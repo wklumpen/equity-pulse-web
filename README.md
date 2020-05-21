@@ -3,6 +3,8 @@
 To get started, you will want to set up a virtual environment on your system and
 make sure you've got your packages set up correctly.
 
+* Clone the project at the appropriate branch.
+
 * In the project directory, run `python venv env` to set up the environments
 folder. Then you can activate the shell (if you're on Windows) for the virtual environment with
 `env\Scripts\activate`.
