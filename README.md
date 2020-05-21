@@ -13,5 +13,4 @@ folder. Then you can activate the shell (if you're on Windows) for the virtual e
 
 * Then install the packages you need: `pip install -r requirements.txt`. This will take a bit of time
 
-
-
+* Run the local server with `python app.py`.
