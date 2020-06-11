@@ -25,7 +25,7 @@
             </div>
             <div class="three columns stat-tile">
                     <p class='tile-title'> Equity</p>
-                    <p>Tile goes here</p>
+                    <div id='boston-access' class='tile-chart'></div>
             </div>
             <div class="three columns stat-tile">
                 <p class='tile-title'>Access</p>
@@ -35,4 +35,6 @@
             </div>
     </div>
 </div>
+<script src="https://d3js.org/d3.v5.js"></script>
+<script src="{{ url_for('static', filename='js/scorecard_boston.js') }}"></script>
 {% endblock %}

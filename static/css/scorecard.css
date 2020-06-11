@@ -9,6 +9,11 @@ h1.region-name {
     font-weight: bold;
 }
 
+svg.center-chart {
+    display: block;
+    margin: 0 auto;
+}
+
 div.inner {
     padding: 10px;
     overflow: auto;
