@@ -1,0 +1,29 @@
+.region-tile {
+    background: #d6d6d6;
+    border-radius: 4px;
+    padding: 10px;
+  }
+
+
+h1.region-name {
+    font-weight: bold;
+}
+
+div.inner {
+    padding: 10px;
+    overflow: auto;
+}
+
+p.tile-title {
+    font-weight: bold;
+    font-variant: small-caps;
+    margin-bottom: 10px;
+}
+
+.stat-tile {
+    background: white;
+    border-radius: 4px;
+    height: 200px;
+    padding: 10px;
+    box-shadow: 2px 2px 4px 0 rgba(0,0,0,0.25);
+}

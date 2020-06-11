@@ -4,27 +4,25 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>{% block title %}{% endblock %} | Klumpentown</title>
+  <title>{% block title %}{% endblock %} | DEMO</title>
   <meta name="description" content="">
   <meta name="author" content="">
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <!-- FONT
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link href="//fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css">
-  <!-- CSS
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <!-- FONT -->
+  <link href="//fonts.googleapis.com/css?family=Signika:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-  <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.5.0/css/all.css" integrity="sha384-B4dIYHKNBt8Bc12p+WXckhzcICo0wtJAoU8YZTY5qE0Id1GSseTk6S+L3BlXeVIU" crossorigin="anonymous">
+
+  <!-- FAVICON -->
   <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
 
-  <!-- Favicon
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <link rel="icon" type="image/png" href="images/favicon.png">
+  <!-- PAGE SPEICIFCS-->
+  {% block head %}{% endblock %}
 </head>
 <body>
 <script>
