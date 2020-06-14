@@ -53,9 +53,20 @@ accessSvg
     .attr('fill', function(d){ return(color(d.data.key)) })
     .style("opacity", 0.7)
 
+// Add the score label
 accessSvg
     .append("text")
     .attr("x", d => {width/2})
     .attr("y", d => {height/2})
     .style('text-anchor', 'middle')
-    .text("95")
+    .attr("class", "access-score")
+    .text(current)
+
+Add the reference label
+accessSvg
+    .append("text")
+    .attr("x", d=> {width/2})
+    .attr("y", d=> {height})
+    .style('text-anchor', 'middle')
+    .attr("class", "access-label")
+    .text("of 100")
