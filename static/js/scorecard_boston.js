@@ -9,11 +9,11 @@ var current = 70
 var deltaColor = 'green'
 if (current > baseline){
     var data = {a: baseline, b: current - baseline,  c: 100-current}
-    var colorSet = ["#2d74ed", "#4c7a34", "#FFFFFF"]
+    var colorSet = ["#2d74ed", "#4c7a34", "#CDCDCD"]
 }
 else {
     var data = {a: current, b: baseline - current, c: 100-baseline}
-    var colorSet = ["#2d74ed", "#a01212", "#FFFFFF"]
+    var colorSet = ["#2d74ed", "#a01212", "#CDCDCD"]
 }
 
 // The radius of the pieplot is half the width or half the height (smallest one). I subtract a bit of margin.
@@ -70,3 +70,4 @@ accessSvg
     .style('text-anchor', 'middle')
     .attr("class", "access-label")
     .text("of 100")
+    .attr("transform", "translate(0," + (20) + ")");
