@@ -62,7 +62,7 @@ accessSvg
     .attr("class", "access-score")
     .text(current)
 
-Add the reference label
+// Add the reference label
 accessSvg
     .append("text")
     .attr("x", d=> {width/2})
