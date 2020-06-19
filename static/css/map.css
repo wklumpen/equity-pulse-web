@@ -42,9 +42,10 @@ body{
 
 .container-sidebar{
     height: 100%;
-    width: 260px;
+    width: 258px;
     margin: 0;
     float: right;
+    border-left: 2px solid black
 }
 
 .sidebar-title{
