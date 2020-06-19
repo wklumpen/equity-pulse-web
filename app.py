@@ -16,10 +16,8 @@ def home():
 @app.route('/<region>')
 def hello_name(region):
     if region.lower() in REGION_LIST:
-        bg = open('static/data/bg_boston.geojson').read()
         view = {'lat': 42.3603578, 'lon': -71.0616172}
-        # view = [42.3603578, -71.0616172]
-        return render_template('map.html', region=region.lower(), bg=bg, zoom=10, view=view)
+        return render_template('map.html', region=region.lower(), zoom=8.5, view=view)
     else:
         return render_template('map.html', region='boston')
 

@@ -1,32 +1,104 @@
-{% extends 'base.html' %}
-{% block title %}Transit Equity in {{region.capitalize()}}{% endblock %}
-{% block head %}
-<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
-<link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
-{% endblock%}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %} | DEMO</title>
+  <meta name="description" content="Transit Equity in Major American Urban Areas">
+  <meta name="author" content="TransitCenter">
 
-{% block content %}
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- Primary Page Layout
-–––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<div class="container">
+  <!-- FONT -->
+  <link href="//fonts.googleapis.com/css?family=Signika:400,300,600" rel="stylesheet" type="text/css">
 
-    <div class="row">
-            <div class="ten columns">
-                <div id="map">
-                    <script>
-                        var view = JSON.parse('{{ view | tojson}}');
-                        var zoom = '{{zoom}}';
-                        // var bg = JSON.parse('{{ bg | tojson | safe}}');
-                    </script>
-                </div>
-            </div>
-            <div class='two columns'>
-                {{bg}}
-            </div>
+  <!-- CSS -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
+
+  <!-- FAVICON -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+</head>
+
+<body>
+
+<div class="container-outer">
+  <div class='container-header'>
+      <div class='headerTitle'>
+        <div class='title-text'>TransitCenter</div>
+      </div>
+      <div class='headerButtons'>
+      </div>
+  </div>
+  <div class='container-main'>
+    <div class='container-top'>
+      <div class='container-map'>
+        <div id='loading'>LOADING</div>
+        <div id="map">
+          <script>
+              var view = JSON.parse('{{ view | tojson}}');
+              var zoom = '{{zoom}}';
+              var bgURL = 'static/data/bg_{{region}}.geojson'
+          </script>
+        </div>
+      </div>
+      <div class='container-sidebar'>
+        <div class='sidebar-title'>
+          <h2>Regional Context</h2>
+        </div>
+        <div class='sidebar-list'>
+          <div class='sidebar-item' onclick='toggleArea("all")'>
+            Entire Region
+          </div>
+          <div class='sidebar-item' onclick='toggleArea("built")'>
+            Built-Up Areas
+          </div>
+        </div>
+        <div class='sidebar-title'>
+          <h2>Thematic Layer</h2>
+        </div>
+        <div class='sidebar-list'>
+          <div class='sidebar-item' onclick='toggleTheme("access")'>
+            Access Score
+          </div>
+          <div class='sidebar-item' onclick='toggleTheme("equity")'>
+            Equity
+          </div>
+          <div class='sidebar-item' onclick='toggleTheme("service")'>
+            Service Levels
+          </div>
+          <div class='sidebar-item' onclick='toggleTheme("reliability")'>
+            Reliability
+          </div>
+        </div>
+        <div class='sidebar-title'>
+          <h2>Overlay Demogaphics</h2>
+        </div>
+        <div class='sidebar-list'>
+          <div class='sidebar-item' onclick='toggleDemo("all")'>
+            1 dot = 25 people
+          </div>
+          <div class='sidebar-item' onclick='toggleDemo("poc")'>
+            1 dot = 25 people of color
+          </div>
+          <div class='sidebar-item' onclick='toggleDemo("poor")'>
+            1 dot = 25 people with low income
+          </div>
+        </div>
+      </div>
     </div>
+  </div>
 </div>
+
 <script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='js/leaflet.ajax.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
-{% endblock %}
+
+</body>
