@@ -1,6 +1,8 @@
 import os
 basedir = os.path.abspath(os.path.dirname(__file__))
 
+REGION_LIST = ['boston']
+
 
 class Config(object):
     DEBUG = False

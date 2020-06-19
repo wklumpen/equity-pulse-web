@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Transit Equity in {{region.capitalize()}}{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
+{% endblock%}
+
+{% block content %}
+
+<!-- Primary Page Layout
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="container">
+
+    <div class="row">
+            <div class="ten columns">
+                <div id="map">
+                    <script>
+                        var view = JSON.parse('{{ view | tojson}}');
+                        var zoom = '{{zoom}}';
+                        // var bg = JSON.parse('{{ bg | tojson | safe}}');
+                    </script>
+                </div>
+            </div>
+            <div class='two columns'>
+                {{bg}}
+            </div>
+    </div>
+</div>
+<script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
+<script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+{% endblock %}
