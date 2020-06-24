@@ -32,6 +32,10 @@ body{
     border-bottom: 2px black solid;
 }
 
+.container-bottom{
+    height: 138px;
+}
+
 /* Container for the map box */
 .container-map{
     height: 100%;
@@ -91,6 +95,10 @@ body{
 #map{
     height: 100%;
     width: 100%;
+}
+
+#bottom-chart{
+    height: 100%;
 }
 
 .headerTitle{
