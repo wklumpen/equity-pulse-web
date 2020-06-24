@@ -11,7 +11,7 @@
 // ==== 1. INITIALIZATIONS ====
 
 // Bottom chart dimensions and margins
-var chartMargin = {top: 10, right: 10, bottom: 35, left: 40}
+var chartMargin = {top: 10, right: 10, bottom: 35, left: 45}
 var boxHeight = d3.select("#bottom-chart").node().getBoundingClientRect().height
 var boxWidth = d3.select("#bottom-chart").node().getBoundingClientRect().width
 var chartHeight = boxHeight - chartMargin.top - chartMargin.bottom
@@ -82,7 +82,6 @@ function onEachFeature(feature, layer){
 
 // ==== 2. BOTTOM CHART FUNCTIONS ====
 
-
  /**
   * Creates a histogram in the bottom chart panel
   * @param {Array} data Array of values to chart
@@ -91,7 +90,6 @@ function onEachFeature(feature, layer){
   * @param {String} ylabel The label for the y-axis
   */
 function histogramBottom(data, bins, xlabel, ylabel){
-
 
   // Create the x range
   var x = d3.scaleLinear()
@@ -223,7 +221,6 @@ function bgStyleDefault(feature) {
   };
 }
 
-
 // Default Placeholder Function (not currently used)
 function getColorPercent(d) {
   return  d > 80 ? "#edf8fb": 
@@ -232,8 +229,6 @@ function getColorPercent(d) {
           d > 20 ? "#8856a7" : 
           "#810f7c";
 }
-
-// Style features in five even blocks based on  min and max ranges
 
 /**
  * Get a color scheme based on quintile ranges.
@@ -244,7 +239,6 @@ function getColorPercent(d) {
 function getQuintileColor(d, min, max) {
   // Handle NAN Values
   if(isNaN(d)){
-    console.log("NANANA");
     return "#000000";
   }
   else {
