@@ -5,7 +5,8 @@
  * 1. Initializations
  * 2. Bottom Chart Functions
  * 3. Map Triggers
- * 4. Styling Functions
+ * 4. Time Slider
+ * 5. Styling Functions
  */
 
 // ==== 1. INITIALIZATIONS ====
@@ -208,7 +209,42 @@ function toggleTheme(theme){
   }
 }
 
-// ==== 4. STYLING FUNCTIONS ====
+// ==== 4. TIME SLIDER ====
+
+// Placeholder data for testing. Will be loaded
+var dateData = [new Date(2020, 2, 2), 
+  new Date(2020, 3, 4), new Date(2020, 3, 10), new Date(2020, 3, 16),
+  new Date(2020, 4, 24), new Date(2020, 5, 2)]
+
+// Initiate the slider
+var sliderTime = d3
+  .sliderBottom()
+  .min(d3.min(dateData))
+  .max(d3.max(dateData))
+  .width(chartWidth-100)
+  .tickFormat(d3.timeFormat('%b %d'))
+  .tickValues(dateData)
+  .fill('#F58426')
+  .marks(dateData) // Allows for irregular steps as needed
+  .default(new Date(2020, 3, 16))
+  .on('end', val => {
+    sliderTrigger(val);
+  });
+
+var sliderSvg = d3.select('#time-slider')
+  .append('svg')
+  .attr('width', chartWidth)
+  .attr('height', 100)
+  .append('g')
+  .attr('transform', 'translate(30,7)')
+  .call(sliderTime)
+
+
+var sliderTrigger = function(value){
+  console.log('Slider Moved to ' + value)
+}
+
+// ==== 5. STYLING FUNCTIONS ====
 
 // Style function for the block groups
 function bgStyleDefault(feature) {
