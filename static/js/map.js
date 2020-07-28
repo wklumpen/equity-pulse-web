@@ -18,6 +18,9 @@ var boxWidth = d3.select("#bottom-chart").node().getBoundingClientRect().width
 var chartHeight = boxHeight - chartMargin.top - chartMargin.bottom
 var chartWidth = boxWidth - chartMargin.left - chartMargin.right
 
+// TEMP Variable
+var scoreURL = "/data/bg/boston/A_C000_c60_3006200_MP"
+
 // Array to hold layer groups for filtering
 var areaGroups = []
 
@@ -91,7 +94,7 @@ function onEachFeature(feature, layer){
   * @param {String} ylabel The label for the y-axis
   */
 function histogramBottom(data, bins, xlabel, ylabel){
-
+  console.log(data);
   // Create the x range
   var x = d3.scaleLinear()
     .domain(d3.extent(data))
@@ -111,7 +114,7 @@ function histogramBottom(data, bins, xlabel, ylabel){
 
   // Scale the range of the data in the y domain
   y.domain([0, d3.max(histBins, function(d) { return d.length; })]);
-
+  console.log(histBins);
   // Append the bar rectangles to the svg element
   bottomSvg.selectAll("rect")
     .data(histBins)
@@ -176,24 +179,28 @@ function toggleTheme(theme){
   if(theme == 'access'){
     // First we need to get the range of values
     var score = []
-    bg.eachLayer(function(layer){
-      var val = parseFloat(layer.feature.properties.A_percent_jobs_30min_auto)
-      score.push(val)
-      
-    })
+    var scores = {}
+    // Load the data we need TODO: Only load if not already loaded?
+    $.getJSON(scoreURL, function(data) {
+      $.each( data, function( key, val ) {
+        scores[parseInt(val['block_group']['id'])] = parseFloat(val['score'])
+        score.push(parseFloat(val['score']))
+      });
 
-    var min = d3.min(score) // D3 ignores invalid data
-    var max = d3.max(score)
-    bg.setStyle(function(feature){
-      // console.log(Math.max(feature.properties.A_percent_jobs_30min_auto))
-      return {
-        fillColor: getQuintileColor(feature.properties.A_percent_jobs_30min_auto, min, max),
-        color: getQuintileColor(feature.properties.A_percent_jobs_30min_auto, min, max),
-        fillOpacity: 0.5,
-        opacity: 0.5
-      }
+    }).done( function (data) {
+      var min = d3.min(score) // D3 ignores invalid data
+      var max = d3.max(score)
+      
+      bg.setStyle(function(feature){
+        return {
+          fillColor: getQuintileColor(scores[parseInt(feature.properties.GEOID)], min, max),
+          color: getQuintileColor(scores[parseInt(feature.properties.GEOID)], min, max),
+          fillOpacity: 0.5,
+          opacity: 0.5
+        }
+      })
+      histogramBottom(score, 30, "Score", "Block Groups")
     })
-    histogramBottom(score, 30, "Score", "Block Groups")
   }
   else if(theme == 'equity'){
     bg.setStyle(

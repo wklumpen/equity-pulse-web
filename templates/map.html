@@ -105,5 +105,13 @@
 <script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
 <script src="{{ url_for('static', filename='js/leaflet.ajax.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
-
+<script>
+  $(document).ready(function(){
+    $('.dropdown-submenu a.test').on("click", function(e){
+      $(this).next('ul').toggle();
+      e.stopPropagation();
+      e.preventDefault();
+    });
+  });
+  </script>
 </body>

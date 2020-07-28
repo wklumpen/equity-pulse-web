@@ -28,12 +28,12 @@ body{
 
 /* Container for the top two parts */
 .container-top{
-    height: calc(100vh - 200px);
+    height: calc(100vh - 280px);
     border-bottom: 2px black solid;
 }
 
 .container-bottom{
-    height: 138px;
+    height: 218px;
 }
 
 /* Container for the map box */
@@ -103,7 +103,7 @@ body{
 }
 
 #bottom-chart{
-    height: 78px;
+    height: 158px;
 }
 
 .headerTitle{
