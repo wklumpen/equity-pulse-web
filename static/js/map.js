@@ -3,23 +3,45 @@
  * Table of Contents
  * -----------------
  * 1. Initializations
- * 2. Bottom Chart Functions
- * 3. Map Triggers
- * 4. Time Slider
- * 5. Styling Functions
+ * 2. Triggers and Events
+ * 3. Display Functions
+ *  3.1. Bottom Chart
+ *  3.2. Time Slider
+ *  3.3. Legend
+ *  3.4. Styling
  */
 
 // ==== 1. INITIALIZATIONS ====
 
 // Bottom chart dimensions and margins
 var chartMargin = {top: 10, right: 10, bottom: 35, left: 45}
-var boxHeight = d3.select("#bottom-chart").node().getBoundingClientRect().height
-var boxWidth = d3.select("#bottom-chart").node().getBoundingClientRect().width
-var chartHeight = boxHeight - chartMargin.top - chartMargin.bottom
-var chartWidth = boxWidth - chartMargin.left - chartMargin.right
+var chartBoxHeight = d3.select("#bottom-chart").node().getBoundingClientRect().height
+var chartBoxWidth = d3.select("#bottom-chart").node().getBoundingClientRect().width
+var chartHeight = chartBoxHeight - chartMargin.top - chartMargin.bottom
+var chartWidth = chartBoxWidth - chartMargin.left - chartMargin.right
+
+var legendMargin = {top: 10, right: 10, bottom: 10, left: 10}
+var legendBoxWidth = d3.select("#legend").node().getBoundingClientRect().height
+var legendBoxHeight = d3.select("#legend").node().getBoundingClientRect().width
+var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
+var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
+
+var themeKey = 'access'
+var zoneKey = 'all'
+var measureKey = 'A_C000_c30_<DATE>_MP'
+var demoKey = 'all'
+var dateKey = '30062020'
+var popKey = null
+
+var bgScore = {}
+var bgPop = {}
 
 // TEMP Variable
-var scoreURL = "/data/bg/boston/A_C000_c60_3006200_MP"
+var scoreURL = "/data/score/" + view['name'] + "/" + measureKey.replace("<DATE>", dateKey)
+var popURL = null
+
+// Placeholder data for testing. Will be loaded
+var dateData = [new Date(2020, 1, 29), new Date(2020, 5, 30)]
 
 // Array to hold layer groups for filtering
 var areaGroups = []
@@ -46,20 +68,28 @@ var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net
 // Create SVG for the bottom chart
 var bottomSvg = d3.select("#bottom-chart")
   .append('svg')
-  .attr("width", chartWidth + chartMargin.left + chartMargin.right)
-  .attr("height", chartHeight + chartMargin.top + chartMargin.bottom)
+  .attr("width", chartBoxWidth)
+  .attr("height", chartBoxHeight)
   .append('g')
   .attr("transform", "translate(" + chartMargin.left + "," + chartMargin.top + ")");
+
+  // Create the legend SVG
+var legendSvg = d3.select("#legend")
+  .append('svg')
+  .attr("width", 318)
+  .attr("height", legendBoxHeight)
+  .append('g')
+  .attr("transform", "translate(" + legendMargin.left + "," + legendMargin.top + ")");
 
 // Load the appropriate GeoJSON Data with an AJAX call
 var bg = new L.GeoJSON.AJAX(bgURL,{
   style: bgStyleDefault,
-  onEachFeature: onEachFeature
+  onEachFeature: onEachBlockGroupFeature
 });
 
 // Divide the layer into different groups as needed for filtering
 // (Currently sorting based on GEOID as a placeholder)
-function onEachFeature(feature, layer){
+function onEachBlockGroupFeature(feature, layer){
   // Determine data bounds
   var type
   if (parseInt(feature.properties.GEOID) % 2 == 0){
@@ -84,17 +114,155 @@ function onEachFeature(feature, layer){
   lg.addLayer(layer);
 }
 
-// ==== 2. BOTTOM CHART FUNCTIONS ====
+// Initiate the slider
+var sliderTime = d3
+  .sliderBottom()
+  .min(d3.min(dateData))
+  .max(d3.max(dateData))
+  .width(chartWidth-100)
+  .tickFormat(d3.timeFormat('%b %d'))
+  .tickValues(dateData)
+  .fill('#F58426')
+  .marks(dateData) // Allows for irregular steps as needed
+  .default(dateData[dateData.length - 1])
+  .on('end', val => {
+    sliderTrigger(val);
+  });
 
- /**
-  * Creates a histogram in the bottom chart panel
-  * @param {Array} data Array of values to chart
-  * @param {Number} bins The number of bins for the histogram
-  * @param {String} xlabel The label for the x-axis
-  * @param {String} ylabel The label for the y-axis
-  */
+var sliderSvg = d3.select('#time-slider')
+  .append('svg')
+  .attr('width', chartWidth)
+  .attr('height', 100)
+  .append('g')
+  .attr('transform', 'translate(30,7)')
+  .call(sliderTime)
+
+measureChanged(measureKey)
+
+// ==== 2. TRIGGERS AND EVENTS ====
+
+/**
+ * Trigger function when zone context area is changed
+ * @param {String} newZoneKey Key used to filter the zones
+*/
+function zoneChanged(newZoneKey){
+  zoneKey = newZoneKey
+  console.log(zoneKey)
+}
+
+/**
+ * Trigger function when map measure is changed
+ * @param {String} newMeasureKey Key used to select the data.
+ */
+function measureChanged(newMeasureKey){
+  measureKey = newMeasureKey.replace("<DATE>", dateKey)
+  var measureType = measureKey.charAt(0);
+
+  if (measureType == 'A'){
+    var score = []
+    bgScore = {}
+
+    // Update the data URL
+    scoreURL = "/data/score/" + view['name'] + "/" + measureKey
+
+    console.log(scoreURL)
+
+    // Load the data we need TODO: Only load if not already loaded?
+    $.getJSON(scoreURL, function(data) {
+      $.each( data, function( key, val ) {
+        bgScore[parseInt(val['block_group']['id'])] = parseFloat(val['score'])
+        score.push(parseFloat(val['score']))
+      });
+
+    }).done( function (data) {
+      var min = d3.min(score) // D3 ignores invalid data
+      var max = d3.max(score)
+      
+      bg.setStyle(function(feature){
+        return {
+          fillColor: getFiveBinColor(bgScore[parseInt(feature.properties.GEOID)], min, max),
+          color: getFiveBinColor(bgScore[parseInt(feature.properties.GEOID)], min, max),
+          fillOpacity: 0.5,
+          opacity: 0.5
+        }
+      })
+      if (measureKey.split("_")[1].charAt(0) == 'C'){
+        setLegendBins(getFiveBinLabels(min, max, "jobs"), "Access to Jobs");
+      }
+      else{
+        setLegendBins(getFiveBinLabels(min, max, "min"), "Travel Times");
+      }
+      
+      histogramBottom(score, 60, "Score", "Block Groups")
+    })
+
+  }
+}
+
+function overlayChanged(newOverlayKey){
+  overlayKey = newOverlayKey
+  console.log(overlayKey)
+  if (overlayKey == 'poverty'){
+    var population = []
+    var populations = {}
+    // Let's update the bottom plot for funzies.
+    popURL = "/data/pop/" + view['name'] + "/pop_poverty"
+    $.getJSON(popURL, function(data) {
+      $.each( data, function( key, val ) {
+        bgPop[parseInt(val['block_group']['id'])] = parseFloat(val['value'])
+        population.push(parseFloat(val['value']))
+      });
+
+    }).done( function (data) {
+      var min = d3.min(population) // D3 ignores invalid data
+      var max = d3.max(population)
+      // console.log(bgPop);
+      var plotData = []
+      console.log(bgScore)
+      for (var key of Object.keys(bgPop)) {
+        plotData.push({'x': bgPop[key], 'y': bgScore[key]})
+    }
+      scatterPlotBottom(plotData, "Number of People Below Poverty Line", "Travel Time")
+    });
+  }
+}
+
+/* Placeholder function for area filtering TO BE UPDATED AND REMOVED */
+/**
+ * Toggle area to display
+ * @param {String} area Area keyword
+ */
+function toggleArea(area){
+  if(area == 'all'){
+    var lg = areaGroups['even'];
+    map.addLayer(lg);
+  }
+  else{
+    var lg = areaGroups['even'];
+    map.removeLayer(lg);
+  }
+}
+
+function sliderTrigger(value){
+  var m = moment(value) // Easier to format using moments.
+  dateKey = m.format('DDMMYYYY')
+  var newMeasureKey = measureKey.split('_').slice(0, 3).join("_") + "_" +  m.format('DDMMYYYY') + "_" + measureKey.split('_')[4]
+  measureChanged(newMeasureKey);
+}
+
+// ==== 3. DISPLAY FUNCTIONS ====
+
+// ======== 3.1. BOTTOM CHART ====
+/**
+* Creates a histogram in the bottom chart panel
+* @param {Array} data Array of values to chart
+* @param {Number} bins The number of bins for the histogram
+* @param {String} xlabel The label for the x-axis
+* @param {String} ylabel The label for the y-axis
+*/
 function histogramBottom(data, bins, xlabel, ylabel){
-  console.log(data);
+  bottomSvg.selectAll("*").remove();
+
   // Create the x range
   var x = d3.scaleLinear()
     .domain(d3.extent(data))
@@ -114,7 +282,6 @@ function histogramBottom(data, bins, xlabel, ylabel){
 
   // Scale the range of the data in the y domain
   y.domain([0, d3.max(histBins, function(d) { return d.length; })]);
-  console.log(histBins);
   // Append the bar rectangles to the svg element
   bottomSvg.selectAll("rect")
     .data(histBins)
@@ -153,105 +320,104 @@ function histogramBottom(data, bins, xlabel, ylabel){
     .text(ylabel);  
 }
 
-// ==== 3. MAP TRIGGERS ====
-
-/* Placeholder function for area filtering */
 /**
- * Toggle area to display
- * @param {String} area Area keyword
- */
-function toggleArea(area){
-  if(area == 'all'){
-    var lg = areaGroups['even'];
-    map.addLayer(lg);
-  }
-  else{
-    var lg = areaGroups['even'];
-    map.removeLayer(lg);
-  }
+* Creates a histogram in the bottom chart panel
+* @param {Array} data Array of values to chart
+* @param {String} xlabel The label for the x-axis
+* @param {String} ylabel The label for the y-axis
+*/
+function scatterPlotBottom(data, xlabel, ylabel){
+  bottomSvg.selectAll("*").remove();
+  console.log(data)
+
+  // Add X axis
+  var x = d3.scaleLinear()
+    .domain(d3.extent(data, function(d) {return d.x}))
+    .range([0, chartWidth ]);
+
+  bottomSvg.append("g")
+    .attr("transform", "translate(0," + chartHeight + ")")
+    .call(d3.axisBottom(x));
+
+  // Add Y axis
+  var y = d3.scaleLinear()
+    .domain(d3.extent(data, function(d) {return d.y}))
+    .range([ chartHeight, 0]);
+
+  bottomSvg.append("g")
+    .call(d3.axisLeft(y));
+
+  // Add dots
+  bottomSvg.append('g')
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", function (d) { return x(d.x); } )
+    .attr("cy", function (d) { return y(d.y); } )
+    .attr("r", 1.5)
+    .style("fill", "#69b3a2")
+
+  // Label the x-axis
+    bottomSvg.append("text")             
+    .attr("transform", "translate(" + (chartWidth/2) + " ," + (chartHeight + chartMargin.top + 18) + ")")
+    .style("text-anchor", "middle")
+    .style('font-weight', 'bold')
+    .text(xlabel);
+
+  // Label the y-axis
+  bottomSvg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - chartMargin.left)
+    .attr("x",0 - (chartHeight / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .style('font-weight', 'bold')
+    .text(ylabel); 
 }
 
-/**
- * Toggle what thematic map and chart information to display
- * @param {String} theme Theme keyword
- */
-function toggleTheme(theme){
-  if(theme == 'access'){
-    // First we need to get the range of values
-    var score = []
-    var scores = {}
-    // Load the data we need TODO: Only load if not already loaded?
-    $.getJSON(scoreURL, function(data) {
-      $.each( data, function( key, val ) {
-        scores[parseInt(val['block_group']['id'])] = parseFloat(val['score'])
-        score.push(parseFloat(val['score']))
-      });
+// ======== 3.2. TIME SLIDER ====
 
-    }).done( function (data) {
-      var min = d3.min(score) // D3 ignores invalid data
-      var max = d3.max(score)
-      
-      bg.setStyle(function(feature){
-        return {
-          fillColor: getQuintileColor(scores[parseInt(feature.properties.GEOID)], min, max),
-          color: getQuintileColor(scores[parseInt(feature.properties.GEOID)], min, max),
-          fillOpacity: 0.5,
-          opacity: 0.5
-        }
-      })
-      histogramBottom(score, 30, "Score", "Block Groups")
-    })
-  }
-  else if(theme == 'equity'){
-    bg.setStyle(
-      function(feature){
-        if(parseInt(feature.properties.GEOID) % 4 == 0){
-          return {fillColor: 'red'}
-        }
-        else{
-          return {fillColor: 'green'}
-        }
-      }
-    )
-  }
+
+// ======== 3.3. LEGEND ====
+
+function clearLegend(){
+  legendSvg.selectAll("*").remove();
 }
 
-// ==== 4. TIME SLIDER ====
-
-// Placeholder data for testing. Will be loaded
-var dateData = [new Date(2020, 2, 2), 
-  new Date(2020, 3, 4), new Date(2020, 3, 10), new Date(2020, 3, 16),
-  new Date(2020, 4, 24), new Date(2020, 5, 2)]
-
-// Initiate the slider
-var sliderTime = d3
-  .sliderBottom()
-  .min(d3.min(dateData))
-  .max(d3.max(dateData))
-  .width(chartWidth-100)
-  .tickFormat(d3.timeFormat('%b %d'))
-  .tickValues(dateData)
-  .fill('#F58426')
-  .marks(dateData) // Allows for irregular steps as needed
-  .default(new Date(2020, 3, 16))
-  .on('end', val => {
-    sliderTrigger(val);
-  });
-
-var sliderSvg = d3.select('#time-slider')
-  .append('svg')
-  .attr('width', chartWidth)
-  .attr('height', 100)
-  .append('g')
-  .attr('transform', 'translate(30,7)')
-  .call(sliderTime)
-
-
-var sliderTrigger = function(value){
-  console.log('Slider Moved to ' + value)
+function setLegendBins(bins, title){
+  clearLegend();
+  legendSvg.selectAll("legendCircles")
+    .data(bins)
+    .enter()
+    .append('circle')
+    .attr('cx', legendMargin.left)
+    .attr('cy', function(d, i){return legendMargin.top + 20 + i*30})
+    .attr('r', 10)
+    .style('fill', d => d.color)
+    .style('stroke', 'black')
+  
+  legendSvg.selectAll("legendLabels")
+    .data(bins)
+    .enter()
+    .append('text')
+    .attr('x', legendMargin.left + 20)
+    .attr('y', function(d, i){return legendMargin.top + 20 + i*30})
+    .style('fill', 'black')
+    .text(d => d.label)
+    .attr('text-anchor', 'left')
+    .style('alignment-baseline', 'middle')
+    .style('font-size', '1.4em')
+  
+  legendSvg.append('text')
+    .attr('x', legendMargin.left)
+    .attr('y', legendMargin.top)
+    .text(title)
+    .attr('text-anchor', 'left')
+    .style('font-size', '1.8em')
 }
 
-// ==== 5. STYLING FUNCTIONS ====
+// ==== 3.4 STYLING ====
 
 // Style function for the block groups
 function bgStyleDefault(feature) {
@@ -274,15 +440,15 @@ function getColorPercent(d) {
 }
 
 /**
- * Get a color scheme based on quintile ranges.
+ * Get a color scheme based on five equal ranges.
  * @param {*} d Value to colorize
  * @param {Number} min Minimum value in data range
  * @param {Number} max Maximum value in data range
  */
-function getQuintileColor(d, min, max) {
+function getFiveBinColor(d, min, max) {
   // Handle NAN Values
   if(isNaN(d)){
-    return "#000000";
+    return "#717678";
   }
   else {
     return  d > 4*(max-min)/5 + min ? "#810f7c": 
@@ -290,5 +456,34 @@ function getQuintileColor(d, min, max) {
     d > 2*(max-min)/5 + min ? "#8c96c6": 
     d > 1*(max-min)/5 + min ? "#b3cde3": 
     "#edf8fb";
+  }
+}
+
+/**
+ * Get color scheme labels on five equal ranges.
+ * @param {Number} min Minimum value in data range
+ * @param {Number} max Maximum value in data range
+ */
+function getFiveBinLabels(min, max, unit){
+  return [
+    {'label': styleNumbers(min) + " to " + styleNumbers(min + (max-min)/5) + " " + unit, 'color': '#edf8fb'},
+    {'label': styleNumbers(min + (max-min)/5) + " to " + styleNumbers(min + 2*(max-min)/5)+ " " + unit, 'color': '#b3cde3'},
+    {'label': styleNumbers(min + 2*(max-min)/5) + " to " + styleNumbers(min + 3*(max-min)/5)+ " " + unit, 'color': '#8c96c6'},
+    {'label': styleNumbers(min + 3*(max-min)/5) + " to " + styleNumbers(min + 4*(max-min)/5)+ " " + unit, 'color': '#8856a7'},
+    {'label': styleNumbers(min + 4*(max-min)/5) + " to " + styleNumbers(max)+ " " + unit, 'color': '#810f7c'},
+    {'label': "No data", 'color': '#717678'},
+  ]
+}
+
+
+function styleNumbers(val){
+  if (Math.abs(val) >= 1000){
+    return val.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  else if (Math.abs(val) > 10){
+    return val.toFixed(0)
+  }
+  else{
+    return val.toFixed(2)
   }
 }
