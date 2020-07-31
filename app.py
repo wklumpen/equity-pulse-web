@@ -7,6 +7,7 @@ sys.path.append(r"C:\Users\Willem\Documents\Project\TransitCenter\TransitCenter\
 # Third Party Modules
 from flask import Flask, render_template, jsonify
 from playhouse.shortcuts import model_to_dict
+import pandas as pd
 
 # Configuration imports
 from config import DevelopmentConfig, REGION_LIST
@@ -32,15 +33,45 @@ def region(region):
         return render_template('map.html', region=region.lower())
 
 # DATA API STARTS HERE
-@app.route('/data/score/<tag>/<score_type>')
-def data_score(tag, score_type):
-    scores = Score.by_tag_type(tag, score_type)
+@app.route('/data/score/<tag>/<score_type_name>')
+def data_score(tag, score_type_name):
+    """
+    Data API call to retrieve score information.
+    Format of score_type_name should be:
+    measure_destination_function_date_period, where
+        measure = the metric used (Access, Equity, Etc)
+        destination = the destination (jobs, snap stores, etc)
+        function = the measurement function (cumulative 45min, travel time)
+        date = date key for the measure
+        period = Morning peak (MP), etc.
+    """
+    scores = Score.by_tag_type(tag, score_type_name)
+    print(scores)
     return jsonify([model_to_dict(s) for s in scores])
 
 @app.route('/data/pop/<tag>/<pop_type>')
 def data_population(tag, pop_type):
     pop = Population.by_tag_type(tag, pop_type)
     return jsonify([model_to_dict(p) for p in pop])
+
+@app.route('/data/time/<tag>/<score_type>')
+def data_time(tag, score_type):
+    """
+    Format of score_type should be:
+    measure_destination_function_period
+    """
+    # Grab scores with dates
+    scores = Score.by_tag_type_no_date(tag, score_type)
+    # Now let's grab populations
+    pop = Population.by_tag_type(tag, 'pop_total')
+    df = pd.DataFrame(list(scores.dicts()))
+    df = pd.merge(df, pd.DataFrame(list(pop.dicts())), on='id')
+    # Now calculate the weighted average
+    df = df[['score', 'date', 'value']].groupby("date").apply(lambda dfx: (dfx["value"] * dfx["score"]).sum() / dfx["value"].sum()).reset_index()
+    df.columns = ['date', 'score']
+    print(df.head())
+    return jsonify(df.to_dict())
+
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

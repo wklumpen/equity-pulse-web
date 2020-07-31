@@ -180,17 +180,17 @@ function measureChanged(newMeasureKey){
       
       bg.setStyle(function(feature){
         return {
-          fillColor: getFiveBinColor(bgScore[parseInt(feature.properties.GEOID)], min, max),
-          color: getFiveBinColor(bgScore[parseInt(feature.properties.GEOID)], min, max),
+          fillColor: getQuartileColor(bgScore[parseInt(feature.properties.GEOID)], score),
+          color: getQuartileColor(bgScore[parseInt(feature.properties.GEOID)], score),
           fillOpacity: 0.5,
           opacity: 0.5
         }
       })
       if (measureKey.split("_")[1].charAt(0) == 'C'){
-        setLegendBins(getFiveBinLabels(min, max, "jobs"), "Access to Jobs");
+        setLegendBins(getQuartileLabels(score, "jobs"), "Access to Jobs");
       }
       else{
-        setLegendBins(getFiveBinLabels(min, max, "min"), "Travel Times");
+        setLegendBins(getQuartileLabels(score, "min"), "Travel Times");
       }
       
       histogramBottom(score, 60, "Score", "Block Groups")
@@ -222,8 +222,16 @@ function overlayChanged(newOverlayKey){
       for (var key of Object.keys(bgPop)) {
         plotData.push({'x': bgPop[key], 'y': bgScore[key]})
     }
-      scatterPlotBottom(plotData, "Number of People Below Poverty Line", "Travel Time")
+      scatterPlotBottom(plotData, "Number of People Below Poverty Line", "Travel Time (min)")
     });
+  }
+
+  else if (overlayKey == 'none'){
+    plotData = []
+    for (var key of Object.keys(bgScore)){
+      plotData.push(bgPop[key])
+    }
+    histogramBottom(plotData, 30, "Score", "# of Block Groups")
   }
 }
 
@@ -357,6 +365,7 @@ function scatterPlotBottom(data, xlabel, ylabel){
     .attr("cy", function (d) { return y(d.y); } )
     .attr("r", 1.5)
     .style("fill", "#69b3a2")
+    .style("opacity", 0.7)
 
   // Label the x-axis
     bottomSvg.append("text")             
@@ -460,6 +469,26 @@ function getFiveBinColor(d, min, max) {
 }
 
 /**
+ * Get a color scheme based on five equal ranges.
+ * @param {*} d Value to colorize
+ * @param {Array} data Entire dataset to use for quartiles.
+ */
+function getQuartileColor(d, data) {
+  data = data.sort(d3.ascending)
+  // Handle NAN Values
+  if(isNaN(d)){
+    return "#717678";
+  }
+  else {
+    return  d > d3.quantile(data, 0.75) ? "#810f7c": 
+    d > d3.quantile(data, 0.5) ? "#8856a7":
+    d > d3.quantile(data, 0.25) ? "#8c96c6":
+    "#edf8fb";
+  }
+}
+
+
+/**
  * Get color scheme labels on five equal ranges.
  * @param {Number} min Minimum value in data range
  * @param {Number} max Maximum value in data range
@@ -471,6 +500,21 @@ function getFiveBinLabels(min, max, unit){
     {'label': styleNumbers(min + 2*(max-min)/5) + " to " + styleNumbers(min + 3*(max-min)/5)+ " " + unit, 'color': '#8c96c6'},
     {'label': styleNumbers(min + 3*(max-min)/5) + " to " + styleNumbers(min + 4*(max-min)/5)+ " " + unit, 'color': '#8856a7'},
     {'label': styleNumbers(min + 4*(max-min)/5) + " to " + styleNumbers(max)+ " " + unit, 'color': '#810f7c'},
+    {'label': "No data", 'color': '#717678'},
+  ]
+}
+
+/**
+ * Colour labels based on quartiles.
+ * @param {Number} data Data to quartile.
+ */
+function getQuartileLabels(data, unit){
+  data = data.sort(d3.ascending)
+  return [
+    {'label': styleNumbers(d3.quantile(data, 0)) + " to " + styleNumbers(d3.quantile(data, 0.25)) + " " + unit, 'color': '#edf8fb'},
+    {'label': styleNumbers(d3.quantile(data, 0.25)) + " to " + styleNumbers(d3.quantile(data, 0.50))+ " " + unit, 'color': '#b3cde3'},
+    {'label': styleNumbers(d3.quantile(data, 0.50)) + " to " + styleNumbers(d3.quantile(data, 0.75))+ " " + unit, 'color': '#8c96c6'},
+    {'label': styleNumbers(d3.quantile(data, 0.75)) + " to " + styleNumbers(d3.quantile(data, 1.0))+ " " + unit, 'color': '#8856a7'},
     {'label': "No data", 'color': '#717678'},
   ]
 }
