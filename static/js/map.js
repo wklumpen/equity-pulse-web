@@ -34,23 +34,44 @@ var plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
 var plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
 var plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
 
-// Keeping track of what data is currently displayed
-var zoneKey = 'all'
-var measureKey = 'A_C000_c30_<DATE>_MP'
-var overlayKey = 'all'
-var dateKey = '30062020'
-var tag = view['name']  // Keeps track of the geographical tag for the region
+// All of the information for the current application state is kept in here
+var state = {
+  'tag': view['name'], // The geographical region tag
+  'score': { // Information about the "score" or "measure"
+    'url': null,  // Used for API lookups
+    'title': 'Access to Jobs', 
+    'label': "Access to Jobs",
+    'unit': 'jobs', 
+    data: {} // Format of data[<block_group_id>] = score
+  }, 
+  'overlay': {
+    'url': null,  // Used for API lookups
+    'title': null, 
+    'label': null,
+    'unit': null, 
+    data: {} //Format of data[<block_group_id>] = people/hhld
+  },
+  'time': {
+    'url': null,  // Used for API lookups
+    'title': null, 
+    'label': null, 
+    data: []
+  }, // Time series data
+  'date': '30062020', // The current date we are displaying data for
+}
 
-var bgScore = {}
-var bgPop = {}
+// Keeping track of what data is currently displayed
+// var zoneKey = 'all'
+// var measureKey = 'A_C000_c30_<DATE>_MP'
+// var overlayKey = 'all'
+// var startDate = '30062020'
 
 var bg = null
 
 // TEMP Variable
-var scoreURL = "/data/score/" + view['name'] + "/" + measureKey.replace("<DATE>", dateKey)
+state['score']['url'] = "/data/score/" + state['tag'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("<DATE>", state['date'])
 var popURL = null
-var timeURL = "/data/time/" + view['name'] + "/" + measureKey.replace("_<DATE>", "")
-console.log(timeURL)
+state['time']['url'] = "/data/time/" + view['name'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("_<DATE>", "")
 
 // Variables to hold the current data for visualization, etc.
 var scoreData = {'title': null, 'label': null, data: []}
@@ -136,13 +157,12 @@ initialize();
 
 function initialize(){
   // Load the appropriate GeoJSON Data with an AJAX call
-  // First, we need to divide the map up into the appropriate areas
-
   bg = new L.GeoJSON.AJAX(bgURL,{
     style: bgStyleDefault,
   }).addTo(map);
 
-  measureChanged(measureKey)
+  loadMapData();
+  loadTimeData();
 }
 
 // Divide the layer into different groups as needed for filtering
@@ -151,17 +171,19 @@ function initialize(){
 
 /**
  * Trigger function when zone context area is changed
- * @param {String} newZoneKey Key used to filter the zones
+ * @param {String} newZoneKey Key used to tag zones
 */
 function zoneChanged(newZoneKey){
-  zoneKey = newZoneKey
-  if (zoneKey == 'msa'){
-    tag = view['name'] + "-msa"
+  oldTag = state['tag']
+  if (newZoneKey == 'msa'){
+    state['tag'] = view['name'] + "-msa"
   }
   else{
-    tag = view['name']
+    state['tag'] = view['name']
   }
-  measureChanged(measureKey);
+  state['score']['url'] = state['score']['url'].replace(oldTag, state['tag'])
+
+  loadMapData();
 }
 
 /**
@@ -169,123 +191,131 @@ function zoneChanged(newZoneKey){
  * @param {String} newMeasureKey Key used to select the data.
  */
 function measureChanged(newMeasureKey){
-  measureKey = newMeasureKey.replace("<DATE>", dateKey)
-  var measureType = measureKey.charAt(0);
+  // Update the data URL
+  state['score']['url'] = "/data/score/" + state['tag'] + "/" + newMeasureKey.replace("<DATE>", state['date'])
+  var score = []
 
-  if (measureType == 'A'){
-    var score = []
-    bgScore = {}
+  // Update the time series URL
+  state['time']['url'] = "/data/time/" + state['tag'] + "/" + newMeasureKey.replace("_<DATE>", "")
 
-    // Update the data URL
-    scoreURL = "/data/score/" + tag + "/" + measureKey
-    // Update the time series URL
-    timeURL = "/data/time/" + tag + "/" + measureKey.replace("_" + dateKey, "")
+  // Update the labels
+  if (newMeasureKey.split("_")[1].charAt(0) == 'C'){
+    state['score']['label'] = 'Access to Jobs'
+    state['score']['unit'] = 'jobs'
+  }
+  else{
+    state['score']['label'] == 'Travel Times'
+    state['score']['unit'] = 'min'
+  }
 
-    console.log(timeURL)
+  // Reload the map data
+  loadMapData();
 
-    // Load the data we need TODO: Only load if not already loaded?
-    $.getJSON(scoreURL, function(data) {
-      $.each( data, function( key, val ) {
-        bgScore[parseInt(val['block_group']['id'])] = parseFloat(val['score'])
-        score.push(parseFloat(val['score']))
-      });
+  // Now let's grab the time series data also and update the time series plot
+  loadTimeData();
+}
 
-    }).done( function (data) {
-      var min = d3.min(score) // D3 ignores invalid data
-      var max = d3.max(score)
-
-      score = score.filter(Boolean).sort(d3.ascending)
-      // console.log(score.filter(Boolean));
-      
-      bg.setStyle(function(feature){
-        return {
-          fillColor: getQuartileColor(bgScore[parseInt(feature.properties.GEOID)], score),
-          color: getQuartileColor(bgScore[parseInt(feature.properties.GEOID)], score),
-          fillOpacity: 0.4,
-          opacity: 0.4
-        }
-      })
-      if (measureKey.split("_")[1].charAt(0) == 'C'){
-        setLegendBins(getQuartileLabels(score, "jobs"), "Access to Jobs");
-      }
-      else{
-        setLegendBins(getQuartileLabels(score, "min"), "Travel Times");
-      }
-      
-      histogram(score, 10, "Score", "Block Groups")
-    })
-
-    // Now let's grab the time series data also and update the time series plot
-    var timeSeriesData = []
-
-    $.getJSON(timeURL, function(data) {
-      $.each( data.date, function( key, val ) {
-        timeSeriesData.push({"date": parseDate(val), "score": parseFloat(data.score[key])})
-      });
-
-    }).done(function (data) {
-      timeSeriesBottom(timeSeriesData, "Date", "Score");
+function loadMapData(){
+  // Fetch the data we need
+  state['score']['data'] = {}  // Reset the data state
+  $.getJSON(state['score']['url'], function(data) {
+    $.each( data, function( key, val ) {
+      state['score']['data'][parseInt(val['block_group']['id'])] = parseFloat(val['score'])
     });
+
+  }).done( function (data) {
+    updateMap();
+    updatePlot();
+  })
+}
+
+function loadTimeData(){
+  state['time']['data'] = []
+  $.getJSON(state['time']['url'], function(data) {
+    $.each( data.date, function( key, val ) {
+      state['time']['data'].push({"date": parseDate(val), "score": parseFloat(data.score[key])})
+    });
+
+  }).done(function (data) {
+    updateTimeSeries(state['time']['data'], "Date", "Score");
+  });
+}
+
+function loadOverlayData(){
+  //
+  // Let's update the plot for funzies.
+  if (state['overlay']['url'] != null){
+    $.getJSON(state['overlay']['url'], function(data) {
+      $.each( data, function( key, val ) {
+        state['overlay']['data'][parseInt(val['block_group']['id'])] = parseFloat(val['value'])
+      });
+    }).done( function (data) {
+      updatePlot();
+    });
+  }
+  else{
+    updatePlot();
   }
 }
 
 function overlayChanged(newOverlayKey){
-  overlayKey = newOverlayKey
-  console.log(overlayKey)
-  if (overlayKey == 'poverty'){
-    var population = []
-    var populations = {}
-    // Let's update the plot for funzies.
-    popURL = "/data/pop/" + tag + "/pop_poverty"
-    $.getJSON(popURL, function(data) {
-      $.each( data, function( key, val ) {
-        bgPop[parseInt(val['block_group']['id'])] = parseFloat(val['value'])
-        population.push(parseFloat(val['value']))
-      });
-
-    }).done( function (data) {
-      var plotData = []
-      for (var key of Object.keys(bgPop)) {
-        plotData.push({'x': bgPop[key], 'y': bgScore[key]})
-    }
-      scatterPlot(plotData, "Number of People Below Poverty Line", "Travel Time (min)")
-    });
+  if (newOverlayKey == 'poverty'){
+    state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
   }
-
-  else if (overlayKey == 'none'){
-    plotData = []
-    for (var key of Object.keys(bgScore)){
-      plotData.push(bgPop[key])
-    }
-    histogram(plotData, 10, "Score", "# of Block Groups")
+  else if (newOverlayKey == 'none'){
+    state['overlay']['url'] = null;
   }
+  loadOverlayData();
+}
+
+function updateMap(){
+  var score = []
+  for (var s in state['score']['data']){
+    score.push(state['score']['data'][s])
+  }
+  score = score.filter(Boolean).sort(d3.ascending)
+  
+  // Style the map
+  bg.setStyle(function(feature){
+    return {
+      fillColor: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
+      color: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
+      fillOpacity: 0.4,
+      opacity: 0.4
+    }
+  })
+  // Update the legend accordingly
+  setLegendBins(getQuartileLabels(score, state['score']['unit']), state['score']['label']);
 }
 
 function updatePlot(){
-
-}
-
-/* Placeholder function for area filtering TO BE UPDATED AND REMOVED */
-/**
- * Toggle area to display
- * @param {String} area Area keyword
- */
-function toggleArea(area){
-  if(area == 'all'){
-    var lg = areaGroups['even'];
-    map.addLayer(lg);
+  // Redo the plot based on currently set data
+  if (state['overlay']['url'] == null){
+    // We do a histogram
+    var score = []
+    for (var s in state['score']['data']){
+      score.push(state['score']['data'][s])
+    }
+    histogram(score, 10, "Score", "# of Block Groups")
   }
-  else{
-    var lg = areaGroups['even'];
-    map.removeLayer(lg);
+  else {
+    var plotData = []
+    for (var key of Object.keys(state['overlay']['data'])) {
+      plotData.push({'x': state['overlay']['data'][key], 'y': state['score']['data'][key]})
+    }
+    scatterPlot(plotData, "Number of People Below Poverty Line", "Travel Time (min)")
   }
 }
 
 function sliderTrigger(value){
   var m = moment(value) // Easier to format using moments.
-  dateKey = m.format('DDMMYYYY')
-  var newMeasureKey = measureKey.split('_').slice(0, 3).join("_") + "_" +  m.format('DDMMYYYY') + "_" + measureKey.split('_')[4]
-  measureChanged(newMeasureKey);
+  newDate = m.format('DDMMYYYY')
+  oldDate = state['date']
+  if (oldDate != newDate){
+    state['score']['url'] = state['score']['url'].replace(oldDate, newDate)
+    loadMapData();
+    state['date'] = newDate
+  }
 }
 
 // ==== 3. DISPLAY FUNCTIONS ====
@@ -418,7 +448,7 @@ function scatterPlot(data, xlabel, ylabel){
 * Creates a time series plot in the bottom chart panel
 * @param {Array} data Array of values to chart
 */
-function timeSeriesBottom(data, xlabel, ylabel){
+function updateTimeSeries(data, xlabel, ylabel){
   bottomSvg.selectAll("*").remove();
 
   var x = d3.scaleTime()
