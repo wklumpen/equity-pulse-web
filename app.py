@@ -13,7 +13,7 @@ import pandas as pd
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population
+from db import Score, Population, BlockGroup
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -49,6 +49,11 @@ def data_score(tag, score_type_name):
     print(scores)
     return jsonify([model_to_dict(s) for s in scores])
 
+@app.route('/data/bg/<tag>')
+def data_bg_tag(tag):
+    bg = BlockGroup.by_tag(tag)
+    return jsonify([model_to_dict(b) for b in bg])
+
 @app.route('/data/pop/<tag>/<pop_type>')
 def data_population(tag, pop_type):
     pop = Population.by_tag_type(tag, pop_type)
@@ -69,7 +74,7 @@ def data_time(tag, score_type):
     # Now calculate the weighted average
     df = df[['score', 'date', 'value']].groupby("date").apply(lambda dfx: (dfx["value"] * dfx["score"]).sum() / dfx["value"].sum()).reset_index()
     df.columns = ['date', 'score']
-    print(df.head())
+    df['date'] = pd.to_datetime(df['date']).dt.date.astype(str)
     return jsonify(df.to_dict())
 
 

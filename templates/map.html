@@ -40,6 +40,55 @@
       </div>
   </div>
   <div class='container-main'>
+    <div class='container-sidebar'>
+      <div class='sidebar-title'>
+        <h2>Regional Context</h2>
+      </div>
+      <div class="dropdown-select">
+        <select id="zones" name="layer" title="Choose a portion of the region to display on the map." class="pretty" onchange="zoneChanged(value)">
+          <option value="all">Entire Region</option>
+          <option value="msa">Metropolitan Statistical Area</option>
+        </select>
+      </div>
+      <div class='sidebar-title'>
+        <h2>Choose a Measure to Display</h2>
+      </div>
+      <div class="dropdown-select">
+        <select id="layer" name="layer" title="Choose a score type to display on the map." class="pretty" onchange="measureChanged(value)">
+          <optgroup label="Cumulative Transit Access">
+            <option value="A_C000_c30_<DATE>_MP" selected>Jobs within 30 min, AM Peak</option>
+            <option value="A_C000_c45_<DATE>_MP">Jobs within 45 min, AM Peak</option>
+            <option value="A_C000_c60_<DATE>_MP">Jobs within 60 min, AM Peak</option>
+          </optgroup>
+          <optgroup label="Travel Times">
+            <option value="A_snap_time1_<DATE>_MP">Closest 1 SNAP, AM Peak</option>
+            <option value="A_snap_time3_<DATE>_MP">Closest 3 SNAP, AM Peak</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class='sidebar-title'>
+        <h2>Overlay Demogaphics</h2>
+      </div>
+      <div class="dropdown-select">
+        <select id="demo" name="layer" title="Choose a population overlap to add to the map." class="pretty" onchange="overlayChanged(value)">
+          <option value='none'>No Overlay</option>
+          <!-- <option value="all">1 dot = 500 people</option> -->
+          <option value="poverty">1 dot = 50 people below the poverty line</option>
+          <!-- <option value="poc">1 dot = 25 people of colour</option> -->
+        </select>
+      </div>
+      <div class='sidebar-title'>
+        <h2>Map Legend</h2>
+      </div>
+      <div id="legend">
+      </div>
+      <div class='sidebar-title'>
+        <h2>Context Plot</h2>
+      </div>
+      <div id="plot">
+      </div>
+    </div>
     <div class='container-top'>
       <div class='container-map'>
         <div id='loading'>LOADING</div>
@@ -49,50 +98,6 @@
               var zoom = '{{zoom}}';
               var bgURL = 'static/data/bg_{{region}}.geojson'
           </script>
-        </div>
-      </div>
-      <div class='container-sidebar'>
-        <div class='sidebar-title'>
-          <h2>Regional Context</h2>
-        </div>
-        <div class="dropdown-select">
-          <select id="zones" name="layer" title="Choose a portion of the region to display on the map." class="pretty" onchange="zoneSetChanged(value)">
-            <option value="all">Entire Region</option>
-            <option value="msa">Metropolitan Statistical Area</option>
-          </select>
-        </div>
-        <div class='sidebar-title'>
-          <h2>Choose a Measure to Display</h2>
-        </div>
-        <div class="dropdown-select">
-          <select id="layer" name="layer" title="Choose a score type to display on the map." class="pretty" onchange="measureChanged(value)">
-            <optgroup label="Cumulative Transit Access">
-              <option value="A_C000_c30_<DATE>_MP" selected>Jobs within 30 min, AM Peak</option>
-              <option value="A_C000_c45_<DATE>_MP">Jobs within 45 min, AM Peak</option>
-              <option value="A_C000_c60_<DATE>_MP">Jobs within 60 min, AM Peak</option>
-            </optgroup>
-            <optgroup label="Travel Times">
-              <option value="A_snap_time1_<DATE>_MP">Closest 1 SNAP, AM Peak</option>
-              <option value="A_snap_time3_<DATE>_MP">Closest 3 SNAP, AM Peak</option>
-            </optgroup>
-          </select>
-        </div>
-
-        <div class='sidebar-title'>
-          <h2>Overlay Demogaphics</h2>
-        </div>
-        <div class="dropdown-select">
-          <select id="demo" name="layer" title="Choose a population overlap to add to the map." class="pretty" onchange="overlayChanged(value)">
-            <option value='none'>No Overlay</option>
-            <option value="all">1 dot = 500 people</option>
-            <option value="poverty">1 dot = 50 people below the poverty line</option>
-            <option value="poc">1 dot = 25 people of colour</option>
-          </select>
-        </div>
-        <div class='sidebar-title'>
-          <h2>Map Legend</h2>
-        </div>
-        <div id="legend">
         </div>
       </div>
     </div>

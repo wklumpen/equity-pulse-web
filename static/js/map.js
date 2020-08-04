@@ -14,37 +14,57 @@
 // ==== 1. INITIALIZATIONS ====
 
 // Bottom chart dimensions and margins
-var chartMargin = {top: 10, right: 10, bottom: 35, left: 45}
-var chartBoxHeight = d3.select("#bottom-chart").node().getBoundingClientRect().height
-var chartBoxWidth = d3.select("#bottom-chart").node().getBoundingClientRect().width
-var chartHeight = chartBoxHeight - chartMargin.top - chartMargin.bottom
-var chartWidth = chartBoxWidth - chartMargin.left - chartMargin.right
+var bottomChartMargin = {top: 10, right: 20, bottom: 35, left: 60}
+var bottomChartBoxWidth = d3.select("#bottom-chart").node().getBoundingClientRect().width
+var bottomChartBoxHeight = d3.select("#bottom-chart").node().getBoundingClientRect().height
+var bottomChartWidth = bottomChartBoxWidth - bottomChartMargin.left - bottomChartMargin.right
+var bottomChartHeight = bottomChartBoxHeight - bottomChartMargin.top - bottomChartMargin.bottom
 
+// Legend dimensions and margins
 var legendMargin = {top: 10, right: 10, bottom: 10, left: 10}
-var legendBoxWidth = d3.select("#legend").node().getBoundingClientRect().height
-var legendBoxHeight = d3.select("#legend").node().getBoundingClientRect().width
+var legendBoxHeight = d3.select("#legend").node().getBoundingClientRect().height
+var legendBoxWidth = d3.select("#legend").node().getBoundingClientRect().width
 var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
 var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 
-var themeKey = 'access'
+// Plot chart dimensions and margins
+var plotMargin = {top: 10, right: 10, bottom: 35, left: 50}
+var plotBoxHeight = d3.select("#plot").node().getBoundingClientRect().height
+var plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
+var plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
+var plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
+
+// Keeping track of what data is currently displayed
 var zoneKey = 'all'
 var measureKey = 'A_C000_c30_<DATE>_MP'
-var demoKey = 'all'
+var overlayKey = 'all'
 var dateKey = '30062020'
-var popKey = null
+var tag = view['name']  // Keeps track of the geographical tag for the region
 
 var bgScore = {}
 var bgPop = {}
 
+var bg = null
+
 // TEMP Variable
 var scoreURL = "/data/score/" + view['name'] + "/" + measureKey.replace("<DATE>", dateKey)
 var popURL = null
+var timeURL = "/data/time/" + view['name'] + "/" + measureKey.replace("_<DATE>", "")
+console.log(timeURL)
 
-// Placeholder data for testing. Will be loaded
-var dateData = [new Date(2020, 1, 29), new Date(2020, 5, 30)]
+// Variables to hold the current data for visualization, etc.
+var scoreData = {'title': null, 'label': null, data: []}
+var overlayData = {'title': null, 'label': null, data: []}
+var timeData = {'title': null, 'label': null, data: []}
 
 // Array to hold layer groups for filtering
 var areaGroups = []
+
+// Define a date parsing function for the data
+var parseDate = d3.timeParse("%Y-%m-%d");
+
+// Placeholder data for testing. Will be loaded
+var dateData = [new Date(2020, 1, 29), new Date(2020, 5, 30)]
 
 // Loading splash (placeholder for now)
 var $loading = $('#loading').hide();
@@ -65,64 +85,39 @@ var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
 }).addTo(map);
 
-// Create SVG for the bottom chart
+// Create SVG for the time series chart on the bottom
 var bottomSvg = d3.select("#bottom-chart")
   .append('svg')
-  .attr("width", chartBoxWidth)
-  .attr("height", chartBoxHeight)
+  .attr("width", bottomChartBoxWidth)
+  .attr("height", bottomChartBoxHeight)
   .append('g')
-  .attr("transform", "translate(" + chartMargin.left + "," + chartMargin.top + ")");
+  .attr("transform", "translate(" + bottomChartMargin.left + "," + bottomChartMargin.top + ")");
 
-  // Create the legend SVG
+// Create the legend SVG
 var legendSvg = d3.select("#legend")
   .append('svg')
-  .attr("width", 318)
+  .attr("width", legendBoxWidth)
   .attr("height", legendBoxHeight)
   .append('g')
   .attr("transform", "translate(" + legendMargin.left + "," + legendMargin.top + ")");
 
-// Load the appropriate GeoJSON Data with an AJAX call
-var bg = new L.GeoJSON.AJAX(bgURL,{
-  style: bgStyleDefault,
-  onEachFeature: onEachBlockGroupFeature
-});
-
-// Divide the layer into different groups as needed for filtering
-// (Currently sorting based on GEOID as a placeholder)
-function onEachBlockGroupFeature(feature, layer){
-  // Determine data bounds
-  var type
-  if (parseInt(feature.properties.GEOID) % 2 == 0){
-    type = 'even'
-  }
-  else{
-    type = 'odd'
-  }
-
-  // Does layerGroup already exist? if not create it and add to map
-  var lg = areaGroups[type];
-
-  if (lg === undefined) {
-      lg = new L.layerGroup();
-      //add the layer to the map
-      lg.addTo(map);
-      //store layer
-      areaGroups[type] = lg;
-  }
-
-  //add the feature to the layer
-  lg.addLayer(layer);
-}
+// Create the plot SVG for the scatter/histogram plots
+var plotSvg = d3.select("#plot")
+  .append('svg')
+  .attr("width", plotBoxWidth)
+  .attr("height", plotBoxHeight)
+  .append('g')
+  .attr("transform", "translate(" + plotMargin.left + "," + plotMargin.top + ")")
 
 // Initiate the slider
 var sliderTime = d3
   .sliderBottom()
   .min(d3.min(dateData))
   .max(d3.max(dateData))
-  .width(chartWidth-100)
+  .width(bottomChartWidth)
   .tickFormat(d3.timeFormat('%b %d'))
   .tickValues(dateData)
-  .fill('#F58426')
+  .fill('#2d74ed')
   .marks(dateData) // Allows for irregular steps as needed
   .default(dateData[dateData.length - 1])
   .on('end', val => {
@@ -131,14 +126,27 @@ var sliderTime = d3
 
 var sliderSvg = d3.select('#time-slider')
   .append('svg')
-  .attr('width', chartWidth)
-  .attr('height', 100)
+  .attr('width', bottomChartBoxWidth)
+  .attr('height', 50)
   .append('g')
-  .attr('transform', 'translate(30,7)')
+  .attr('transform', 'translate(' + bottomChartMargin.left + ', 7)')
   .call(sliderTime)
 
-measureChanged(measureKey)
+initialize();
 
+function initialize(){
+  // Load the appropriate GeoJSON Data with an AJAX call
+  // First, we need to divide the map up into the appropriate areas
+
+  bg = new L.GeoJSON.AJAX(bgURL,{
+    style: bgStyleDefault,
+  }).addTo(map);
+
+  measureChanged(measureKey)
+}
+
+// Divide the layer into different groups as needed for filtering
+// (Currently sorting based on GEOID as a placeholder)
 // ==== 2. TRIGGERS AND EVENTS ====
 
 /**
@@ -147,7 +155,13 @@ measureChanged(measureKey)
 */
 function zoneChanged(newZoneKey){
   zoneKey = newZoneKey
-  console.log(zoneKey)
+  if (zoneKey == 'msa'){
+    tag = view['name'] + "-msa"
+  }
+  else{
+    tag = view['name']
+  }
+  measureChanged(measureKey);
 }
 
 /**
@@ -163,9 +177,11 @@ function measureChanged(newMeasureKey){
     bgScore = {}
 
     // Update the data URL
-    scoreURL = "/data/score/" + view['name'] + "/" + measureKey
+    scoreURL = "/data/score/" + tag + "/" + measureKey
+    // Update the time series URL
+    timeURL = "/data/time/" + tag + "/" + measureKey.replace("_" + dateKey, "")
 
-    console.log(scoreURL)
+    console.log(timeURL)
 
     // Load the data we need TODO: Only load if not already loaded?
     $.getJSON(scoreURL, function(data) {
@@ -177,13 +193,16 @@ function measureChanged(newMeasureKey){
     }).done( function (data) {
       var min = d3.min(score) // D3 ignores invalid data
       var max = d3.max(score)
+
+      score = score.filter(Boolean).sort(d3.ascending)
+      // console.log(score.filter(Boolean));
       
       bg.setStyle(function(feature){
         return {
           fillColor: getQuartileColor(bgScore[parseInt(feature.properties.GEOID)], score),
           color: getQuartileColor(bgScore[parseInt(feature.properties.GEOID)], score),
-          fillOpacity: 0.5,
-          opacity: 0.5
+          fillOpacity: 0.4,
+          opacity: 0.4
         }
       })
       if (measureKey.split("_")[1].charAt(0) == 'C'){
@@ -193,9 +212,20 @@ function measureChanged(newMeasureKey){
         setLegendBins(getQuartileLabels(score, "min"), "Travel Times");
       }
       
-      histogramBottom(score, 60, "Score", "Block Groups")
+      histogram(score, 10, "Score", "Block Groups")
     })
 
+    // Now let's grab the time series data also and update the time series plot
+    var timeSeriesData = []
+
+    $.getJSON(timeURL, function(data) {
+      $.each( data.date, function( key, val ) {
+        timeSeriesData.push({"date": parseDate(val), "score": parseFloat(data.score[key])})
+      });
+
+    }).done(function (data) {
+      timeSeriesBottom(timeSeriesData, "Date", "Score");
+    });
   }
 }
 
@@ -205,8 +235,8 @@ function overlayChanged(newOverlayKey){
   if (overlayKey == 'poverty'){
     var population = []
     var populations = {}
-    // Let's update the bottom plot for funzies.
-    popURL = "/data/pop/" + view['name'] + "/pop_poverty"
+    // Let's update the plot for funzies.
+    popURL = "/data/pop/" + tag + "/pop_poverty"
     $.getJSON(popURL, function(data) {
       $.each( data, function( key, val ) {
         bgPop[parseInt(val['block_group']['id'])] = parseFloat(val['value'])
@@ -214,15 +244,11 @@ function overlayChanged(newOverlayKey){
       });
 
     }).done( function (data) {
-      var min = d3.min(population) // D3 ignores invalid data
-      var max = d3.max(population)
-      // console.log(bgPop);
       var plotData = []
-      console.log(bgScore)
       for (var key of Object.keys(bgPop)) {
         plotData.push({'x': bgPop[key], 'y': bgScore[key]})
     }
-      scatterPlotBottom(plotData, "Number of People Below Poverty Line", "Travel Time (min)")
+      scatterPlot(plotData, "Number of People Below Poverty Line", "Travel Time (min)")
     });
   }
 
@@ -231,8 +257,12 @@ function overlayChanged(newOverlayKey){
     for (var key of Object.keys(bgScore)){
       plotData.push(bgPop[key])
     }
-    histogramBottom(plotData, 30, "Score", "# of Block Groups")
+    histogram(plotData, 10, "Score", "# of Block Groups")
   }
+}
+
+function updatePlot(){
+
 }
 
 /* Placeholder function for area filtering TO BE UPDATED AND REMOVED */
@@ -268,17 +298,17 @@ function sliderTrigger(value){
 * @param {String} xlabel The label for the x-axis
 * @param {String} ylabel The label for the y-axis
 */
-function histogramBottom(data, bins, xlabel, ylabel){
-  bottomSvg.selectAll("*").remove();
+function histogram(data, bins, xlabel, ylabel){
+  plotSvg.selectAll("*").remove();
 
   // Create the x range
   var x = d3.scaleLinear()
     .domain(d3.extent(data))
-    .rangeRound([0, chartWidth]);
+    .rangeRound([0, plotWidth]);
 
   // Create the y range
   var y = d3.scaleLinear()
-    .range([chartHeight, 0]);
+    .range([plotHeight, 0]);
 
   // Set the parameters for the histogram
   var histogram = d3.histogram()
@@ -291,7 +321,7 @@ function histogramBottom(data, bins, xlabel, ylabel){
   // Scale the range of the data in the y domain
   y.domain([0, d3.max(histBins, function(d) { return d.length; })]);
   // Append the bar rectangles to the svg element
-  bottomSvg.selectAll("rect")
+  plotSvg.selectAll("rect")
     .data(histBins)
     .enter().append("rect")
     .attr("class", "bar")
@@ -299,29 +329,29 @@ function histogramBottom(data, bins, xlabel, ylabel){
     .attr("transform", function(d) {
     return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
     .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-    .attr("height", function(d) { return chartHeight - y(d.length); });
+    .attr("height", function(d) { return plotHeight - y(d.length); });
 
   // Add the x-axis
-  bottomSvg.append("g")
-    .attr("transform", "translate(0," + chartHeight + ")")
+  plotSvg.append("g")
+    .attr("transform", "translate(0," + plotHeight + ")")
     .call(d3.axisBottom(x));
 
   // Add the y-axis
-  bottomSvg.append("g")
+  plotSvg.append("g")
     .call(d3.axisLeft(y));
 
   // Label the x-axis
-  bottomSvg.append("text")             
-    .attr("transform", "translate(" + (chartWidth/2) + " ," + (chartHeight + chartMargin.top + 18) + ")")
+  plotSvg.append("text")             
+    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 18) + ")")
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
     .text(xlabel);
 
   // Label the y-axis
-  bottomSvg.append("text")
+  plotSvg.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - chartMargin.left)
-    .attr("x",0 - (chartHeight / 2))
+    .attr("y", 0 - plotMargin.left)
+    .attr("x",0 - (plotHeight / 2))
     .attr("dy", "1em")
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
@@ -334,29 +364,28 @@ function histogramBottom(data, bins, xlabel, ylabel){
 * @param {String} xlabel The label for the x-axis
 * @param {String} ylabel The label for the y-axis
 */
-function scatterPlotBottom(data, xlabel, ylabel){
-  bottomSvg.selectAll("*").remove();
-  console.log(data)
+function scatterPlot(data, xlabel, ylabel){
+  plotSvg.selectAll("*").remove();
 
   // Add X axis
   var x = d3.scaleLinear()
     .domain(d3.extent(data, function(d) {return d.x}))
-    .range([0, chartWidth ]);
+    .range([0, plotWidth ]);
 
-  bottomSvg.append("g")
-    .attr("transform", "translate(0," + chartHeight + ")")
+    plotSvg.append("g")
+    .attr("transform", "translate(0," + plotHeight + ")")
     .call(d3.axisBottom(x));
 
   // Add Y axis
   var y = d3.scaleLinear()
     .domain(d3.extent(data, function(d) {return d.y}))
-    .range([ chartHeight, 0]);
+    .range([ plotHeight, 0]);
 
-  bottomSvg.append("g")
+    plotSvg.append("g")
     .call(d3.axisLeft(y));
 
   // Add dots
-  bottomSvg.append('g')
+  plotSvg.append('g')
     .selectAll("dot")
     .data(data)
     .enter()
@@ -368,8 +397,72 @@ function scatterPlotBottom(data, xlabel, ylabel){
     .style("opacity", 0.7)
 
   // Label the x-axis
-    bottomSvg.append("text")             
-    .attr("transform", "translate(" + (chartWidth/2) + " ," + (chartHeight + chartMargin.top + 18) + ")")
+  plotSvg.append("text")             
+    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 18) + ")")
+    .style("text-anchor", "middle")
+    .style('font-weight', 'bold')
+    .text(xlabel);
+
+  // Label the y-axis
+  plotSvg.append("text")
+    .attr("transform", "rotate(-90)")
+    .attr("y", 0 - plotMargin.left)
+    .attr("x",0 - (plotHeight / 2))
+    .attr("dy", "1em")
+    .style("text-anchor", "middle")
+    .style('font-weight', 'bold')
+    .text(ylabel); 
+}
+
+/**
+* Creates a time series plot in the bottom chart panel
+* @param {Array} data Array of values to chart
+*/
+function timeSeriesBottom(data, xlabel, ylabel){
+  bottomSvg.selectAll("*").remove();
+
+  var x = d3.scaleTime()
+    .domain(d3.extent(data, d => d.date))
+    .range([0, bottomChartWidth])
+  
+  bottomSvg.append("g")
+    .attr("transform", "translate(0," + bottomChartHeight + ")")
+    .call(d3.axisBottom(x));
+
+  var y = d3.scaleLinear()
+    .domain([0, d3.max(data, d => d.score)])
+    .range([ bottomChartHeight, 0]);
+
+  bottomSvg.append("g")
+    .call(d3.axisLeft(y));
+
+  // Add line for line char
+  bottomSvg.append("path")
+    .data([data])
+    .style('fill', 'none')
+    .style('stroke', 'black')
+    .style('stroke-width', "2px")
+    .attr('d', d3.line()
+      .x(d => x(d.date))
+      .y(d => y(d.score)
+      )
+    )
+
+  // Add circles to make things clearer
+  bottomSvg.append('g')
+    .selectAll("dot")
+    .data(data)
+    .enter()
+    .append("circle")
+    .attr("cx", d => x(d.date))
+    .attr("cy", d => y(d.score))
+    .attr("r", 7)
+    .style("fill", "#2d74ed")
+    .style("opacity", 0.7)
+
+    // Label the x-axis
+  bottomSvg.append("text")             
+    .attr("transform", "translate(" + (bottomChartWidth/2) + " ," + (bottomChartHeight + bottomChartMargin.top + 18) + ")")
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
     .text(xlabel);
@@ -377,8 +470,8 @@ function scatterPlotBottom(data, xlabel, ylabel){
   // Label the y-axis
   bottomSvg.append("text")
     .attr("transform", "rotate(-90)")
-    .attr("y", 0 - chartMargin.left)
-    .attr("x",0 - (chartHeight / 2))
+    .attr("y", 0 - bottomChartMargin.left)
+    .attr("x",0 - (bottomChartHeight / 2))
     .attr("dy", "1em")
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
@@ -401,8 +494,8 @@ function setLegendBins(bins, title){
     .enter()
     .append('circle')
     .attr('cx', legendMargin.left)
-    .attr('cy', function(d, i){return legendMargin.top + 20 + i*30})
-    .attr('r', 10)
+    .attr('cy', function(d, i){return legendMargin.top + 20 + i*20})
+    .attr('r', 6)
     .style('fill', d => d.color)
     .style('stroke', 'black')
   
@@ -411,7 +504,7 @@ function setLegendBins(bins, title){
     .enter()
     .append('text')
     .attr('x', legendMargin.left + 20)
-    .attr('y', function(d, i){return legendMargin.top + 20 + i*30})
+    .attr('y', function(d, i){return legendMargin.top + 20 + i*20})
     .style('fill', 'black')
     .text(d => d.label)
     .attr('text-anchor', 'left')
@@ -431,10 +524,10 @@ function setLegendBins(bins, title){
 // Style function for the block groups
 function bgStyleDefault(feature) {
   return {
-    fillColor: 'blue',
+    fillColor: 'none',
     weight: 1,
     opacity: 0.1,
-    color: 'blue',
+    color: 'none',
     fillOpacity: 0.2
   };
 }
@@ -469,24 +562,24 @@ function getFiveBinColor(d, min, max) {
 }
 
 /**
- * Get a color scheme based on five equal ranges.
+ * Get a color scheme based on five equal ranges. Note that the `data` array
+ * passed to the function must have all NaN's removed and have been sorted,
+ * ideally using d3.ascending.
  * @param {*} d Value to colorize
- * @param {Array} data Entire dataset to use for quartiles.
+ * @param {Array} data Sorted, clean dataset to use for quartiles.
  */
 function getQuartileColor(d, data) {
-  data = data.sort(d3.ascending)
-  // Handle NAN Values
+  // Handle NAN Value label
   if(isNaN(d)){
     return "#717678";
   }
   else {
-    return  d > d3.quantile(data, 0.75) ? "#810f7c": 
-    d > d3.quantile(data, 0.5) ? "#8856a7":
-    d > d3.quantile(data, 0.25) ? "#8c96c6":
+    return  d >= d3.quantile(data, 0.75) ? "#810f7c": 
+    d >= d3.quantile(data, 0.5) ? "#8856a7":
+    d >= d3.quantile(data, 0.25) ? "#8c96c6":
     "#edf8fb";
   }
 }
-
 
 /**
  * Get color scheme labels on five equal ranges.
@@ -509,12 +602,13 @@ function getFiveBinLabels(min, max, unit){
  * @param {Number} data Data to quartile.
  */
 function getQuartileLabels(data, unit){
-  data = data.sort(d3.ascending)
+  // Drop out the NaNs
+  data = data.filter(Boolean)
   return [
     {'label': styleNumbers(d3.quantile(data, 0)) + " to " + styleNumbers(d3.quantile(data, 0.25)) + " " + unit, 'color': '#edf8fb'},
     {'label': styleNumbers(d3.quantile(data, 0.25)) + " to " + styleNumbers(d3.quantile(data, 0.50))+ " " + unit, 'color': '#b3cde3'},
     {'label': styleNumbers(d3.quantile(data, 0.50)) + " to " + styleNumbers(d3.quantile(data, 0.75))+ " " + unit, 'color': '#8c96c6'},
-    {'label': styleNumbers(d3.quantile(data, 0.75)) + " to " + styleNumbers(d3.quantile(data, 1.0))+ " " + unit, 'color': '#8856a7'},
+    {'label': "More than " + styleNumbers(d3.quantile(data, 0.75)) + " " + unit, 'color': '#8856a7'},
     {'label': "No data", 'color': '#717678'},
   ]
 }
