@@ -2,7 +2,7 @@ import json
 import sys
 
 # Temporary path to project
-sys.path.append(r"C:\Users\Willem\Documents\Project\TransitCenter\TransitCenter\utils")
+# sys.path.append(r"C:\Users\Willem\Documents\Project\TransitCenter\TransitCenter\utils")
 
 # Third Party Modules
 from flask import Flask, render_template, jsonify
