@@ -15,14 +15,13 @@ body{
 
 /* Container for the header */
 .container-header{
-    height: 60px;
     background-color: #2d74ed;
     color: white;
 }
 
 /* Container for the content */
 .container-main{
-    height: calc(100vh - 60px);
+    height: calc(100vh - 50px);
     position: relative;
 }
 
@@ -32,7 +31,7 @@ body{
 }
 
 .container-bottom{
-    height: 166px;
+    height: 176px;
     width: calc(100% - 420px);
     border-top: 2px black solid;
     float:left;
@@ -109,7 +108,7 @@ body{
 }
 
 #bottom-chart{
-    height: 148px;
+    height: 158px;
 }
 
 #legend{
@@ -174,3 +173,26 @@ body{
 .select-css option {
 	font-weight:normal;
 }
+
+/* Add a black background color to the top navigation */
+.topnav {
+    background-color: #2d74ed;
+    overflow: hidden;
+    height: 50px;
+  }
+  
+  /* Style the links inside the navigation bar */
+  .topnav a {
+    float: left;
+    color: #f2f2f2;
+    text-align: center;
+    padding: 16px 16px;
+    text-decoration: none;
+    font-size: 17px;
+  }
+  
+  /* Change the color of links on hover */
+  .topnav a:hover {
+    background-color: #2db0ed;
+    color: white;
+  }

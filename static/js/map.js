@@ -312,7 +312,8 @@ function updateMap(){
       fillColor: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
       color: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
       fillOpacity: 0.4,
-      opacity: 0.4
+      weight: 1.1,
+      opacity: 0.2
     }
   })
   // Update the legend accordingly
@@ -685,7 +686,6 @@ function getQuartileLabels(data, unit){
     {'label': "No data", 'color': '#717678'},
   ]
 }
-
 
 function styleNumbers(val){
   if (Math.abs(val) >= 1000){
