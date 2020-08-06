@@ -51,6 +51,11 @@ var state = {
     'unit': null, 
     data: {} //Format of data[<block_group_id>] = people/hhld
   },
+  'dot': {
+    'url': null,
+    data: {},
+    group: null
+  },
   'time': {
     'url': null,  // Used for API lookups
     'title': null, 
@@ -258,14 +263,32 @@ function loadOverlayData(){
   }
 }
 
+function loadDotData(){
+  if (state['dot']['url'] != null){
+    $.getJSON(state['dot']['url'], function(data) {
+      $.each( data, function( key, val ) {
+        state['dot']['data'][parseInt(val['block_group']['id'])] = {'x': parseFloat(val['x']), 'y': parseFloat(val['y'])}
+      });
+    }).done( function (data) {
+      console.log(state['dot']['data'])
+      dotMap()
+    });
+  }
+}
+
 function overlayChanged(newOverlayKey){
   if (newOverlayKey == 'poverty'){
     state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
+    state['dot']['url'] = "/data/dot/" + state['tag'] + "/pop_poverty"
   }
   else if (newOverlayKey == 'none'){
     state['overlay']['url'] = null;
+    state['dot']['url'] = null;
+    map.removeLayer(state['dot']['group'])
+    state['dot']['group'] = null;
   }
   loadOverlayData();
+  loadDotData();
 }
 
 function updateMap(){
@@ -286,6 +309,22 @@ function updateMap(){
   })
   // Update the legend accordingly
   setLegendBins(getQuartileLabels(score, state['score']['unit']), state['score']['label']);
+}
+
+function dotMap(){
+  var dots = []
+  for (var key of Object.keys(state['dot']['data'])) {
+    state['dot']['data'][key]['x']
+    dots.push(new L.circle([state['dot']['data'][key]['y'],state['dot']['data'][key]['x']], 
+      {
+        radius: 60,
+        color: '#000000',
+        weight: 0.8
+      }))
+  }
+  overlay = L.layerGroup(dots)
+  state['dot']['group'] = overlay
+  state['dot']['group'].addTo(map);
 }
 
 function updatePlot(){

@@ -13,7 +13,7 @@ import pandas as pd
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup
+from db import Score, Population, BlockGroup, Dot
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -76,6 +76,11 @@ def data_time(tag, score_type):
     df.columns = ['date', 'score']
     df['date'] = pd.to_datetime(df['date']).dt.date.astype(str)
     return jsonify(df.to_dict())
+
+@app.route('/data/dot/<tag>/<pop_type>')
+def data_dot(tag, pop_type):
+    dots = Dot.by_tag_type(tag, pop_type)
+    return jsonify([model_to_dict(d) for d in dots])
 
 
 if __name__ == '__main__':

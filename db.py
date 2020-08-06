@@ -9,7 +9,7 @@ from datetime import date, datetime
 from peewee import Model, SqliteDatabase, TextField, ForeignKeyField, IntegerField, FloatField, DateField, chunked
 import pandas as pd
 
-database = SqliteDatabase(r'C:\Users\Willem\Documents\Project\TransitCenter\TransitCenter\results.db') # Temporary sqlite DB instance
+database = SqliteDatabase(r'results.db') # Temporary sqlite DB instance
 
 class BaseModel(Model):
     class Meta:
@@ -222,10 +222,59 @@ class BlockGroupTag(BaseModel):
     block_group = ForeignKeyField(BlockGroup, backref='block_group_tags')
     tag = ForeignKeyField(Tag, backref='block_group_tags')
 
+
+class Dot(BaseModel):
+    block_group = ForeignKeyField(BlockGroup, backref='dots')
+    population_type = ForeignKeyField(PopulationType, backref='dots')
+    x = FloatField()
+    y = FloatField()
+
+
+    @staticmethod
+    def by_tag_type(tag, pop_type):
+        return (Dot.select(Dot.block_group_id, Dot.x, Dot.y)
+                .join(PopulationType)
+                .where(PopulationType.name == pop_type)
+                .switch(Dot)
+                .join(BlockGroup)
+                .join(BlockGroupTag)
+                .join(Tag)
+                .where(Tag.name == tag))
+
+    @staticmethod
+    def dots_from_csv(filepath):
+        df = pd.read_csv(filepath, dtype={'block_group_id': 'Int64'})
+        types = dict()
+        # Packgage up the types
+        for name in df['var'].unique():
+            pt, new = PopulationType.get_or_create(name=name, description=name)
+            types[name] = pt
+        
+        # Now let's add them in
+        to_insert = []
+        for idx, dot_row in df.iterrows():
+            if idx % 10000 == 0:
+                print(f"{idx} rows packaged")
+            insert_row = dict()
+            insert_row['block_group_id'] = dot_row['block_group_id']
+            insert_row['population_type_id'] = types[dot_row['var']].id
+            insert_row['x'] = dot_row['x']
+            insert_row['y'] = dot_row['y']
+            to_insert.append(insert_row)
+        
+        with database.atomic():
+                for batch in chunked(to_insert, 200):
+                    Dot.insert_many(batch).execute()
+        
+
 def create_tables():
     database.connect()
-    database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag])
+    database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag, Dot])
+    database.close()
 
 if __name__ == "__main__":
     database.connect()
-    database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag])
+    database.drop_tables([Dot])
+    database.close()
+    create_tables()
+    Dot.dots_from_csv(r"C:\Users\Willem\Documents\Project\TransitCenter\demo_dots.csv")
