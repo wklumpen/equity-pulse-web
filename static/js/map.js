@@ -53,8 +53,6 @@ var state = {
   },
   'dot': {
     'url': null,
-    data: {},
-    group: null
   },
   'time': {
     'url': null,  // Used for API lookups
@@ -71,7 +69,8 @@ var state = {
 // var overlayKey = 'all'
 // var startDate = '30062020'
 
-var bg = null
+var bgLayer = null
+var overlayLayer = null
 
 // TEMP Variable
 state['score']['url'] = "/data/score/" + state['tag'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("<DATE>", state['date'])
@@ -79,9 +78,9 @@ var popURL = null
 state['time']['url'] = "/data/time/" + view['name'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("_<DATE>", "")
 
 // Variables to hold the current data for visualization, etc.
-var scoreData = {'title': null, 'label': null, data: []}
-var overlayData = {'title': null, 'label': null, data: []}
-var timeData = {'title': null, 'label': null, data: []}
+// var scoreData = {'title': null, 'label': null, data: []}
+// var overlayData = {'title': null, 'label': null, data: []}
+// var timeData = {'title': null, 'label': null, data: []}
 
 // Array to hold layer groups for filtering
 var areaGroups = []
@@ -162,11 +161,13 @@ initialize();
 
 function initialize(){
   // Load the appropriate GeoJSON Data with an AJAX call
-  bg = new L.GeoJSON.AJAX(bgURL,{
+  bgLayer = new L.GeoJSON.AJAX(bgURL,{
     style: bgStyleDefault,
   }).addTo(map);
 
-  loadMapData();
+  bgLayer.on('data:loaded', function() {
+    loadMapData();
+  })
   loadTimeData();
 }
 
@@ -247,8 +248,7 @@ function loadTimeData(){
 }
 
 function loadOverlayData(){
-  //
-  // Let's update the plot for funzies.
+  // Let's update the plot for funzies
   if (state['overlay']['url'] != null){
     $.getJSON(state['overlay']['url'], function(data) {
       $.each( data, function( key, val ) {
@@ -265,27 +265,35 @@ function loadOverlayData(){
 
 function loadDotData(){
   if (state['dot']['url'] != null){
-    $.getJSON(state['dot']['url'], function(data) {
-      $.each( data, function( key, val ) {
-        state['dot']['data'][parseInt(val['block_group']['id'])] = {'x': parseFloat(val['x']), 'y': parseFloat(val['y'])}
-      });
-    }).done( function (data) {
-      console.log(state['dot']['data'])
-      dotMap()
-    });
+    var geojsonMarkerOptions = {
+      radius: 1.5,
+      fillColor: "#000000",
+      color: "#000",
+      weight: 0,
+      fillOpacity: 0.3
+    };
+
+    overlayLayer = new L.GeoJSON.AJAX(state['dot']['url'], {
+      pointToLayer: function (feature, latlng) {
+        return L.circleMarker(latlng, geojsonMarkerOptions);
+      }
+    }).addTo(map);
   }
+  else if (overlayLayer != null){
+    map.removeLayer(overlayLayer)
+  }
+
 }
 
 function overlayChanged(newOverlayKey){
   if (newOverlayKey == 'poverty'){
     state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
-    state['dot']['url'] = "/data/dot/" + state['tag'] + "/pop_poverty"
+    state['dot']['url'] = "/static/data/pop_poverty_" + state['tag'] + ".geojson"
+    console.log(state['dot']['url'])
   }
   else if (newOverlayKey == 'none'){
     state['overlay']['url'] = null;
     state['dot']['url'] = null;
-    map.removeLayer(state['dot']['group'])
-    state['dot']['group'] = null;
   }
   loadOverlayData();
   loadDotData();
@@ -299,7 +307,7 @@ function updateMap(){
   score = score.filter(Boolean).sort(d3.ascending)
   
   // Style the map
-  bg.setStyle(function(feature){
+  bgLayer.setStyle(function(feature){
     return {
       fillColor: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
       color: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
@@ -309,22 +317,6 @@ function updateMap(){
   })
   // Update the legend accordingly
   setLegendBins(getQuartileLabels(score, state['score']['unit']), state['score']['label']);
-}
-
-function dotMap(){
-  var dots = []
-  for (var key of Object.keys(state['dot']['data'])) {
-    state['dot']['data'][key]['x']
-    dots.push(new L.circle([state['dot']['data'][key]['y'],state['dot']['data'][key]['x']], 
-      {
-        radius: 60,
-        color: '#000000',
-        weight: 0.8
-      }))
-  }
-  overlay = L.layerGroup(dots)
-  state['dot']['group'] = overlay
-  state['dot']['group'].addTo(map);
 }
 
 function updatePlot(){
@@ -598,6 +590,18 @@ function bgStyleDefault(feature) {
     opacity: 0.1,
     color: 'none',
     fillOpacity: 0.2
+  };
+}
+
+// Style function for the overlay dots
+function dotStyle(feature) {
+  return {
+    radius: 8,
+    fillColor: "#ff7800",
+    color: "#000",
+    weight: 1,
+    opacity: 1,
+    fillOpacity: 0.8
   };
 }
 
