@@ -28,19 +28,22 @@ var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
 var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 
 // Plot chart dimensions and margins
-var plotMargin = {top: 10, right: 10, bottom: 35, left: 50}
+var plotMargin = {top: 10, right: 10, bottom: 50, left: 60}
 var plotBoxHeight = d3.select("#plot").node().getBoundingClientRect().height
 var plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
 var plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
 var plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
+
+// Color schemes
+var YlGnBu = ["#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"]
 
 // All of the information for the current application state is kept in here
 var state = {
   'tag': view['name'], // The geographical region tag
   'score': { // Information about the "score" or "measure"
     'url': null,  // Used for API lookups
-    'title': 'Access to Jobs', 
-    'label': "Access to Jobs",
+    'title': 'Access to Jobs in 30 minutes', 
+    'label': "Jobs Accessible",
     'unit': 'jobs', 
     data: {} // Format of data[<block_group_id>] = score
   }, 
@@ -206,11 +209,11 @@ function measureChanged(newMeasureKey){
 
   // Update the labels
   if (newMeasureKey.split("_")[1].charAt(0) == 'C'){
-    state['score']['label'] = 'Access to Jobs'
+    state['score']['label'] = 'Jobs Accessible (jobs)'
     state['score']['unit'] = 'jobs'
   }
   else{
-    state['score']['label'] == 'Travel Times'
+    state['score']['label'] == 'Travel Time (min)'
     state['score']['unit'] = 'min'
   }
 
@@ -288,8 +291,10 @@ function loadDotData(){
 function overlayChanged(newOverlayKey){
   if (newOverlayKey == 'poverty'){
     state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
+    state['overlay']['label'] = "Number of people in poverty"
+    state['overlay']['title'] = "People below the poverty line"
+    state['overlay']['unit'] = 'people'
     state['dot']['url'] = "/static/data/pop_poverty_" + state['tag'] + ".geojson"
-    console.log(state['dot']['url'])
   }
   else if (newOverlayKey == 'none'){
     state['overlay']['url'] = null;
@@ -328,14 +333,14 @@ function updatePlot(){
     for (var s in state['score']['data']){
       score.push(state['score']['data'][s])
     }
-    histogram(score, 10, "Score", "# of Block Groups")
+    histogram(score, 10, state['score']['label'], "# of Block Groups")
   }
   else {
     var plotData = []
     for (var key of Object.keys(state['overlay']['data'])) {
       plotData.push({'x': state['overlay']['data'][key], 'y': state['score']['data'][key]})
     }
-    scatterPlot(plotData, "Number of People Below Poverty Line", "Travel Time (min)")
+    scatterPlot(plotData, state['overlay']['label'], state['score']['label'])
   }
 }
 
@@ -396,7 +401,13 @@ function histogram(data, bins, xlabel, ylabel){
   // Add the x-axis
   plotSvg.append("g")
     .attr("transform", "translate(0," + plotHeight + ")")
-    .call(d3.axisBottom(x));
+    .call(d3.axisBottom(x))
+    .selectAll("text")
+    .attr("y", 0)
+    .attr("x", 9)
+    .attr("dy", ".35em")
+    .attr("transform", "rotate(45)")
+    .style("text-anchor", "start");
 
   // Add the y-axis
   plotSvg.append("g")
@@ -404,7 +415,7 @@ function histogram(data, bins, xlabel, ylabel){
 
   // Label the x-axis
   plotSvg.append("text")             
-    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 18) + ")")
+    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 38) + ")")
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
     .text(xlabel);
@@ -648,10 +659,10 @@ function getQuartileColor(d, data) {
     return "#717678";
   }
   else {
-    return  d >= d3.quantile(data, 0.75) ? "#810f7c": 
-    d >= d3.quantile(data, 0.5) ? "#8856a7":
-    d >= d3.quantile(data, 0.25) ? "#8c96c6":
-    "#edf8fb";
+    return  d >= d3.quantile(data, 0.75) ? YlGnBu[1]: 
+    d >= d3.quantile(data, 0.5) ? YlGnBu[2]:
+    d >= d3.quantile(data, 0.25) ? YlGnBu[3]:
+    YlGnBu[4];
   }
 }
 
@@ -679,10 +690,10 @@ function getQuartileLabels(data, unit){
   // Drop out the NaNs
   data = data.filter(Boolean)
   return [
-    {'label': styleNumbers(d3.quantile(data, 0)) + " to " + styleNumbers(d3.quantile(data, 0.25)) + " " + unit, 'color': '#edf8fb'},
-    {'label': styleNumbers(d3.quantile(data, 0.25)) + " to " + styleNumbers(d3.quantile(data, 0.50))+ " " + unit, 'color': '#b3cde3'},
-    {'label': styleNumbers(d3.quantile(data, 0.50)) + " to " + styleNumbers(d3.quantile(data, 0.75))+ " " + unit, 'color': '#8c96c6'},
-    {'label': "More than " + styleNumbers(d3.quantile(data, 0.75)) + " " + unit, 'color': '#8856a7'},
+    {'label': styleNumbers(d3.quantile(data, 0)) + " to " + styleNumbers(d3.quantile(data, 0.25)) + " " + unit, 'color': YlGnBu[4]},
+    {'label': styleNumbers(d3.quantile(data, 0.25)) + " to " + styleNumbers(d3.quantile(data, 0.50))+ " " + unit, 'color': YlGnBu[3]},
+    {'label': styleNumbers(d3.quantile(data, 0.50)) + " to " + styleNumbers(d3.quantile(data, 0.75))+ " " + unit, 'color': YlGnBu[2]},
+    {'label': "More than " + styleNumbers(d3.quantile(data, 0.75)) + " " + unit, 'color': YlGnBu[1]},
     {'label': "No data", 'color': '#717678'},
   ]
 }
