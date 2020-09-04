@@ -36,6 +36,7 @@ var plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
 
 // Color schemes
 var YlGnBu = ["#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"]
+var YlGnBu7 = ["#ffffcc", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84"]
 
 // All of the information for the current application state is kept in here
 var state = {
@@ -294,7 +295,7 @@ function overlayChanged(newOverlayKey){
     state['overlay']['label'] = "Number of people in poverty"
     state['overlay']['title'] = "People below the poverty line"
     state['overlay']['unit'] = 'people'
-    state['dot']['url'] = "/static/data/pop_poverty_" + state['tag'] + ".geojson"
+    state['dot']['url'] = "/static/data/pop_poverty_" + view['name'] + ".geojson"
   }
   else if (newOverlayKey == 'none'){
     state['overlay']['url'] = null;
@@ -312,17 +313,21 @@ function updateMap(){
   score = score.filter(Boolean).sort(d3.ascending)
   
   // Style the map
+  // For jenks, we'll need to calculate the breaks once for the data
+  var breaks = jenks(score, 6)
   bgLayer.setStyle(function(feature){
     return {
-      fillColor: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
-      color: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
+      // fillColor: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
+      // color: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
+      fillColor: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, YlGnBu7),
+      color: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, YlGnBu7),
       fillOpacity: 0.4,
       weight: 1.1,
       opacity: 0.2
     }
   })
   // Update the legend accordingly
-  setLegendBins(getQuartileLabels(score, state['score']['unit']), state['score']['label']);
+  setLegendBins(getSevenBreaksLabels(breaks, YlGnBu7, state['score']['unit']), state['score']['label']);
 }
 
 function updatePlot(){
@@ -333,7 +338,7 @@ function updatePlot(){
     for (var s in state['score']['data']){
       score.push(state['score']['data'][s])
     }
-    histogram(score, 10, state['score']['label'], "# of Block Groups")
+    histogram(score, 50, state['score']['label'], "# of Block Groups")
   }
   else {
     var plotData = []
@@ -367,6 +372,9 @@ function sliderTrigger(value){
 */
 function histogram(data, bins, xlabel, ylabel){
   plotSvg.selectAll("*").remove();
+  console.log(data)
+  data = data.filter(Boolean)
+  breaks = jenks(data, 6)
 
   // Create the x range
   var x = d3.scaleLinear()
@@ -394,9 +402,12 @@ function histogram(data, bins, xlabel, ylabel){
     .attr("class", "bar")
     .attr("x", 1)
     .attr("transform", function(d) {
-    return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
+      return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
     .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-    .attr("height", function(d) { return plotHeight - y(d.length); });
+    .attr("height", function(d) { return plotHeight - y(d.length); })
+    .style('fill', function(d) {
+      return getSevenBreaksColor(d.x0, breaks, YlGnBu7)
+    });
 
   // Add the x-axis
   plotSvg.append("g")
@@ -666,6 +677,36 @@ function getQuartileColor(d, data) {
   }
 }
 
+function getFiveJenksColor(d, breaks) {
+  // Handle NAN Value label
+  if(isNaN(d)){
+    return "#717678";
+  }
+  else {
+    return  d >= breaks[3] ? YlGnBu[0]: 
+    d >= breaks[2] ? YlGnBu[1]:
+    d >= breaks[1] ? YlGnBu[2]:
+    d >= breaks[0] ? YlGnBu[3]:
+    YlGnBu[4];
+  }
+}
+
+function getSevenBreaksColor(d, breaks, colors) {
+  // Handle NAN Value label
+  if(isNaN(d)){
+    return "#717678";
+  }
+  else {
+    return  d >= breaks[5] ? colors[0]:
+    d >= breaks[4] ? colors[1]:
+    d >= breaks[3] ? colors[2]:
+    d >= breaks[2] ? colors[3]:
+    d >= breaks[1] ? colors[4]:
+    d >= breaks[0] ? colors[5]:
+    colors[6];
+  }
+}
+
 /**
  * Get color scheme labels on five equal ranges.
  * @param {Number} min Minimum value in data range
@@ -694,6 +735,19 @@ function getQuartileLabels(data, unit){
     {'label': styleNumbers(d3.quantile(data, 0.25)) + " to " + styleNumbers(d3.quantile(data, 0.50))+ " " + unit, 'color': YlGnBu[3]},
     {'label': styleNumbers(d3.quantile(data, 0.50)) + " to " + styleNumbers(d3.quantile(data, 0.75))+ " " + unit, 'color': YlGnBu[2]},
     {'label': "More than " + styleNumbers(d3.quantile(data, 0.75)) + " " + unit, 'color': YlGnBu[1]},
+    {'label': "No data", 'color': '#717678'},
+  ]
+}
+
+function getSevenBreaksLabels(breaks, color, unit){
+  return [
+    {'label': styleNumbers(breaks[0]) + " to " + styleNumbers(breaks[1]) + " " + unit, 'color': color[6]},
+    {'label': styleNumbers(breaks[1]) + " to " + styleNumbers(breaks[2])+ " " + unit, 'color': color[5]},
+    {'label': styleNumbers(breaks[2]) + " to " + styleNumbers(breaks[3])+ " " + unit, 'color': color[4]},
+    {'label': styleNumbers(breaks[3]) + " to " + styleNumbers(breaks[4])+ " " + unit, 'color': color[3]},
+    {'label': styleNumbers(breaks[4]) + " to " + styleNumbers(breaks[5])+ " " + unit, 'color': color[2]},
+    {'label': styleNumbers(breaks[5]) + " to " + styleNumbers(breaks[6])+ " " + unit, 'color': color[1]},
+    {'label': "More than " + styleNumbers(breaks[6]) + " " + unit, 'color': color[0]},
     {'label': "No data", 'color': '#717678'},
   ]
 }
