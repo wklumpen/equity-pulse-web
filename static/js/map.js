@@ -28,7 +28,7 @@ var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
 var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 
 // Plot chart dimensions and margins
-var plotMargin = {top: 10, right: 10, bottom: 50, left: 60}
+var plotMargin = {top: 10, right: 10, bottom: 50, left: 70}
 var plotBoxHeight = d3.select("#plot").node().getBoundingClientRect().height
 var plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
 var plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
@@ -169,6 +169,14 @@ function initialize(){
     style: bgStyleDefault,
   }).addTo(map);
 
+  transitLayer = new L.GeoJSON.AJAX('static/data/' + view['name'] + '_transit.geojson', {
+    style: {
+      color: '#3F3F3F',
+      opaicty: 0.5,
+      weight: 1
+    }
+  }).addTo(map)
+
   bgLayer.on('data:loaded', function() {
     loadMapData();
   })
@@ -214,7 +222,7 @@ function measureChanged(newMeasureKey){
     state['score']['unit'] = 'jobs'
   }
   else{
-    state['score']['label'] == 'Travel Time (min)'
+    state['score']['label'] = 'Travel Time (min)'
     state['score']['unit'] = 'min'
   }
 
@@ -295,7 +303,7 @@ function overlayChanged(newOverlayKey){
     state['overlay']['label'] = "Number of people in poverty"
     state['overlay']['title'] = "People below the poverty line"
     state['overlay']['unit'] = 'people'
-    state['dot']['url'] = "/static/data/pop_poverty_" + view['name'] + ".geojson"
+    state['dot']['url'] = "/static/data/" + view['name'] + "_pop_poverty.geojson"
   }
   else if (newOverlayKey == 'none'){
     state['overlay']['url'] = null;
@@ -303,6 +311,19 @@ function overlayChanged(newOverlayKey){
   }
   loadOverlayData();
   loadDotData();
+}
+
+function transitToggle(value){
+  if (document.getElementById('transitToggle').checked){
+    transitLayer.setStyle({
+      weight: 1
+    })
+  }
+  else{
+    transitLayer.setStyle({
+      weight: 0
+    })
+  }
 }
 
 function updateMap(){
@@ -335,17 +356,18 @@ function updatePlot(){
   if (state['overlay']['url'] == null){
     // We do a histogram
     var score = []
+    // console.log(state['score']['data'])
     for (var s in state['score']['data']){
       score.push(state['score']['data'][s])
     }
-    histogram(score, 50, state['score']['label'], "# of Block Groups")
+    histogramPlot(state['score']['data'], 50, state['score']['label'], "Population")
   }
   else {
     var plotData = []
     for (var key of Object.keys(state['overlay']['data'])) {
-      plotData.push({'x': state['overlay']['data'][key], 'y': state['score']['data'][key]})
+      plotData.push({'x': state['score']['data'][key], 'y': state['overlay']['data'][key]})
     }
-    scatterPlot(plotData, state['overlay']['label'], state['score']['label'])
+    scatterPlot(plotData, state['score']['label'], state['overlay']['label'])
   }
 }
 
@@ -370,76 +392,145 @@ function sliderTrigger(value){
 * @param {String} xlabel The label for the x-axis
 * @param {String} ylabel The label for the y-axis
 */
-function histogram(data, bins, xlabel, ylabel){
+function histogramPlot(data, bins, xlabel, ylabel){
   plotSvg.selectAll("*").remove();
-  console.log(data)
-  data = data.filter(Boolean)
-  breaks = jenks(data, 6)
+  var popData = []
 
-  // Create the x range
-  var x = d3.scaleLinear()
-    .domain(d3.extent(data))
-    .rangeRound([0, plotWidth]);
+  var plotData = []
 
-  // Create the y range
-  var y = d3.scaleLinear()
-    .range([plotHeight, 0]);
+  // Gotta load the population data from the API
+  $.getJSON("data/pop/" + state['tag'] + "/pop_total", function(dta) {
+    $.each( dta, function( key, val ) {
+      // popData[parseInt(val['block_group']['id'])] =
+      plotData.push(
+        {
+          'id': parseInt(val['block_group']['id']),
+          'score': data[parseInt(val['block_group']['id'])], 
+          'pop' : parseFloat(val['value'])
+        }
+      )         
+      });
+  }).done( function (dta) {
 
-  // Set the parameters for the histogram
-  var histogram = d3.histogram()
+    // Remove some undefined
+    plotData.forEach(d => {
+      if (d['score'] === undefined) {
+        delete d
+      }
+    });
+
+    // Create the x range
+    var x = d3.scaleLinear()
+      .domain(d3.extent(plotData, d => d.score))
+      .rangeRound([0, plotWidth]);
+
+    // Use the histogram function to get some bins
+    var histogram = d3.histogram()
+    .value(d => d.score)
     .domain(x.domain())
     .thresholds(x.ticks(bins));
 
-  // Group the data for the bars
-  var histBins = histogram(data);
-
-  // Scale the range of the data in the y domain
-  y.domain([0, d3.max(histBins, function(d) { return d.length; })]);
-  // Append the bar rectangles to the svg element
-  plotSvg.selectAll("rect")
-    .data(histBins)
-    .enter().append("rect")
-    .attr("class", "bar")
-    .attr("x", 1)
-    .attr("transform", function(d) {
-      return "translate(" + x(d.x0) + "," + y(d.length) + ")"; })
-    .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
-    .attr("height", function(d) { return plotHeight - y(d.length); })
-    .style('fill', function(d) {
-      return getSevenBreaksColor(d.x0, breaks, YlGnBu7)
+    // Group the data for the bars
+    var histBins = histogram(plotData);
+    histBins.forEach(h =>{
+        h.totPop = 0
     });
+    // Now we go through and sum the total population in each bin
+    plotData.forEach(d => {
+      histBins.forEach(h =>{
+        if ((d.score > h.x0) & (d.score <= h.x1)){
+          h.totPop += parseInt(d.pop)
+        }
+      })
+    })
 
-  // Add the x-axis
-  plotSvg.append("g")
-    .attr("transform", "translate(0," + plotHeight + ")")
-    .call(d3.axisBottom(x))
-    .selectAll("text")
-    .attr("y", 0)
-    .attr("x", 9)
-    .attr("dy", ".35em")
-    .attr("transform", "rotate(45)")
-    .style("text-anchor", "start");
+    // Create breaks for jenks scaling and colors
+    jenksData = Array.from(plotData, d => d.score)
+    jenksData = jenksData.filter(Boolean).sort(d3.ascending)
+    breaks = jenks(jenksData, 6)
 
-  // Add the y-axis
-  plotSvg.append("g")
-    .call(d3.axisLeft(y));
+    // Create the y range
+    var y = d3.scaleLinear()
+      .range([plotHeight, 0]);
 
-  // Label the x-axis
-  plotSvg.append("text")             
-    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 38) + ")")
-    .style("text-anchor", "middle")
-    .style('font-weight', 'bold')
-    .text(xlabel);
+    // Scale the range of the data in the y domain
+    y.domain([0, d3.max(histBins, h => h.totPop)]);
+    // Append the bar rectangles to the svg element
 
-  // Label the y-axis
-  plotSvg.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 0 - plotMargin.left)
-    .attr("x",0 - (plotHeight / 2))
-    .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .style('font-weight', 'bold')
-    .text(ylabel);  
+    console.log(histBins)
+    plotSvg.selectAll("rect")
+      .data(histBins)
+      .enter().append("rect")
+      .attr("class", "bar")
+      .attr("x", 1)
+      .attr("transform", function(d) {
+        return "translate(" + x(d.x0) + "," + y(d.totPop) + ")"; })
+      .attr("width", function(d) { return x(d.x1) - x(d.x0) -1 ; })
+      .attr("height", function(d) { return plotHeight - y(d.totPop); })
+      .style('fill', function(d) {
+        return getSevenBreaksColor(d.x0, breaks, YlGnBu7)
+      });
+
+    // Add the x-axis
+    plotSvg.append("g")
+      .attr("transform", "translate(0," + plotHeight + ")")
+      .call(d3.axisBottom(x))
+      .selectAll("text")
+      .attr("y", 0)
+      .attr("x", 9)
+      .attr("dy", ".35em")
+      .attr("transform", "rotate(45)")
+      .style("text-anchor", "start");
+
+    // Add the y-axis
+    plotSvg.append("g")
+      .call(d3.axisLeft(y));
+
+    // Label the x-axis
+    plotSvg.append("text")             
+      .attr("transform", getXLabelBuffer(d3.max(histBins, h => h.x1)))
+      .style("text-anchor", "middle")
+      .style('font-weight', 'bold')
+      .text(xlabel);
+
+    // Label the y-axis
+    plotSvg.append("text")
+      .attr("transform", "rotate(-90)")
+      .attr("y", 0 - plotMargin.left)
+      .attr("x",0 - (plotHeight / 2))
+      .attr("dy", "1em")
+      .style("text-anchor", "middle")
+      .style('font-weight', 'bold')
+      .text(ylabel);
+
+
+
+
+  });
+  // var scores = Array.from(data, d => d.value())
+  // // console.log(scores)
+  // data = data.filter(Boolean)
+  // breaks = jenks(data, 6)
+
+  // // Create the x range
+  // var x = d3.scaleLinear()
+  //   .domain(d3.extent(data))
+  //   .rangeRound([0, plotWidth]);
+
+  // // Create the y range
+  // var y = d3.scaleLinear()
+  //   .range([plotHeight, 0]);
+
+  // // Set the parameters for the histogram
+  // var histogram = d3.histogram()
+  //   .domain(x.domain())
+  //   .thresholds(x.ticks(bins));
+
+  
+
+  // console.log(histBins)
+
+  
 }
 
 /**
@@ -451,14 +542,25 @@ function histogram(data, bins, xlabel, ylabel){
 function scatterPlot(data, xlabel, ylabel){
   plotSvg.selectAll("*").remove();
 
+  // Get some breaks for color
+  var jenksData = Array.from(data, d => d.x)
+  jenksData = jenksData.filter(Boolean)
+  breaks = jenks(jenksData, 6)
+
   // Add X axis
   var x = d3.scaleLinear()
     .domain(d3.extent(data, function(d) {return d.x}))
     .range([0, plotWidth ]);
 
-    plotSvg.append("g")
-    .attr("transform", "translate(0," + plotHeight + ")")
-    .call(d3.axisBottom(x));
+  plotSvg.append("g")
+  .attr("transform", "translate(0," + plotHeight + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
+  .attr("y", 0)
+  .attr("x", 9)
+  .attr("dy", ".35em")
+  .attr("transform", "rotate(45)")
+  .style("text-anchor", "start");
 
   // Add Y axis
   var y = d3.scaleLinear()
@@ -477,17 +579,19 @@ function scatterPlot(data, xlabel, ylabel){
     .attr("cx", function (d) { return x(d.x); } )
     .attr("cy", function (d) { return y(d.y); } )
     .attr("r", 1.5)
-    .style("fill", "#69b3a2")
+    .style('fill', function(d) {
+      return getSevenBreaksColor(d.x, breaks, YlGnBu7)
+    })
     .style("opacity", 0.7)
 
-  // Label the x-axis
+  // Label the x-label
   plotSvg.append("text")             
-    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 18) + ")")
+    .attr("transform", getXLabelBuffer(d3.max(jenksData)))
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
     .text(xlabel);
 
-  // Label the y-axis
+  // Label the y-label
   plotSvg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - plotMargin.left)
@@ -750,6 +854,14 @@ function getSevenBreaksLabels(breaks, color, unit){
     {'label': "More than " + styleNumbers(breaks[6]) + " " + unit, 'color': color[0]},
     {'label': "No data", 'color': '#717678'},
   ]
+}
+
+function getXLabelBuffer(maxVal){
+  var buffer =  maxVal < 100 ? 8:
+    maxVal < 1000 ? 18:
+    maxVal < 10000 ? 28:
+    38
+  return "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + buffer) + ")"
 }
 
 function styleNumbers(val){
