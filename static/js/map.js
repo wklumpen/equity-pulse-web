@@ -222,7 +222,7 @@ function measureChanged(newMeasureKey){
     state['score']['unit'] = 'jobs'
   }
   else{
-    state['score']['label'] == 'Travel Time (min)'
+    state['score']['label'] = 'Travel Time (min)'
     state['score']['unit'] = 'min'
   }
 
@@ -447,7 +447,7 @@ function histogram(data, bins, xlabel, ylabel){
 
   // Label the x-axis
   plotSvg.append("text")             
-    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 38) + ")")
+    .attr("transform", getXLabelBuffer(d3.max(data)))
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
     .text(xlabel);
@@ -516,7 +516,7 @@ function scatterPlot(data, xlabel, ylabel){
 
   // Label the x-label
   plotSvg.append("text")             
-    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 38) + ")")
+    .attr("transform", getXLabelBuffer(d3.max(jenksData)))
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
     .text(xlabel);
@@ -784,6 +784,26 @@ function getSevenBreaksLabels(breaks, color, unit){
     {'label': "More than " + styleNumbers(breaks[6]) + " " + unit, 'color': color[0]},
     {'label': "No data", 'color': '#717678'},
   ]
+}
+
+function getXLabelBuffer(maxVal){
+  console.log(maxVal)
+  var buffer =  maxVal < 100 ? 8:
+    maxVal < 1000 ? 18:
+    maxVal < 10000 ? 28:
+    38
+  console.log(buffer);
+  return "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + buffer) + ")"
+}
+
+function getYLabelBuffer(maxVal){
+  console.log(maxVal)
+  var buffer =  maxVal < 100 ? 8:
+    maxVal < 1000 ? 18:
+    maxVal < 10000 ? 28:
+    38
+  console.log(buffer);
+  return "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + buffer) + ")"
 }
 
 function styleNumbers(val){
