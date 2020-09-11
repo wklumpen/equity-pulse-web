@@ -169,6 +169,14 @@ function initialize(){
     style: bgStyleDefault,
   }).addTo(map);
 
+  transitLayer = new L.GeoJSON.AJAX('static/data/' + view['name'] + '_transit.geojson', {
+    style: {
+      color: '#2D2D2D',
+      opaicty: 0.8,
+      weight: 1
+    }
+  }).addTo(map)
+
   bgLayer.on('data:loaded', function() {
     loadMapData();
   })
@@ -295,7 +303,7 @@ function overlayChanged(newOverlayKey){
     state['overlay']['label'] = "Number of people in poverty"
     state['overlay']['title'] = "People below the poverty line"
     state['overlay']['unit'] = 'people'
-    state['dot']['url'] = "/static/data/pop_poverty_" + view['name'] + ".geojson"
+    state['dot']['url'] = "/static/" + view['name'] + "_data/pop_poverty" +  + ".geojson"
   }
   else if (newOverlayKey == 'none'){
     state['overlay']['url'] = null;
@@ -303,6 +311,19 @@ function overlayChanged(newOverlayKey){
   }
   loadOverlayData();
   loadDotData();
+}
+
+function transitToggle(value){
+  if (document.getElementById('transitToggle').checked){
+    transitLayer.setStyle({
+      weight: 1
+    })
+  }
+  else{
+    transitLayer.setStyle({
+      weight: 0
+    })
+  }
 }
 
 function updateMap(){

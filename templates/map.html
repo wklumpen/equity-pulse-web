@@ -83,6 +83,14 @@
       </div>
       <div id="legend">
       </div>
+      <!-- Rounded switch -->
+      <div id="toggle">
+      <h2>Show  Transit Lines</h2>
+      <label class="switch">
+        <input type="checkbox" id='transitToggle' checked="true" onchange="transitToggle(value)">
+        <span class="slider round"></span>
+      </label>
+      </div>
       <div class='sidebar-title'>
         <h2>Context Plot</h2>
       </div>
@@ -96,12 +104,12 @@
           <script>
               var view = JSON.parse('{{ view | tojson}}');
               var zoom = '{{zoom}}';
-              var bgURL = 'static/data/bg_{{region}}.geojson'
+              var bgURL = 'static/data/{{region}}_bg.geojson'
           </script>
         </div>
       </div>
     </div>
-    <div class='container-bottom'>
+    <div class='container-bottom'> 
       <div id='time-slider'></div>
       <div id='bottom-chart'></div>
     </div>
