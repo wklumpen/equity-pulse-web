@@ -171,8 +171,8 @@ function initialize(){
 
   transitLayer = new L.GeoJSON.AJAX('static/data/' + view['name'] + '_transit.geojson', {
     style: {
-      color: '#2D2D2D',
-      opaicty: 0.8,
+      color: '#3F3F3F',
+      opaicty: 0.5,
       weight: 1
     }
   }).addTo(map)
@@ -303,7 +303,7 @@ function overlayChanged(newOverlayKey){
     state['overlay']['label'] = "Number of people in poverty"
     state['overlay']['title'] = "People below the poverty line"
     state['overlay']['unit'] = 'people'
-    state['dot']['url'] = "/static/" + view['name'] + "_data/pop_poverty" +  + ".geojson"
+    state['dot']['url'] = "/static/data/" + view['name'] + "_pop_poverty.geojson"
   }
   else if (newOverlayKey == 'none'){
     state['overlay']['url'] = null;
@@ -364,9 +364,9 @@ function updatePlot(){
   else {
     var plotData = []
     for (var key of Object.keys(state['overlay']['data'])) {
-      plotData.push({'x': state['overlay']['data'][key], 'y': state['score']['data'][key]})
+      plotData.push({'x': state['score']['data'][key], 'y': state['overlay']['data'][key]})
     }
-    scatterPlot(plotData, state['overlay']['label'], state['score']['label'])
+    scatterPlot(plotData, state['score']['label'], state['overlay']['label'])
   }
 }
 
@@ -472,14 +472,25 @@ function histogram(data, bins, xlabel, ylabel){
 function scatterPlot(data, xlabel, ylabel){
   plotSvg.selectAll("*").remove();
 
+  // Get some breaks for color
+  var jenksData = Array.from(data, d => d.x)
+  jenksData = jenksData.filter(Boolean)
+  breaks = jenks(jenksData, 6)
+
   // Add X axis
   var x = d3.scaleLinear()
     .domain(d3.extent(data, function(d) {return d.x}))
     .range([0, plotWidth ]);
 
-    plotSvg.append("g")
-    .attr("transform", "translate(0," + plotHeight + ")")
-    .call(d3.axisBottom(x));
+  plotSvg.append("g")
+  .attr("transform", "translate(0," + plotHeight + ")")
+  .call(d3.axisBottom(x))
+  .selectAll("text")
+  .attr("y", 0)
+  .attr("x", 9)
+  .attr("dy", ".35em")
+  .attr("transform", "rotate(45)")
+  .style("text-anchor", "start");
 
   // Add Y axis
   var y = d3.scaleLinear()
@@ -498,17 +509,19 @@ function scatterPlot(data, xlabel, ylabel){
     .attr("cx", function (d) { return x(d.x); } )
     .attr("cy", function (d) { return y(d.y); } )
     .attr("r", 1.5)
-    .style("fill", "#69b3a2")
+    .style('fill', function(d) {
+      return getSevenBreaksColor(d.x, breaks, YlGnBu7)
+    })
     .style("opacity", 0.7)
 
-  // Label the x-axis
+  // Label the x-label
   plotSvg.append("text")             
-    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 18) + ")")
+    .attr("transform", "translate(" + (plotWidth/2) + " ," + (plotHeight + plotMargin.top + 38) + ")")
     .style("text-anchor", "middle")
     .style('font-weight', 'bold')
     .text(xlabel);
 
-  // Label the y-axis
+  // Label the y-label
   plotSvg.append("text")
     .attr("transform", "rotate(-90)")
     .attr("y", 0 - plotMargin.left)
