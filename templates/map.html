@@ -19,7 +19,7 @@
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/'-awesome/4.7.0/css/font-awesome.min.css"> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/prettydropdown.css') }}">
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/prettydropdown.css') }}"> -->
   <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
 
   <!-- FAVICON -->
@@ -44,7 +44,7 @@
       <div class='sidebar-title'>
         <h2>Regional Context</h2>
       </div>
-      <div class="dropdown-select">
+      <div class="select">
         <select id="zones" name="layer" title="Choose a portion of the region to display on the map." class="pretty" onchange="zoneChanged(value)">
           <option value="all">Entire Region</option>
           <option value="msa">Metropolitan Statistical Area</option>
@@ -66,7 +66,26 @@
           </optgroup>
         </select>
       </div>
-
+      <div class="select">
+        <select id="countySel" size="1">
+            <option value="" selected="selected"  class="pretty">-- Select Country --</option>
+        </select>
+      </div>
+      <div class="select">
+        <select id="stateSel" size="1">
+            <option value="" selected="selected"  class="pretty">-- Select State--</option>
+        </select>
+      </div>
+      <div class="select">
+        <select id="citySel" size="1">
+            <option value="" selected="selected"  class="pretty">-- Select City--</option>
+        </select>
+      </div>
+      <div class="select">
+        <select id="zipSel" size="1">
+            <option value="" selected="selected"  class="pretty">-- Select Zip--</option>
+        </select>
+      </div>
       <div class='sidebar-title'>
         <h2>Overlay Demogaphics</h2>
       </div>
@@ -116,12 +135,13 @@
 <script src="{{ url_for('static', filename='js/leaflet.ajax.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jenks.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
-<script src="{{ url_for('static', filename='js/prettydropdown.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mapselect.js') }}"></script>
+<!-- <script src="{{ url_for('static', filename='js/prettydropdown.js') }}"></script>
 <script>
   $(document).ready(function() {
     $('select').prettyDropdown({
       height: 30
     });
   });
-</script>
+</script> -->
 </body>
