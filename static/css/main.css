@@ -1,0 +1,50 @@
+
+
+/* Remove margins and padding from the list, and add a black background color */
+ul.topnav {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #2d74ed;
+  box-shadow: 1px 1px 2px lightgrey;
+}
+
+/* Float the list items side by side */
+ul.topnav li {
+  float: left;
+}
+
+/* Style the links inside the list items */
+ul.topnav li a {
+  display: inline-block;
+  color: white;
+  text-align: center;
+  padding: 5px 10px 10px 5px;
+  text-decoration: none;
+  transition: 0.3s;
+  font-size: 20px;
+  height: 20px;
+  vertical-align: middle;
+}
+
+/* Change background color of links on hover */
+/* ul.topnav li a:hover {
+} */
+
+ul.topnav li.icon a:hover{
+  text-decoration: none;
+}
+
+/* Hide the list item that contains the link that should open and close the topnav on small screens */
+ul.topnav li.icon {
+  display: none;
+}
+
+ul.topnav a.title-text {
+  color: white;
+  font-weight: bold;
+  font-size: 1.2em;
+  height: 20px;
+  padding: 5px 10px 10px 5px;
+}

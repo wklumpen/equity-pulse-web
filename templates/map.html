@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Basic Page Needs
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>{% block title %}{% endblock %}Transit Equity | DEMO</title>
+  <meta name="description" content="Transit Equity in Major American Urban Areas">
+  <meta name="author" content="TransitCenter">
+
+  <!-- Mobile Specific Metas
+  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- FONT -->
+  <link href="//fonts.googleapis.com/css?family=Signika:400,300,600" rel="stylesheet" type="text/css">
+
+  <!-- CSS -->
+  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/'-awesome/4.7.0/css/font-awesome.min.css"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/prettydropdown.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
+
+  <!-- FAVICON -->
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
+
+  <script src="https://use.fontawesome.com/a70b68a3fb.js"></script>
+
+</head>
+
+<body>
+<div class="container-outer">
+  <div class='container-header'>
+    <div class="topnav">
+      <a href="https://transitcenter.org/"><b>TransitCenter</b></a>
+      <a href="/">Scorecard</a>
+      <a href="#">About</a>
+      <a href="#">Download</a>
+    </div>
+  </div>
+  <div class='container-main'>
+    <div class='container-sidebar'>
+      <div class='sidebar-title'>
+        <h2>Regional Context</h2>
+      </div>
+      <div class="dropdown-select">
+        <select id="zones" name="layer" title="Choose a portion of the region to display on the map." class="pretty" onchange="zoneChanged(value)">
+          <option value="all">Entire Region</option>
+          <option value="msa">Metropolitan Statistical Area</option>
+        </select>
+      </div>
+      <div class='sidebar-title'>
+        <h2>Score to Display</h2>
+      </div>
+      <div class="dropdown-select">
+        <select id="layer" name="layer" title="Choose a score type to display on the map." class="pretty" onchange="measureChanged(value)">
+          <optgroup label="Cumulative Transit Access">
+            <option value="A_C000_c30_<DATE>_MP" selected>Jobs within 30 min, AM Peak</option>
+            <option value="A_C000_c45_<DATE>_MP">Jobs within 45 min, AM Peak</option>
+            <option value="A_C000_c60_<DATE>_MP">Jobs within 60 min, AM Peak</option>
+          </optgroup>
+          <optgroup label="Travel Times">
+            <option value="A_snap_time1_<DATE>_MP">Closest 1 SNAP, AM Peak</option>
+            <option value="A_snap_time3_<DATE>_MP">Closest 3 SNAP, AM Peak</option>
+          </optgroup>
+        </select>
+      </div>
+
+      <div class='sidebar-title'>
+        <h2>Overlay Demogaphics</h2>
+      </div>
+      <div class="dropdown-select">
+        <select id="demo" name="layer" title="Choose a population overlap to add to the map." class="pretty" onchange="overlayChanged(value)">
+          <option value='none'>No Overlay</option>
+          <!-- <option value="all">1 dot = 500 people</option> -->
+          <option value="poverty">1 dot = 50 people below the poverty line</option>
+          <!-- <option value="poc">1 dot = 25 people of colour</option> -->
+        </select>
+      </div>
+      <div class='sidebar-title'>
+        <h2>Map Legend</h2>
+      </div>
+      <div id="legend">
+      </div>
+      <!-- Rounded switch -->
+      <div id="toggle">
+      <h2>Show  Transit Lines</h2>
+      <label class="switch">
+        <input type="checkbox" id='transitToggle' checked="true" onchange="transitToggle(value)">
+        <span class="slider round"></span>
+      </label>
+      </div>
+      <div class='sidebar-title'>
+        <h2>Context Plot</h2>
+      </div>
+      <div id="plot">
+      </div>
+    </div>
+    <div class='container-top'>
+      <div class='container-map'>
+        <div id='loading'>LOADING</div>
+        <div id="map">
+          <script>
+              var view = JSON.parse('{{ view | tojson}}');
+              var zoom = '{{zoom}}';
+              var bgURL = 'static/data/{{region}}_bg.geojson'
+          </script>
+        </div>
+      </div>
+    </div>
+    <div class='container-bottom'> 
+      <div id='time-slider'></div>
+      <div id='bottom-chart'></div>
+    </div>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
+<script src="https://unpkg.com/d3-simple-slider"></script>
+<script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='js/moment.js') }}"></script>
+<script src="{{ url_for('static', filename='js/leaflet.ajax.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/jenks.js') }}"></script>
+<script src="{{ url_for('static', filename='js/map.js') }}"></script>
+<script src="{{ url_for('static', filename='js/prettydropdown.js') }}"></script>
+<script>
+  $(document).ready(function() {
+    $('select').prettyDropdown({
+      height: 30
+    });
+  });
+</script>
+</body>
