@@ -135,10 +135,8 @@ function optionsUpdate(){
   the query string parameters are set properly.
 */
 function setStateFromParams(){
-    console.log("SETTING STATE FROM PARAMS")
     // Now we update the map state by building an API string
     var mapParams = new URLSearchParams(window.location.search)
-
     var measure = null;
     var destination = null;
     var period = null;
