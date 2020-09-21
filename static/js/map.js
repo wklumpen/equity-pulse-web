@@ -31,13 +31,14 @@ var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 var plotMargin = {top: 10, right: 30, bottom: 50, left: 70}
 var plotBoxHeight = d3.select("#plot").node().getBoundingClientRect().height
 var plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
-console.log(plotBoxWidth, plotBoxHeight)
 var plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
 var plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
 
 // Color schemes
 var YlGnBu = ["#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"]
 var YlGnBu7 = ["#ffffcc", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84"]
+
+
 
 // All of the information for the current application state is kept in here
 var state = {
@@ -215,9 +216,8 @@ function initialize(){
   }).addTo(map)
 
   bgLayer.on('data:loaded', function() {
-    loadMapData();
+    setStateFromParams();
   })
-  loadTimeData();
 }
 
 // Divide the layer into different groups as needed for filtering
@@ -273,6 +273,7 @@ function measureChanged(newMeasureKey){
 function loadMapData(){
   // Fetch the data we need
   state['score']['data'] = {}  // Reset the data state
+
   $.getJSON(state['score']['url'], function(data) {
     $.each( data, function( key, val ) {
       state['score']['data'][parseInt(val['block_group']['id'])] = parseFloat(val['score'])
@@ -313,6 +314,7 @@ function loadOverlayData(){
 }
 
 function loadDotData(){
+  console.log(state['dot']['url'])
   if (state['dot']['url'] != null){
     var geojsonMarkerOptions = {
       radius: 1.5,
@@ -321,7 +323,7 @@ function loadDotData(){
       weight: 0,
       fillOpacity: 0.3
     };
-
+    console.log("LOADING DOTS")
     overlayLayer = new L.GeoJSON.AJAX(state['dot']['url'], {
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, geojsonMarkerOptions);
@@ -334,21 +336,21 @@ function loadDotData(){
 
 }
 
-function overlayChanged(newOverlayKey){
-  if (newOverlayKey == 'poverty'){
-    state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
-    state['overlay']['label'] = "Number of people in poverty"
-    state['overlay']['title'] = "People below the poverty line"
-    state['overlay']['unit'] = 'people'
-    state['dot']['url'] = "/static/data/" + view['name'] + "_pop_poverty.geojson"
-  }
-  else if (newOverlayKey == 'none'){
-    state['overlay']['url'] = null;
-    state['dot']['url'] = null;
-  }
-  loadOverlayData();
-  loadDotData();
-}
+// function overlayChanged(newOverlayKey){
+//   if (newOverlayKey == 'poverty'){
+//     state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
+//     state['overlay']['label'] = "Number of people in poverty"
+//     state['overlay']['title'] = "People below the poverty line"
+//     state['overlay']['unit'] = 'people'
+//     state['dot']['url'] = "/static/data/" + view['name'] + "_pop_poverty.geojson"
+//   }
+//   else if (newOverlayKey == 'none'){
+//     state['overlay']['url'] = null;
+//     state['dot']['url'] = null;
+//   }
+//   loadOverlayData();
+//   loadDotData();
+// }
 
 function transitToggle(value){
   if (document.getElementById('transitToggle').checked){
@@ -390,14 +392,11 @@ function updateMap(){
 }
 
 function updatePlot(){
-  console.log("Box Size: ", plotBoxWidth, plotBoxHeight)
-  console.log("Plot Size:", plotWidth, plotHeight)
   if (plotWidth > 0){
     // Redo the plot based on currently set data
     if (state['overlay']['url'] == null){
       // We do a histogram
       var score = []
-      // console.log(state['score']['data'])
       for (var s in state['score']['data']){
         score.push(state['score']['data'][s])
       }

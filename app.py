@@ -46,7 +46,6 @@ def data_score(tag, score_type_name):
         period = Morning peak (MP), etc.
     """
     scores = Score.by_tag_type(tag, score_type_name)
-    print(scores)
     return jsonify([model_to_dict(s) for s in scores])
 
 @app.route('/data/bg/<tag>')
