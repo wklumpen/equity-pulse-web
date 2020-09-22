@@ -14,9 +14,9 @@
 // ==== 1. INITIALIZATIONS ====
 
 // Bottom chart dimensions and margins
-var bottomChartMargin = {top: 10, right: 50, bottom: 20, left: 60}
+var bottomChartMargin = {top: 10, right: 10, bottom: 20, left: 10}
 var bottomChartBoxWidth = d3.select(".container-main").node().getBoundingClientRect().width - 480
-var bottomChartBoxHeight = 150
+var bottomChartBoxHeight = 50
 var bottomChartWidth = bottomChartBoxWidth - bottomChartMargin.left - bottomChartMargin.right
 var bottomChartHeight = bottomChartBoxHeight - bottomChartMargin.top - bottomChartMargin.bottom
 
@@ -141,7 +141,6 @@ var time = L.control({position: 'bottomright'});
 time.onAdd = function(map){
   var sliderDiv = L.DomUtil.create('div', 'timebox');
   sliderDiv.setAttribute("id", "timebox")
-  sliderDiv.innerHTML += "<div id='time-slider'></div>"
   sliderDiv.innerHTML += "<div id='bottom-chart'></div>"
   return sliderDiv
 }
@@ -190,14 +189,6 @@ var sliderTime = d3
   .on('end', val => {
     sliderTrigger(val);
   });
-
-var sliderSvg = d3.select('#time-slider')
-  .append('svg')
-  .attr('width', bottomChartBoxWidth)
-  .attr('height', 50)
-  .append('g')
-  .attr('transform', 'translate(' + bottomChartMargin.left + ', 7)')
-  .call(sliderTime)
 
 initialize();
 
@@ -314,7 +305,6 @@ function loadOverlayData(){
 }
 
 function loadDotData(){
-  console.log(state['dot']['url'])
   if (state['dot']['url'] != null){
     var geojsonMarkerOptions = {
       radius: 1.5,
@@ -332,36 +322,6 @@ function loadDotData(){
   }
   else if (overlayLayer != null){
     map.removeLayer(overlayLayer)
-  }
-
-}
-
-// function overlayChanged(newOverlayKey){
-//   if (newOverlayKey == 'poverty'){
-//     state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
-//     state['overlay']['label'] = "Number of people in poverty"
-//     state['overlay']['title'] = "People below the poverty line"
-//     state['overlay']['unit'] = 'people'
-//     state['dot']['url'] = "/static/data/" + view['name'] + "_pop_poverty.geojson"
-//   }
-//   else if (newOverlayKey == 'none'){
-//     state['overlay']['url'] = null;
-//     state['dot']['url'] = null;
-//   }
-//   loadOverlayData();
-//   loadDotData();
-// }
-
-function transitToggle(value){
-  if (document.getElementById('transitToggle').checked){
-    transitLayer.setStyle({
-      weight: 1
-    })
-  }
-  else{
-    transitLayer.setStyle({
-      weight: 0
-    })
   }
 }
 
@@ -412,17 +372,6 @@ function updatePlot(){
   }
 }
 
-function sliderTrigger(value){
-  var m = moment(value) // Easier to format using moments.
-  newDate = m.format('DDMMYYYY')
-  oldDate = state['date']
-  if (oldDate != newDate){
-    state['score']['url'] = state['score']['url'].replace(oldDate, newDate)
-    loadMapData();
-    state['date'] = newDate
-  }
-}
-
 // ==== 3. DISPLAY FUNCTIONS ====
 
 // ======== 3.1. BOTTOM CHART ====
@@ -446,23 +395,34 @@ function updateTimeSeries(data, xlabel, ylabel){
     .domain([0, d3.max(data, d => d.score)])
     .range([ bottomChartHeight, 0]);
 
-  bottomSvg.append("g")
-    .call(d3.axisLeft(y));
+  // Add lollipop sticks
+  bottomSvg.selectAll("stick")
+    .data(data)
+    .enter()
+    .append("line")
+    .attr("x1", function(d) { return x(d.date); })
+    .attr("x2", function(d) { return x(d.date); })
+    .attr("y1", function(d) { return y(d.score); })
+    .attr("y2", y(0))
+    .attr("stroke", "grey")
+
+  // bottomSvg.append("g")
+  //   .call(d3.axisLeft(y));
 
   // Add line for line char
-  bottomSvg.append("path")
-    .data([data])
-    .style('fill', 'none')
-    .style('stroke', 'black')
-    .style('stroke-width', "2px")
-    .attr('d', d3.line()
-      .x(d => x(d.date))
-      .y(d => y(d.score)
-      )
-    )
+  // bottomSvg.append("path")
+  //   .data([data])
+  //   .style('fill', 'none')
+  //   .style('stroke', 'black')
+  //   .style('stroke-width', "2px")
+  //   .attr('d', d3.line()
+  //     .x(d => x(d.date))
+  //     .y(d => y(d.score)
+  //     )
+  //   )
 
   // Add circles to make things clearer
-  bottomSvg.append('g')
+  var nodes = bottomSvg.append('g')
     .selectAll("dot")
     .data(data)
     .enter()
@@ -470,25 +430,44 @@ function updateTimeSeries(data, xlabel, ylabel){
     .attr("cx", d => x(d.date))
     .attr("cy", d => y(d.score))
     .attr("r", 7)
-    .style("fill", "#2d74ed")
-    .style("opacity", 0.7)
+    .style('fill', "#2d74ed")
+    .style("stroke-width", "2")
+    .style("stroke", function(d){
+      var md = moment(d.date)
+      if (md.format('YYYYMMDD') == state['date']){
+        return "black"
+      }
+      else{
+        return "none"
+      }
+    })
 
-  //   // Label the x-axis
-  // bottomSvg.append("text")             
-  //   .attr("transform", "translate(" + (bottomChartWidth/2) + " ," + (bottomChartHeight + bottomChartMargin.top + 18) + ")")
-  //   .style("text-anchor", "middle")
-  //   .style('font-weight', 'bold')
-  //   .text(xlabel);
+  // Add mouseover effects to nodes
+  nodes.on('mouseover', function (d) {
+      // Highlight the nodes: every node is green except of him
+      nodes.style('fill', "#2d74ed")
+      d3.select(this).style('fill', '#69b3b2')
+      
+      // Highlight the connections
+    })
+    .on('mouseout', function (d) {
+      nodes.style('fill', "#2d74ed")
+    })
+  
+  // Add selection functionality to nodes
+  nodes.on('click', function (d){
+    sliderTrigger(d.date)
+  })
 
   // Label the y-axis
-  bottomSvg.append("text")
-    .attr("transform", "rotate(-90)")
-    .attr("y", 0 - bottomChartMargin.left)
-    .attr("x",0 - (bottomChartHeight / 2))
-    .attr("dy", "1em")
-    .style("text-anchor", "middle")
-    .style('font-weight', 'bold')
-    .text(ylabel); 
+  // bottomSvg.append("text")
+  //   .attr("transform", "rotate(-90)")
+  //   .attr("y", 0 - bottomChartMargin.left)
+  //   .attr("x",0 - (bottomChartHeight / 2))
+  //   .attr("dy", "1em")
+  //   .style("text-anchor", "middle")
+  //   .style('font-weight', 'bold')
+  //   .text(ylabel); 
 }
 
 sidebar.on('content', function(e) {

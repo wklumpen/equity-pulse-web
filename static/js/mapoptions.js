@@ -213,8 +213,8 @@ function setStateFromParams(){
       date = mapParams.get('date')
     }
     else{
-      var today = new Date();
-      date = today.getFullYear()+'-'+(today.getMonth()+1)+'-'+today.getDate();
+      console.log("Setting Date:", view['max_date'])
+      date = view['max_date']
     }
 
     if (mapParams.has('demo') & demoList.includes(mapParams.get('demo'))){
@@ -254,11 +254,19 @@ function setStateFromParams(){
     else{
         state['tag'] = view['name']
     }
+
+    // Now a date update
+    console.log(date)
+    state['date'] = date
+
+    console.log(state['score']['url'])
+
     state['score']['url'] = state['score']['url'].replace(oldTag, state['tag'])
 
     // Now the measure update
-    newMeasureKey = measure + "_" + destination + "_" + param + "_<DATE>_" + period
-    state['score']['url'] = "/data/score/" + state['tag'] + "/" + newMeasureKey.replace("<DATE>", state['date'])
+    newMeasureKey = measure + "_" + destination + "_" + param + "_" + date + "_" + period
+    state['score']['url'] = "/data/score/" + state['tag'] + "/" + newMeasureKey
+    console.log(state['score']['url'])
 
     // Update the time series URL
     state['time']['url'] = "/data/time/" + state['tag'] + "/" + newMeasureKey.replace("_<DATE>", "")
@@ -273,7 +281,6 @@ function setStateFromParams(){
         state['score']['unit'] = 'min'
     }
 
-    console.log(demo)
     // Update overlay data
     if (demo == 'poverty'){
         state['overlay']['url'] = "/data/pop/" + state['tag'] + "/pop_poverty"
@@ -286,8 +293,6 @@ function setStateFromParams(){
         state['overlay']['url'] = null;
         state['dot']['url'] = null;
     }
-
-    console.log(state['score']['url'])
 
     setOptionsFromParams();
 
