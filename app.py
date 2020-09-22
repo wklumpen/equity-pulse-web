@@ -13,7 +13,7 @@ import pandas as pd
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Dot
+from db import Score, Population, BlockGroup, Dot, Tag
 
 app = Flask(__name__)
 app.config.from_object(DevelopmentConfig)
@@ -27,8 +27,10 @@ def home():
 @app.route('/<region>')
 def region(region):
     if region.lower() in REGION_LIST:
-        view = {'name': 'boston', 'lat': 42.3603578, 'lon': -71.0616172}
-        return render_template('map.html', region=region.lower(), zoom=10.5, view=view)
+        # Get the maximum date
+        start_date = Tag.max_tag_date(region.lower()).strftime("%Y%m%d")
+        view = {'name': 'boston', 'lat': 42.3603578, 'lon': -71.0616172, 'max_date': start_date}
+        return render_template('map.html', region=region.lower(), zoom=9.5, view=view)
     else:
         return render_template('map.html', region=region.lower())
 
@@ -74,6 +76,7 @@ def data_time(tag, score_type):
     df = df[['score', 'date', 'value']].groupby("date").apply(lambda dfx: (dfx["value"] * dfx["score"]).sum() / dfx["value"].sum()).reset_index()
     df.columns = ['date', 'score']
     df['date'] = pd.to_datetime(df['date']).dt.date.astype(str)
+
     return jsonify(df.to_dict())
 
 @app.route('/data/dot/<tag>/<pop_type>')

@@ -6,7 +6,7 @@ object-relational-mapper, along with helper functions to assist data management.
 """
 from datetime import date, datetime
 
-from peewee import Model, SqliteDatabase, TextField, ForeignKeyField, IntegerField, FloatField, DateField, chunked
+from peewee import Model, SqliteDatabase, TextField, ForeignKeyField, IntegerField, FloatField, DateField, chunked, fn
 import pandas as pd
 
 database = SqliteDatabase(r'results.db') # Temporary sqlite DB instance
@@ -62,7 +62,6 @@ class Score(BaseModel):
         # We'll build a dictionary of types to add and make sure they're
         score_types = dict()
         for score_column in df.columns[1:]:
-            print(score_column)
             s_split = score_column.split('_')
             if s_split[0] == 'A':
                 measure = 'Access to'
@@ -146,7 +145,7 @@ class Score(BaseModel):
                 .where((ScoreType.measure == s_split[0])
                  & (ScoreType.destination == s_split[1])
                  & (ScoreType.function == s_split[2])
-                 & (ScoreType.period == s_split[3]))
+                 & (ScoreType.period == s_split[4]))
                 )
     
     @staticmethod
@@ -216,6 +215,10 @@ class Population(BaseModel):
 
 class Tag(BaseModel):
     name = TextField()
+
+    @staticmethod
+    def max_tag_date(tag_name):
+        return (ScoreType.select(fn.MAX(ScoreType.date))).scalar()
 
 
 class BlockGroupTag(BaseModel):
