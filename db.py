@@ -41,13 +41,25 @@ class BlockGroup(BaseModel):
             for batch in chunked(to_insert, 100):
                 BlockGroupTag.insert_many(batch).execute()
 
+    @staticmethod
+    def add_bg_from_csv(filepath):
+        print("Inserting Block Groups from CSV")
+        df = pd.read_csv(filepath, dtype={'block_group_id': 'Int64'})
+        to_insert = []
+        for idx, bg in df.iterrows():
+            new_bg = dict()
+            new_bg['id'] = bg['block_group_id']
+            to_insert.append(new_bg)
+    
+        with database.atomic():
+            for batch in chunked(to_insert, 100):
+                BlockGroup.insert_many(batch).execute()
+
+
+
 class ScoreType(BaseModel):
-    name = TextField()
-    measure = TextField()
-    destination = TextField()
-    function = TextField()
+    key = TextField()
     date = DateField()
-    period = TextField()
     description = TextField(null=True)
 
 
@@ -58,46 +70,22 @@ class Score(BaseModel):
 
     @staticmethod
     def score_from_csv(filepath):
+        print("Inserting Scores from CSV")
         df = pd.read_csv(filepath, dtype={'block_group_id': 'Int64'})
         # We'll build a dictionary of types to add and make sure they're
         score_types = dict()
         for score_column in df.columns[1:]:
-            s_split = score_column.split('_')
-            if s_split[0] == 'A':
-                measure = 'Access to'
-            else:
-                raise TypeError # Temporary until we add all the possibilities
-
-            destination = s_split[1]
-            if s_split[2] == 'c30':
-                metric = '30 minute cumulative'
-            elif s_split[2] == 'c45':
-                metric = '45 minute cumulative'
-            elif s_split[2] == 'c60':
-                metric = '60 minute cumulative'
-            elif s_split[2] == 'time3':
-                metric = 'time to closest 3 destinations'
-            elif s_split[2] == 'time1':
-                metric = 'Time to closest destination'
-            else:
-                raise TypeError # Temporary to flag errors.
-            
-            if s_split[4]:
-                period = 'morning peak'
-            else:
-                raise TypeError # Temporary to flag errors
+            print(f"Score key: {score_column}")
+            # Break it down and build it back up
+            s_split = score_column.strip().split('_')
+            date_key = s_split[-1]
+            score_key = "_".join(s_split[:-1])
 
             score_type, new = ScoreType.get_or_create(
-                name = score_column,
-                measure = s_split[0],
-                destination = s_split[1],
-                function = s_split[2],
-                date = datetime.strptime(s_split[3], '%d%m%Y'),
-                period = s_split[4]
+                key = score_key,
+                date = datetime.strptime(date_key, '%Y-%m-%d'),
                 )
-            description = f"{measure} {s_split[1]} using a {metric} measure for {period} period on {s_split[3]}"
-            score_type.description = description
-            score_type.save()
+
             score_types[score_column] = score_type
 
             # Now we can package the column into a list of dictionaries and do a bulk insert
@@ -117,36 +105,24 @@ class Score(BaseModel):
                     Score.insert_many(batch).execute()
         
     @staticmethod
-    def by_tag_type(tag, score_type, date=False):
-        if date:
-            return (Score.select(Score.score, BlockGroup.id, ScoreType.date)
-                    .join(BlockGroup).join(BlockGroupTag).join(Tag)
-                    .where(Tag.name == tag)
-                    .switch(Score)
-                    .join(ScoreType)
-                    .where(ScoreType.name == score_type))
-        else:
-            return (Score.select(Score.score, BlockGroup.id)
-                    .join(BlockGroup).join(BlockGroupTag).join(Tag)
-                    .where(Tag.name == tag)
-                    .switch(Score)
-                    .join(ScoreType)
-                    .where(ScoreType.name == score_type))
-    
-    @staticmethod
-    def by_tag_type_no_date(tag, score_type):
-        # Parse the score key
-        s_split = score_type.split("_")
+    def by_tag_type_with_date(tag, score_key, date):
         return (Score.select(Score.score, BlockGroup.id, ScoreType.date)
                 .join(BlockGroup).join(BlockGroupTag).join(Tag)
                 .where(Tag.name == tag)
                 .switch(Score)
                 .join(ScoreType)
-                .where((ScoreType.measure == s_split[0])
-                 & (ScoreType.destination == s_split[1])
-                 & (ScoreType.function == s_split[2])
-                 & (ScoreType.period == s_split[4]))
-                )
+                .where((ScoreType.key == score_key) & (ScoreType.date == date)))
+
+    @staticmethod
+    def by_tag_type_no_date(tag, score_key):
+        # Parse the score key
+        return (Score.select(Score.score, BlockGroup.id, ScoreType.date)
+                .join(BlockGroup).join(BlockGroupTag).join(Tag)
+                .where(Tag.name == tag)
+                .switch(Score)
+                .join(ScoreType)
+                .where((ScoreType.key == score_key)
+                ))
     
     @staticmethod
     def weighted_average(tag, score_type, pop_type):
@@ -176,11 +152,12 @@ class Population(BaseModel):
 
     @staticmethod
     def population_from_csv(filepath):
+        print("Inserting Population from CSV")
         df = pd.read_csv(filepath, dtype={'block_group_id': 'Int64'})
         # We'll build a dictionary of types to add and make sure they're
         pop_types = dict()
         for pop_column in df.columns[1:]:
-            print(pop_column)
+            print(f"Population Column: {pop_column}")
 
             pop_type, new = PopulationType.get_or_create(name=pop_column)
             description = pop_column
@@ -203,6 +180,7 @@ class Population(BaseModel):
             with database.atomic():
                 for batch in chunked(to_insert, 100):
                     Population.insert_many(batch).execute()
+
     @staticmethod
     def by_tag_type(tag, pop_type):
         return (Population.select(Population.value, BlockGroup.id)
@@ -211,7 +189,6 @@ class Population(BaseModel):
                 .switch(Population)
                 .join(PopulationType)
                 .where(PopulationType.name == pop_type))
-
 
 class Tag(BaseModel):
     name = TextField()
@@ -226,6 +203,7 @@ class BlockGroupTag(BaseModel):
     tag = ForeignKeyField(Tag, backref='block_group_tags')
 
 
+# DEPRECIATED
 class Dot(BaseModel):
     block_group = ForeignKeyField(BlockGroup, backref='dots')
     population_type = ForeignKeyField(PopulationType, backref='dots')
@@ -272,8 +250,16 @@ class Dot(BaseModel):
 
 def create_tables():
     database.connect()
-    database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag, Dot])
+    database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag], safe=True)
     database.close()
+
+
+def setup_region(bg_filepath, pop_filepath, initial_zone_name):
+    BlockGroup.add_bg_from_csv(bg_filepath)
+    BlockGroup.tag_bg_from_csv(bg_filepath, initial_zone_name)
+    Score.score_from_csv(bg_filepath)
+    Population.population_from_csv(pop_filepath)
+
 
 if __name__ == "__main__":
     database.connect()

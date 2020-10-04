@@ -305,6 +305,12 @@ function loadOverlayData(){
 }
 
 function loadDotData(){
+  // First, remove the existing layer
+  if (overlayLayer != null){
+    map.removeLayer(overlayLayer)
+  }
+
+  // Now add one back in if it's not the one we need
   if (state['dot']['url'] != null){
     var geojsonMarkerOptions = {
       radius: 1.5,
@@ -313,15 +319,12 @@ function loadDotData(){
       weight: 0,
       fillOpacity: 0.3
     };
-    console.log("LOADING DOTS")
+    console.log("LOADING DOTS:", state['dot']['url'])
     overlayLayer = new L.GeoJSON.AJAX(state['dot']['url'], {
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, geojsonMarkerOptions);
       }
     }).addTo(map);
-  }
-  else if (overlayLayer != null){
-    map.removeLayer(overlayLayer)
   }
 }
 
