@@ -21,6 +21,8 @@
   <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/prettydropdown.css') }}">
   <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet-sidebar.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/fa-all.css') }}">
 
   <!-- FAVICON -->
   <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
@@ -33,103 +35,193 @@
 <div class="container-outer">
   <div class='container-header'>
     <div class="topnav">
-      <a href="https://transitcenter.org/"><b>TransitCenter</b></a>
-      <a href="/">Scorecard</a>
+      <a href="https://transitcenter.org/"><b>TransitCenter Equity Pulse</b></a>
+      <!-- <a href="/">Scorecard</a>
       <a href="#">About</a>
-      <a href="#">Download</a>
+      <a href="#">Download</a> -->
     </div>
   </div>
   <div class='container-main'>
-    <div class='container-sidebar'>
-      <div class='sidebar-title'>
-        <h2>Regional Context</h2>
-      </div>
-      <div class="dropdown-select">
-        <select id="zones" name="layer" title="Choose a portion of the region to display on the map." class="pretty" onchange="zoneChanged(value)">
-          <option value="all">Entire Region</option>
-          <option value="msa">Metropolitan Statistical Area</option>
-        </select>
-      </div>
-      <div class='sidebar-title'>
-        <h2>Score to Display</h2>
-      </div>
-      <div class="dropdown-select">
-        <select id="layer" name="layer" title="Choose a score type to display on the map." class="pretty" onchange="measureChanged(value)">
-          <optgroup label="Cumulative Transit Access">
-            <option value="A_C000_c30_<DATE>_MP" selected>Jobs within 30 min, AM Peak</option>
-            <option value="A_C000_c45_<DATE>_MP">Jobs within 45 min, AM Peak</option>
-            <option value="A_C000_c60_<DATE>_MP">Jobs within 60 min, AM Peak</option>
-          </optgroup>
-          <optgroup label="Travel Times">
-            <option value="A_snap_time1_<DATE>_MP">Closest 1 SNAP, AM Peak</option>
-            <option value="A_snap_time3_<DATE>_MP">Closest 3 SNAP, AM Peak</option>
-          </optgroup>
-        </select>
-      </div>
+      <div id='loading'>LOADING</div>
+      <div id="map">
+        <script>
+            var view = JSON.parse('{{ view | tojson}}');
+            var zoom = '{{zoom}}';
+            var bgURL = 'static/data/{{region}}_bg.geojson'
+        </script>
+    </div>
 
-      <div class='sidebar-title'>
-        <h2>Overlay Demogaphics</h2>
+    <div id="sidebar" class="leaflet-sidebar collapsed">
+      <!-- Nav tabs -->
+      <div class="leaflet-sidebar-tabs">
+          <ul role="tablist"> <!-- top aligned tabs -->
+              <li><a href="#home" role="tab" ><i class="fa fa-bars"></i></a></li>
+              <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Map settings"></i></a></li>
+              <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li>
+              <li class="disabled"><a href="#share" role="tab"><i class="fa fa-share" title="Share this map"></i></a></li>
+              <li class="disabled"><a href="#download" role="tab"><i class="fa fa-download" title="Download data"></i></a></li>
+          </ul>
+  
+          <ul role="tablist"> <!-- bottom aligned tabs -->
+              <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
+          </ul>
       </div>
-      <div class="dropdown-select">
-        <select id="demo" name="layer" title="Choose a population overlap to add to the map." class="pretty" onchange="overlayChanged(value)">
-          <option value='none'>No Overlay</option>
-          <!-- <option value="all">1 dot = 500 people</option> -->
-          <option value="poverty">1 dot = 50 people below the poverty line</option>
-          <!-- <option value="poc">1 dot = 25 people of colour</option> -->
-        </select>
+  
+      <!-- Tab panes -->
+      <div class="leaflet-sidebar-content">
+          <div class="leaflet-sidebar-pane" id="home">
+              <h1 class="leaflet-sidebar-header">
+                  Access and Equity in {{region.title()}}
+                  <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+              </h1>
+              
+              <p>COVID-19 has had a severe impact on the people and economy of the United States. Transit will be a vital part of
+                that recovery, but transit access is not always equitable and accessible accross populated regions. To keep our finger on the
+                pulse of transit equity accross seven metropolitan areas in the United Staes, we've created this analytical dashbaord and mapping 
+                application.
+              </p>
+              <h3>How to use this application</h3>
+              <p>Use the map to explore the data in the region. You can customize the inputs to the map by clicking on the gears icon
+                on the left of this panel. Explore over time by selecting an available date from the timeline below to see how changes
+                in transit access and service have developed throughout the course of the COVID-19 pandemic.
+              </p>
+          </div>
+  
+          <div class="leaflet-sidebar-pane" id="data">
+              <h1 class="leaflet-sidebar-header">
+                Map Settings
+                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+              </h1>
+              <h2>Data Inputs</h2>
+
+              <p class="label">Opportunity to Access</p>
+              <div class="dropdown-select">
+                <select id="destination" name="destination" title="Choose a destination." onchange="optionsUpdate()">
+                  <option value="C000" selected>Employment, All</option>
+                  <option value="CE01" >Employment, Low Income</option>
+                  <option value="snap" >Grocery Stores</option>
+                  <option value="los" >Transit Service</option>
+                </select>
+              </div>
+
+              <p id="measurement"></p>
+
+              <p class="label">Time Period</p>
+              <div class="dropdown-select">
+                <select id="period" name="period" title="Choose a time period.">
+                </select>
+              </div>
+
+              <p class="label">Measurement Options</p>
+              <div class="dropdown-select">
+                <select id="param" name="param" title="Choose a parameter.">
+                </select>
+              </div>
+
+              <p class="label">Show as Auto Ratio</p>
+              <div class="dropdown-select">
+                <select id="auto" name="auto" title="Choose a parameter.">
+                </select>
+              </div>
+
+              <p class="label">Include Fare Sensitivity</p>
+              <div class="dropdown-select">
+                <select id="fare" name="fare" title="Choose a parameter.">
+                </select>
+              </div>
+
+              <p class="label">Portion of Region to Include</p>
+              <div class="dropdown-select">
+                <select id="zones" name="zones" title="Choose a portion of the region to display on the map.">
+                  <option value="all">Entire Region</option>
+                  <option value="msa">Metropolitan Statistical Area</option>
+                </select>
+              </div>
+
+              <p class="label">Overlay Demogaphics</p>
+              <div class="dropdown-select">
+                <select id="demo" name="zones" title="Choose a population overlap to add to the map.">
+                  <option value='none'>No Overlay</option>
+                  <option value="pop_total">1 dot = 50 people</option>
+                  <option value="pop_poverty">1 dot = 50 people below the poverty line</option>
+                  <option value="pop_black">1 dot = 50 black people</option>
+                </select>
+              </div>
+
+              <button onclick="updateMapClicked()">Update Map</button>
+
+              <h2>Display Options</h2>
+              <!-- Rounded switch -->
+              <p class='label'>Show  Transit Lines</p>
+              <div id="toggle">
+                <label class="switch">
+                  <input type="checkbox" id='transitToggle' checked="true" onchange="transitToggle(value)">
+                  <span class="slider round"></span>
+                </label>
+              </div>
+          </div>
+  
+          <div class="leaflet-sidebar-pane" id="charts">
+              <h1 class="leaflet-sidebar-header">
+                Charts and Context
+                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+              </h1>
+              <div id="plot" class="svg-container">
+              </div>
+          </div>
+
+          <div class="leaflet-sidebar-pane" id="share">
+            <h1 class="leaflet-sidebar-header">
+                Share This Map
+                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+            </h1>
+            <h2> Test</h2>
+            <p>Coming soon!</p>
+          </div>
+          <div class="leaflet-sidebar-pane" id="download">
+            <h1 class="leaflet-sidebar-header">
+                Download data
+                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+            </h1>
+            <p>Coming Soon!</p>
+          </div>
+
+          <div class="leaflet-sidebar-pane" id="info">
+            <h1 class="leaflet-sidebar-header">
+                About This Application
+                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+            </h1>
+            <p>Web Application Version: <b>0.3.1-beta</b></p>
+            <p>This application and the data analysis behind it was proudly built for TransitCenter by
+              <a href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
+              SF2 Enterprises, and <a href="https://www.klumpentown.com/">Klumpentown Consulting</a>.
+            </p>
+
+            <p>All of visualization and analysis was done using open source code and data.</p>
+            
+          </div>
       </div>
-      <div class='sidebar-title'>
-        <h2>Map Legend</h2>
-      </div>
-      <div id="legend">
-      </div>
-      <!-- Rounded switch -->
-      <div id="toggle">
-      <h2>Show  Transit Lines</h2>
-      <label class="switch">
-        <input type="checkbox" id='transitToggle' checked="true" onchange="transitToggle(value)">
-        <span class="slider round"></span>
-      </label>
-      </div>
-      <div class='sidebar-title'>
-        <h2>Context Plot</h2>
-      </div>
-      <div id="plot">
-      </div>
-    </div>
-    <div class='container-top'>
-      <div class='container-map'>
-        <div id='loading'>LOADING</div>
-        <div id="map">
-          <script>
-              var view = JSON.parse('{{ view | tojson}}');
-              var zoom = '{{zoom}}';
-              var bgURL = 'static/data/{{region}}_bg.geojson'
-          </script>
-        </div>
-      </div>
-    </div>
-    <div class='container-bottom'> 
-      <div id='time-slider'></div>
-      <div id='bottom-chart'></div>
     </div>
   </div>
 </div>
 
+<!-- Supporting Scripts -->
 <script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
 <script src="https://unpkg.com/d3-simple-slider"></script>
 <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/leaflet.js') }}"></script>
+<script src="{{ url_for('static', filename='js/leaflet-sidebar.js') }}"></script>
+
 <script src="{{ url_for('static', filename='js/moment.js') }}"></script>
 <script src="{{ url_for('static', filename='js/leaflet.ajax.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jenks.js') }}"></script>
+
+<!-- Mapping Application Scripts -->
+<script src="{{ url_for('static', filename='js/mapstyles.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mapevents.js') }}"></script>
+<script src="{{ url_for('static', filename='js/maplegend.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mapcharts.js') }}"></script>
+<script src="{{ url_for('static', filename='js/mapoptions.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
-<script src="{{ url_for('static', filename='js/prettydropdown.js') }}"></script>
-<script>
-  $(document).ready(function() {
-    $('select').prettyDropdown({
-      height: 30
-    });
-  });
-</script>
+
 </body>
