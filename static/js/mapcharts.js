@@ -68,7 +68,7 @@ function histogramPlot(data, bins, xlabel, ylabel){
       y.domain([0, d3.max(histBins, h => h.totPop)]);
       // Append the bar rectangles to the svg element
   
-      console.log(histBins)
+      // console.log(histBins)
 
       plotSvg.selectAll("rect")
         .data(histBins)
