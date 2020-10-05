@@ -125,6 +125,14 @@ var sidebar = L.control.sidebar({
 
 sidebar.open('home');
 
+sidebar.on('content', function(e){
+  if (e.id == 'share'){
+    console.log(window.location.href);
+    var shareText = document.getElementById('share-link')
+    shareText.innerHTML = window.location.href
+  }
+})
+
 var legend = L.control({position: 'topright'});
 
 legend.onAdd = function(map){
@@ -170,10 +178,6 @@ var plotSvg = d3.select("#plot")
   .attr("preserveAspectRatio", "xMinYMin meet")
   .attr("viewBox", "0 0 300 300")
   .classed("svg-content", true)
-  // .attr("width", plotBoxWidth)
-  // .attr("height", plotBoxHeight)
-  // .append('g')
-  // .attr("transform", "translate(" + plotMargin.left + "," + plotMargin.top + ")")
 
 // Initiate the slider
 var sliderTime = d3
@@ -319,7 +323,6 @@ function loadDotData(){
       weight: 0,
       fillOpacity: 0.3
     };
-    console.log("LOADING DOTS:", state['dot']['url'])
     overlayLayer = new L.GeoJSON.AJAX(state['dot']['url'], {
       pointToLayer: function (feature, latlng) {
         return L.circleMarker(latlng, geojsonMarkerOptions);

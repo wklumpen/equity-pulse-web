@@ -312,3 +312,11 @@ button:hover {
   background-color: #0250d6; /* Green */
   color: white;
 }
+
+pre {
+  font-family: Consolas, "Andale Mono WT", 'Lucida Console", "Courier New';
+  white-space: pre-wrap;
+  padding: 5px 5px 5px 15px;
+  background-color: #eceff1;
+  border-radius: 5px;
+}

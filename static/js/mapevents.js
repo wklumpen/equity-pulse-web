@@ -1,6 +1,3 @@
-
-
-
 function transitToggle(value){
   if (document.getElementById('transitToggle').checked){
       transitLayer.setStyle({
@@ -16,12 +13,11 @@ function transitToggle(value){
 
 function sliderTrigger(value){
   var m = moment(value) // Easier to format using moments.
-  var newDate = m.format('YYYYMMDD')
+  var newDate = m.format('YYYY-MM-DD')
   if (newDate != state['date']){
     queryParams = new URLSearchParams(window.location.search);
     queryParams.set('date', newDate)
     history.replaceState(null, null, "?" + queryParams.toString())
-
     setStateFromParams();
   }
 }

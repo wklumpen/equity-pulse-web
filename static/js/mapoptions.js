@@ -394,6 +394,8 @@ function setStateFromParams(){
 
     setOptionsFromParams();
 
+    // Now update the sharable link
+
     // Reload the map data
     loadMapData();
     loadTimeData();
@@ -422,13 +424,15 @@ function setOptionsFromParams(){
 
     destList.value = s_split[0]
     optionsUpdate();
-    
     zoneList.value = zone;
-    periodList.value = s_split[3];
-    paramList.value = s_split[2];
-    autoList.value = s_split[4];
-    fareList.value = s_split[5];
-    
+
+    if (s_split[0] != "los"){
+      periodList.value = s_split[3];
+      paramList.value = s_split[2];
+      autoList.value = s_split[4];
+      fareList.value = s_split[5];
+    }
+
     demoList.value = mapParams.get('demo');
 }
 

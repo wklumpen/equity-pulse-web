@@ -14,6 +14,7 @@
 
   <!-- FONT -->
   <link href="//fonts.googleapis.com/css?family=Signika:400,300,600" rel="stylesheet" type="text/css">
+  <script src="https://use.fontawesome.com/a70b68a3fb.js"></script>
 
   <!-- CSS -->
   <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/'-awesome/4.7.0/css/font-awesome.min.css"> -->
@@ -26,8 +27,6 @@
 
   <!-- FAVICON -->
   <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-
-  <script src="https://use.fontawesome.com/a70b68a3fb.js"></script>
 
 </head>
 
@@ -58,7 +57,7 @@
               <li><a href="#home" role="tab" ><i class="fa fa-bars"></i></a></li>
               <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Map settings"></i></a></li>
               <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li>
-              <li class="disabled"><a href="#share" role="tab"><i class="fa fa-share" title="Share this map"></i></a></li>
+              <li><a href="#share" role="tab"><i class="fa fa-share" title="Share this map"></i></a></li>
               <li class="disabled"><a href="#download" role="tab"><i class="fa fa-download" title="Download data"></i></a></li>
           </ul>
   
@@ -175,9 +174,10 @@
                 Share This Map
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
             </h1>
-            <h2> Test</h2>
-            <p>Coming soon!</p>
+            <p>You can share the map and preserve the current settings by using the following link:</p>
+            <pre><code id='share-link'></code></pre>
           </div>
+
           <div class="leaflet-sidebar-pane" id="download">
             <h1 class="leaflet-sidebar-header">
                 Download data
@@ -191,13 +191,11 @@
                 About This Application
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
             </h1>
-            <p>Web Application Version: <b>0.3.1-beta</b></p>
+            <p>Web Application Version: <b>0.4.0-beta</b></p>
             <p>This application and the data analysis behind it was proudly built for TransitCenter by
               <a href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
               SF2 Enterprises, and <a href="https://www.klumpentown.com/">Klumpentown Consulting</a>.
             </p>
-
-            <p>All of visualization and analysis was done using open source code and data.</p>
             
           </div>
       </div>
