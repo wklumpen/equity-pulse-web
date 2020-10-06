@@ -6,10 +6,12 @@ object-relational-mapper, along with helper functions to assist data management.
 """
 from datetime import date, datetime
 
-from peewee import Model, SqliteDatabase, TextField, ForeignKeyField, IntegerField, FloatField, DateField, chunked, fn
+from peewee import Model, SqliteDatabase, TextField, ForeignKeyField, IntegerField, BigIntegerField, FloatField, DateField, chunked, fn
 import pandas as pd
 
-database = SqliteDatabase(r'results.db') # Temporary sqlite DB instance
+from dbconfig import database
+
+# database = SqliteDatabase(r'results.db') # Temporary sqlite DB instance
 
 class BaseModel(Model):
     class Meta:
@@ -18,11 +20,11 @@ class BaseModel(Model):
 
 
 class BlockGroup(BaseModel):
-    id = IntegerField(primary_key=True)
+    geoid = BigIntegerField(unique=True)
 
     @staticmethod
     def by_tag(tag):
-        return (BlockGroup.select(BlockGroup.id)
+        return (BlockGroup.select(BlockGroup.geoid)
                     .join(BlockGroupTag).join(Tag)
                     .where(Tag.name == tag))
 
@@ -47,14 +49,12 @@ class BlockGroup(BaseModel):
         df = pd.read_csv(filepath, dtype={'block_group_id': 'Int64'})
         to_insert = []
         for idx, bg in df.iterrows():
-            new_bg = dict()
-            new_bg['id'] = bg['block_group_id']
+            print(int(bg['block_group_id']))
+            new_bg = BlockGroup(geoid=int(bg['block_group_id']))
             to_insert.append(new_bg)
-    
-        with database.atomic():
-            for batch in chunked(to_insert, 100):
-                BlockGroup.insert_many(batch).execute()
 
+        with database.atomic():
+            BlockGroup.bulk_create(to_insert, batch_size=500)
 
 
 class ScoreType(BaseModel):
@@ -64,7 +64,7 @@ class ScoreType(BaseModel):
 
 
 class Score(BaseModel):
-    block_group = ForeignKeyField(BlockGroup, backref='scores')
+    block_group = ForeignKeyField(BlockGroup, field='geoid', backref='scores')
     score_type = ForeignKeyField(ScoreType, backref='scores')
     score = FloatField(null=True)
 
@@ -72,6 +72,7 @@ class Score(BaseModel):
     def score_from_csv(filepath):
         print("Inserting Scores from CSV")
         df = pd.read_csv(filepath, dtype={'block_group_id': 'Int64'})
+        df = df.fillna(0)
         # We'll build a dictionary of types to add and make sure they're
         score_types = dict()
         for score_column in df.columns[1:]:
@@ -103,31 +104,33 @@ class Score(BaseModel):
             with database.atomic():
                 for batch in chunked(to_insert, 100):
                     Score.insert_many(batch).execute()
-        
+
     @staticmethod
     def by_tag_type_with_date(tag, score_key, date):
-        return (Score.select(Score.score, BlockGroup.id, ScoreType.date)
+        q = (Score.select(Score.score, BlockGroup.geoid, ScoreType.date)
                 .join(BlockGroup).join(BlockGroupTag).join(Tag)
                 .where(Tag.name == tag)
                 .switch(Score)
                 .join(ScoreType)
                 .where((ScoreType.key == score_key) & (ScoreType.date == date)))
+        print(q)
+        return q
 
     @staticmethod
     def by_tag_type_no_date(tag, score_key):
         # Parse the score key
-        return (Score.select(Score.score, BlockGroup.id, ScoreType.date)
+        return (Score.select(Score.score, BlockGroup.geoid, ScoreType.date)
                 .join(BlockGroup).join(BlockGroupTag).join(Tag)
                 .where(Tag.name == tag)
                 .switch(Score)
                 .join(ScoreType)
                 .where((ScoreType.key == score_key)
                 ))
-    
+
     @staticmethod
     def weighted_average(tag, score_type, pop_type):
         # Start by getting the appropriate score
-        score = (Score.select(Score.score, BlockGroup.id)
+        score = (Score.select(Score.score, BlockGroup.geoid)
                 .join(BlockGroup).join(BlockGroupTag).join(Tag)
                 .where(Tag.name == tag)
                 .switch(Score)
@@ -146,7 +149,7 @@ class PopulationType(BaseModel):
 
 
 class Population(BaseModel):
-    block_group = ForeignKeyField(BlockGroup, backref='populations')
+    block_group = ForeignKeyField(BlockGroup, field='geoid', backref='populations')
     population_type = ForeignKeyField(PopulationType, backref='populations')
     value = FloatField()
 
@@ -179,16 +182,17 @@ class Population(BaseModel):
 
             with database.atomic():
                 for batch in chunked(to_insert, 100):
-                    Population.insert_many(batch).execute()
+                    Population.insert_many(batch).on_conflict('ignore').execute()
 
     @staticmethod
     def by_tag_type(tag, pop_type):
-        return (Population.select(Population.value, BlockGroup.id)
+        return (Population.select(Population.value, BlockGroup.geoid)
                 .join(BlockGroup).join(BlockGroupTag).join(Tag)
                 .where(Tag.name == tag)
                 .switch(Population)
                 .join(PopulationType)
                 .where(PopulationType.name == pop_type))
+
 
 class Tag(BaseModel):
     name = TextField()
@@ -199,60 +203,22 @@ class Tag(BaseModel):
 
 
 class BlockGroupTag(BaseModel):
-    block_group = ForeignKeyField(BlockGroup, backref='block_group_tags')
+    block_group = ForeignKeyField(BlockGroup, field="geoid", backref='block_group_tags')
     tag = ForeignKeyField(Tag, backref='block_group_tags')
 
+class Region(BaseModel):
+    name = TextField()
+    description = TextField(null=True)
+    tag = TextField(unique=True)
+    lat = FloatField()
+    lon = FloatField()
+    zoom = FloatField()
 
-# DEPRECIATED
-class Dot(BaseModel):
-    block_group = ForeignKeyField(BlockGroup, backref='dots')
-    population_type = ForeignKeyField(PopulationType, backref='dots')
-    x = FloatField()
-    y = FloatField()
-
-
-    @staticmethod
-    def by_tag_type(tag, pop_type):
-        return (Dot.select(Dot.block_group_id, Dot.x, Dot.y)
-                .join(PopulationType)
-                .where(PopulationType.name == pop_type)
-                .switch(Dot)
-                .join(BlockGroup)
-                .join(BlockGroupTag)
-                .join(Tag)
-                .where(Tag.name == tag))
-
-    @staticmethod
-    def dots_from_csv(filepath):
-        df = pd.read_csv(filepath, dtype={'block_group_id': 'Int64'})
-        types = dict()
-        # Packgage up the types
-        for name in df['var'].unique():
-            pt, new = PopulationType.get_or_create(name=name, description=name)
-            types[name] = pt
-        
-        # Now let's add them in
-        to_insert = []
-        for idx, dot_row in df.iterrows():
-            if idx % 10000 == 0:
-                print(f"{idx} rows packaged")
-            insert_row = dict()
-            insert_row['block_group_id'] = dot_row['block_group_id']
-            insert_row['population_type_id'] = types[dot_row['var']].id
-            insert_row['x'] = dot_row['x']
-            insert_row['y'] = dot_row['y']
-            to_insert.append(insert_row)
-        
-        with database.atomic():
-                for batch in chunked(to_insert, 200):
-                    Dot.insert_many(batch).execute()
-        
 
 def create_tables():
-    database.connect()
-    database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag], safe=True)
-    database.close()
-
+    with database:
+        print("Creating Tables on", database)
+        database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag], safe=True)
 
 def setup_region(bg_filepath, pop_filepath, initial_zone_name):
     BlockGroup.add_bg_from_csv(bg_filepath)
@@ -262,8 +228,4 @@ def setup_region(bg_filepath, pop_filepath, initial_zone_name):
 
 
 if __name__ == "__main__":
-    database.connect()
-    database.drop_tables([Dot])
-    database.close()
-    create_tables()
-    Dot.dots_from_csv(r"C:\Users\Willem\Documents\Project\TransitCenter\demo_dots.csv")
+    pass
