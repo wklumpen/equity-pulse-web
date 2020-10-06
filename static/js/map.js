@@ -69,12 +69,6 @@ var state = {
   'date': '30062020', // The current date we are displaying data for
 }
 
-// Keeping track of what data is currently displayed
-// var zoneKey = 'all'
-// var measureKey = 'A_C000_c30_<DATE>_MP'
-// var overlayKey = 'all'
-// var startDate = '30062020'
-
 var bgLayer = null
 var overlayLayer = null
 
@@ -82,11 +76,6 @@ var overlayLayer = null
 state['score']['url'] = "/data/score/" + state['tag'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("<DATE>", state['date'])
 var popURL = null
 state['time']['url'] = "/data/time/" + view['name'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("_<DATE>", "")
-
-// Variables to hold the current data for visualization, etc.
-// var scoreData = {'title': null, 'label': null, data: []}
-// var overlayData = {'title': null, 'label': null, data: []}
-// var timeData = {'title': null, 'label': null, data: []}
 
 // Array to hold layer groups for filtering
 var areaGroups = []
@@ -202,7 +191,7 @@ function initialize(){
     style: bgStyleDefault,
   }).addTo(map);
 
-  transitLayer = new L.GeoJSON.AJAX('static/data/' + view['name'] + '_transit.geojson', {
+  transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geojson', {
     style: {
       color: '#3F3F3F',
       opaicty: 0.5,
@@ -271,7 +260,7 @@ function loadMapData(){
 
   $.getJSON(state['score']['url'], function(data) {
     $.each( data, function( key, val ) {
-      state['score']['data'][parseInt(val['block_group']['id'])] = parseFloat(val['score'])
+      state['score']['data'][parseInt(val['block_group']['geoid'])] = parseFloat(val['score'])
     });
 
   }).done( function (data) {
@@ -297,7 +286,7 @@ function loadOverlayData(){
   if (state['overlay']['url'] != null){
     $.getJSON(state['overlay']['url'], function(data) {
       $.each( data, function( key, val ) {
-        state['overlay']['data'][parseInt(val['block_group']['id'])] = parseFloat(val['value'])
+        state['overlay']['data'][parseInt(val['block_group']['geoid'])] = parseFloat(val['value'])
       });
     }).done( function (data) {
       updatePlot();
