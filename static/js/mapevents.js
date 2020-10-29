@@ -1,5 +1,6 @@
 function transitToggle(value){
-  if (document.getElementById('transitToggle').checked){
+  console.log(value);
+  if (document.getElementById('transitCheck').checked){
       transitLayer.setStyle({
       weight: 1
       })

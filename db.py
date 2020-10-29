@@ -201,6 +201,23 @@ class Tag(BaseModel):
     def max_tag_date(tag_name):
         return (ScoreType.select(fn.MAX(ScoreType.date))).scalar()
 
+    @staticmethod
+    def get_tag_dates(tag_name):
+        return (ScoreType.select(ScoreType.date)
+                .join(Score)
+                .join(BlockGroup)
+                .join(BlockGroupTag)
+                .join(Tag)
+                .where(Tag.name == tag_name).distinct())
+        # return (BlockGroup.select()
+        #         .join(BlockGroupTag)
+        #         .join(Tag)
+        #         .switch(BlockGroup)
+        #         .join(Score)
+        #         .join(ScoreType)
+        #         .where(Tag.name == tag_name)
+        #         .distinct())
+
 
 class BlockGroupTag(BaseModel):
     block_group = ForeignKeyField(BlockGroup, field="geoid", backref='block_group_tags')
@@ -210,6 +227,8 @@ class Region(BaseModel):
     name = TextField()
     description = TextField(null=True)
     tag = TextField(unique=True)
+    county = TextField(unique=True)
+    state = TextField()
     lat = FloatField()
     lon = FloatField()
     zoom = FloatField()

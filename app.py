@@ -36,17 +36,30 @@ def _db_close(exc):
 
 @app.route('/')
 def home():
-    return render_template('scorecard.html')
+    return render_template('home.html', regions=Region.select())
+
+@app.route('/documentation')
+def documentation():
+    return render_template('documentation.html')
 
 
 @app.route('/map/<region>')
-def region(region):
+def map(region):
     try:
         r = Region.get(Region.tag == region)
         # Get the maximum date
         start_date = Tag.max_tag_date(region.lower()).strftime("%Y-%m-%d")
         view = {'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'max_date': start_date}
         return render_template('map.html', region=r.tag, zoom=r.zoom, view=view)
+    except DoesNotExist:
+        return redirect('/')
+
+@app.route('/charts/<region>')
+def charts(region):
+    try:
+        r = Region.get(Region.tag == region)
+        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'state': r.state, 'county': r.county}
+        return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')
 
@@ -96,6 +109,11 @@ def data_time(zone, score_key):
     df['date'] = pd.to_datetime(df['date']).dt.date.astype(str)
 
     return jsonify(df.to_dict())
+
+@app.route('/data/dates/<zone>')
+def zone_dates(zone):
+    dates = Tag.get_tag_dates(zone)
+    return jsonify([model_to_dict(d)['date'] for d in dates])
 
 @app.route('/data/dot/<zone>/<pop_key>')
 def data_dot(zone, pop_key):

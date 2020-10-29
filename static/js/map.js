@@ -28,11 +28,11 @@ var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
 var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 
 // Plot chart dimensions and margins
-var plotMargin = {top: 10, right: 30, bottom: 50, left: 70}
-var plotBoxHeight = d3.select("#plot").node().getBoundingClientRect().height
-var plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
-var plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
-var plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
+// var plotMargin = {top: 10, right: 30, bottom: 50, left: 70}
+// var plotBoxHeight = d3.select("#plot").node().getBoundingClientRect().height
+// var plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
+// var plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
+// var plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
 
 // Color schemes
 var YlGnBu = ["#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"]
@@ -347,24 +347,24 @@ function updateMap(){
 }
 
 function updatePlot(){
-  if (plotWidth > 0){
-    // Redo the plot based on currently set data
-    if (state['overlay']['url'] == null){
-      // We do a histogram
-      var score = []
-      for (var s in state['score']['data']){
-        score.push(state['score']['data'][s])
-      }
-      histogramPlot(state['score']['data'], 50, state['score']['label'], "Population")
-    }
-    else {
-      var plotData = []
-      for (var key of Object.keys(state['overlay']['data'])) {
-        plotData.push({'x': state['score']['data'][key], 'y': state['overlay']['data'][key]})
-      }
-      scatterPlot(plotData, state['score']['label'], state['overlay']['label'])
-    }
-  }
+  // if (plotWidth > 0){
+  //   // Redo the plot based on currently set data
+  //   if (state['overlay']['url'] == null){
+  //     // We do a histogram
+  //     var score = []
+  //     for (var s in state['score']['data']){
+  //       score.push(state['score']['data'][s])
+  //     }
+  //     histogramPlot(state['score']['data'], 50, state['score']['label'], "Population")
+  //   }
+  //   else {
+  //     var plotData = []
+  //     for (var key of Object.keys(state['overlay']['data'])) {
+  //       plotData.push({'x': state['score']['data'][key], 'y': state['overlay']['data'][key]})
+  //     }
+  //     scatterPlot(plotData, state['score']['label'], state['overlay']['label'])
+  //   }
+  // }
 }
 
 // ==== 3. DISPLAY FUNCTIONS ====

@@ -7,38 +7,58 @@
   <title>{% block title %}{% endblock %} | DEMO</title>
   <meta name="description" content="">
   <meta name="author" content="">
+
   <!-- Mobile Specific Metas
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- FONT -->
   <link href="//fonts.googleapis.com/css?family=Signika:400,300,600" rel="stylesheet" type="text/css">
+  <!--Import Google Icon Font-->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
   <!-- CSS -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+  <!--Import materialize.css-->
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"  media="screen,projection"/>
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
   <!-- FAVICON -->
-  <link rel="shortcut icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
 
   <!-- PAGE SPEICIFCS-->
   {% block head %}{% endblock %}
 </head>
 <body>
-<script>
-  /* Toggle between adding and removing the "responsive" class to topnav when the user clicks on the icon */
-function myFunction() {
-    document.getElementsByClassName("topnav")[0].classList.toggle("responsive");
-    document.getElementsByClassName("title-text")[0].classList.toggle("responsive")
-}
-</script>
-  <ul class="topnav">
-    <li><a href="/" class="title-text">TransitCenter</a></li>
-    <li><a href="/tfc">about</a></li>
-    <li class='icon'>
-      <a href="javascript:void(0);" onclick="myFunction()">&#9776;</a>
-    </li>
-  </ul>
-{% block content %}{% endblock %}
+  <header>
+    <nav class="blue transit">
+      <div class="nav-wrapper">
+        <a href="/" class="brand-logo center">TransitCenter Equity Project</a>
+        <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
+        <ul id="nav-mobile" class="left hide-on-med-and-down">
+          <li><a href="#">About</a></li>
+          <li><a href="/documentation">Documentation</a></li>
+        </ul>
+        <ul id="nav-mobile" class="right hide-on-med-and-down">
+          <li><a href="https://twitter.com/wklumpen"><i class="fa fa-twitter"></i></a></li>
+        </ul>
+      </div>
+    </nav>
+    <ul class="sidenav" id="mobile-demo">
+      <li><a href="#"><b>About</b></a></li>
+      <li><a href="/documentation">Documentation</a></li>
+    </ul>
+  </header>
+
+  <main>
+    {% block content %}{% endblock %}
+  </main>
+
+  <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+  <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
+  <script>
+      $(document).ready(function(){
+        $('.sidenav').sidenav();
+        $('select').formSelect();
+      });
+  </script>
+  
 </body>
-</html>

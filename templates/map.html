@@ -1,45 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <!-- Basic Page Needs
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta charset="utf-8">
-  <title>{% block title %}{% endblock %}Transit Equity | DEMO</title>
-  <meta name="description" content="Transit Equity in Major American Urban Areas">
-  <meta name="author" content="TransitCenter">
+{% extends 'base.html' %}
+{% block title %}Transit Equity Map{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/scorecard.css') }}">
 
-  <!-- Mobile Specific Metas
-  –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="https://use.fontawesome.com/a70b68a3fb.js"></script>
 
-  <!-- FONT -->
-  <link href="//fonts.googleapis.com/css?family=Signika:400,300,600" rel="stylesheet" type="text/css">
-  <script src="https://use.fontawesome.com/a70b68a3fb.js"></script>
+<!-- CSS -->
+<!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/'-awesome/4.7.0/css/font-awesome.min.css"> -->
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/prettydropdown.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet-sidebar.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/fa-all.css') }}">
 
-  <!-- CSS -->
-  <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/'-awesome/4.7.0/css/font-awesome.min.css"> -->
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/prettydropdown.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet-sidebar.css') }}">
-  <link rel="stylesheet" href="{{ url_for('static', filename='css/fa-all.css') }}">
+{% endblock%}
 
-  <!-- FAVICON -->
-  <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}">
-
-</head>
-
-<body>
-<div class="container-outer">
-  <div class='container-header'>
-    <div class="topnav">
-      <a href="https://transitcenter.org/"><b>TransitCenter Equity Pulse</b></a>
-      <!-- <a href="/">Scorecard</a>
-      <a href="#">About</a>
-      <a href="#">Download</a> -->
-    </div>
-  </div>
+{% block content %}
   <div class='container-main'>
       <div id='loading'>LOADING</div>
       <div id="map">
@@ -56,7 +32,7 @@
           <ul role="tablist"> <!-- top aligned tabs -->
               <li><a href="#home" role="tab" ><i class="fa fa-bars"></i></a></li>
               <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Map settings"></i></a></li>
-              <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li>
+              <!-- <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li> -->
               <li><a href="#share" role="tab"><i class="fa fa-share" title="Share this map"></i></a></li>
               <li class="disabled"><a href="#download" role="tab"><i class="fa fa-download" title="Download data"></i></a></li>
           </ul>
@@ -79,7 +55,7 @@
                 pulse of transit equity accross seven metropolitan areas in the United Staes, we've created this analytical dashbaord and mapping 
                 application.
               </p>
-              <h3>How to use this application</h3>
+              <h5>How to use this application</h5>
               <p>Use the map to explore the data in the region. You can customize the inputs to the map by clicking on the gears icon
                 on the left of this panel. Explore over time by selecting an available date from the timeline below to see how changes
                 in transit access and service have developed throughout the course of the COVID-19 pandemic.
@@ -91,11 +67,11 @@
                 Map Settings
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
               </h1>
-              <h2>Data Inputs</h2>
+              <h5>Data Inputs</h5>
 
               <p class="label">Opportunity to Access</p>
               <div class="dropdown-select">
-                <select id="destination" name="destination" title="Choose a destination." onchange="optionsUpdate()">
+                <select class="browser-default" id="destination" name="destination" title="Choose a destination." onchange="optionsUpdate()">
                   <option value="C000" selected>Employment, All</option>
                   <option value="CE01" >Employment, Low Income</option>
                   <option value="snap" >Grocery Stores</option>
@@ -107,31 +83,31 @@
 
               <p class="label">Time Period</p>
               <div class="dropdown-select">
-                <select id="period" name="period" title="Choose a time period.">
+                <select class="browser-default" id="period" name="period" title="Choose a time period.">
                 </select>
               </div>
 
               <p class="label">Measurement Options</p>
               <div class="dropdown-select">
-                <select id="param" name="param" title="Choose a parameter.">
+                <select class="browser-default" id="param" name="param" title="Choose a parameter.">
                 </select>
               </div>
 
               <p class="label">Show as Auto Ratio</p>
               <div class="dropdown-select">
-                <select id="auto" name="auto" title="Choose a parameter.">
+                <select  class="browser-default" id="auto" name="auto" title="Choose a parameter.">
                 </select>
               </div>
 
               <p class="label">Include Fare Sensitivity</p>
               <div class="dropdown-select">
-                <select id="fare" name="fare" title="Choose a parameter.">
+                <select class="browser-default" id="fare" name="fare" title="Choose a parameter.">
                 </select>
               </div>
 
               <p class="label">Portion of Region to Include</p>
               <div class="dropdown-select">
-                <select id="zones" name="zones" title="Choose a portion of the region to display on the map.">
+                <select class="browser-default" id="zones" name="zones" title="Choose a portion of the region to display on the map.">
                   <option value="all">Entire Region</option>
                   <option value="msa">Metropolitan Statistical Area</option>
                 </select>
@@ -139,7 +115,7 @@
 
               <p class="label">Overlay Demogaphics</p>
               <div class="dropdown-select">
-                <select id="demo" name="zones" title="Choose a population overlap to add to the map.">
+                <select class="browser-default" id="demo" name="zones" title="Choose a population overlap to add to the map.">
                   <option value='none'>No Overlay</option>
                   <option value="pop_total">1 dot = 50 people</option>
                   <option value="pop_poverty">1 dot = 50 people below the poverty line</option>
@@ -149,25 +125,27 @@
 
               <button onclick="updateMapClicked()">Update Map</button>
 
-              <h2>Display Options</h2>
+              <h5>Display Options</h5>
               <!-- Rounded switch -->
               <p class='label'>Show  Transit Lines</p>
-              <div id="toggle">
-                <label class="switch">
-                  <input type="checkbox" id='transitToggle' checked="true" onchange="transitToggle(value)">
-                  <span class="slider round"></span>
+              <div class="switch">
+                <label>
+                  Off
+                  <input id='transitCheck' checked='checked' type="checkbox" onchange="transitToggle(value)">
+                  <span class="lever blue"></span>
+                  On
                 </label>
               </div>
           </div>
   
-          <div class="leaflet-sidebar-pane" id="charts">
+          <!-- <div class="leaflet-sidebar-pane" id="charts">
               <h1 class="leaflet-sidebar-header">
                 Charts and Context
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
               </h1>
               <div id="plot" class="svg-container">
               </div>
-          </div>
+          </div> -->
 
           <div class="leaflet-sidebar-pane" id="share">
             <h1 class="leaflet-sidebar-header">
@@ -201,7 +179,6 @@
       </div>
     </div>
   </div>
-</div>
 
 <!-- Supporting Scripts -->
 <script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
@@ -222,4 +199,4 @@
 <script src="{{ url_for('static', filename='js/mapoptions.js') }}"></script>
 <script src="{{ url_for('static', filename='js/map.js') }}"></script>
 
-</body>
+{% endblock %}
