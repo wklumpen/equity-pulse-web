@@ -132,12 +132,38 @@ class Score(BaseModel):
 
     @staticmethod
     def by_tag_type_with_date(tag, score_key, date):
-        q = (Score.select(Score.score, BlockGroup.geoid, ScoreType.date)
-                .join(BlockGroup).join(BlockGroupTag).join(Tag)
-                .where(Tag.name == tag)
-                .switch(Score)
-                .join(ScoreType)
-                .where((ScoreType.key == score_key) & (ScoreType.date == date)))
+        sql = """
+        SELECT score.score, score.block_group_id FROM score
+        INNER JOIN score_type ON score.score_type_id = score_type.id
+        WHERE score_type.key = ?
+        AND score_type.date = ?
+        AND score.block_group_id IN 
+        (
+            SELECT block_group_tag.block_group_id
+            FROM block_group_tag
+            INNER JOIN tag ON block_group_tag.tag_id = tag.id
+            WHERE tag.name = ?
+        )"""
+        params = (score_key, date, tag)
+        cursor = database.execute_sql(sql, params)
+        data = {}
+        for row in cursor.fetchall():
+            data[row[1]] = row[0]
+        return data
+
+        # q = (Score.select(Score.score, BlockGroup.geoid, ScoreType.date)
+        #         .join(BlockGroup).join(BlockGroupTag).join(Tag)
+        #         .where(Tag.name == tag)
+        #         .switch(Score)
+        #         .join(ScoreType)
+        #         .where((ScoreType.key == score_key) & (ScoreType.date == date)))
+        # return q
+
+    @staticmethod
+    def get_dates(tag, score_key):
+        q = (Summary.select(Summary.date)
+            .where(Summary.zone == tag)
+            .where(Summary.score_key == score_key).distinct())
         return q
 
     @staticmethod

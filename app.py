@@ -78,9 +78,8 @@ def score(zone, score_key, date_key):
         period = Morning peak (MP), etc.
     """
     date = dt.datetime.strptime(date_key, "%Y-%m-%d")
-    scores = Score.by_tag_type_with_date(zone, score_key, date)
-    print(scores)
-    return jsonify([model_to_dict(s) for s in scores])
+    scores = Score.by_tag_type_with_date(zone, score_key, date_key)
+    return jsonify(scores)
 
 @app.route('/data/bg/<tag>')
 def data_bg_tag(tag):
@@ -109,17 +108,10 @@ def data_time(zone, score_key):
     Format of score_key should be:
     """
     # Grab scores with dates
-    scores = Score.by_tag_type_no_date(zone, score_key)
-    # Now let's grab populations
-    # pop = Population.by_tag_type(zone, 'pop_total')
-    # df = pd.DataFrame(list(scores.dicts()))
-    # df = pd.merge(df, pd.DataFrame(list(pop.dicts())), on='geoid')
-    # # Now calculate the weighted average
-    # df = df[['score', 'date', 'value']].groupby("date").apply(lambda dfx: (dfx["value"] * dfx["score"]).sum() / dfx["value"].sum()).reset_index()
-    # df.columns = ['date', 'score']
-    # df['date'] = pd.to_datetime(df['date']).dt.date.astype(str)
+    scores = Score.get_dates(f"{zone}-msa", score_key)
+    score_d = [model_to_dict(s)['date'] for s in scores]
 
-    return jsonify(scores)
+    return jsonify(score_d)
 
 @app.route('/data/dates/<zone>')
 def zone_dates(zone):
