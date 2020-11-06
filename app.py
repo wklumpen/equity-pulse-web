@@ -15,7 +15,7 @@ import pandas as pd
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Tag, Region
+from db import Score, Population, BlockGroup, Tag, Region, Summary
 from dbconfig import database
 
 app = Flask(__name__)
@@ -36,7 +36,7 @@ def _db_close(exc):
 
 @app.route('/')
 def home():
-    return render_template('home.html', regions=Region.select())
+    return render_template('home.html', regions=Region.select().where(Region.live == True))
 
 @app.route('/documentation')
 def documentation():
@@ -49,7 +49,7 @@ def map(region):
         r = Region.get(Region.tag == region)
         # Get the maximum date
         start_date = Tag.max_tag_date(region.lower()).strftime("%Y-%m-%d")
-        view = {'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'max_date': start_date}
+        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'max_date': start_date}
         return render_template('map.html', region=r.tag, zoom=r.zoom, view=view)
     except DoesNotExist:
         return redirect('/')
@@ -58,14 +58,13 @@ def map(region):
 def charts(region):
     try:
         r = Region.get(Region.tag == region)
-        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'state': r.state, 'county': r.county}
+        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'state': r.state, 'county': r.county, 'agencies': r.agencies}
         return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')
 
 
 # DATA API STARTS HERE
-
 @app.route('/data/score/<zone>/<score_key>/<date_key>')
 def score(zone, score_key, date_key):
     """
@@ -80,6 +79,7 @@ def score(zone, score_key, date_key):
     """
     date = dt.datetime.strptime(date_key, "%Y-%m-%d")
     scores = Score.by_tag_type_with_date(zone, score_key, date)
+    print(scores)
     return jsonify([model_to_dict(s) for s in scores])
 
 @app.route('/data/bg/<tag>')
@@ -92,6 +92,17 @@ def data_population(zone, pop_key):
     pop = Population.by_tag_type(zone, pop_key)
     return jsonify([model_to_dict(p) for p in pop])
 
+@app.route('/data/theme/<theme>/<zone>/<score_key>')
+def data_theme(theme, zone, score_key):
+    if theme == '1':
+        data = Score.weighted_average_all_pop_types(zone, score_key) 
+        return jsonify(data)
+
+@app.route('/data/summary/<zone>')
+def data_summary(zone):
+    q = (Summary.select().where(Summary.zone.contains(zone)))
+    return jsonify([model_to_dict(p) for p in q])
+
 @app.route('/data/time/<zone>/<score_key>')
 def data_time(zone, score_key):
     """
@@ -100,15 +111,15 @@ def data_time(zone, score_key):
     # Grab scores with dates
     scores = Score.by_tag_type_no_date(zone, score_key)
     # Now let's grab populations
-    pop = Population.by_tag_type(zone, 'pop_total')
-    df = pd.DataFrame(list(scores.dicts()))
-    df = pd.merge(df, pd.DataFrame(list(pop.dicts())), on='geoid')
-    # Now calculate the weighted average
-    df = df[['score', 'date', 'value']].groupby("date").apply(lambda dfx: (dfx["value"] * dfx["score"]).sum() / dfx["value"].sum()).reset_index()
-    df.columns = ['date', 'score']
-    df['date'] = pd.to_datetime(df['date']).dt.date.astype(str)
+    # pop = Population.by_tag_type(zone, 'pop_total')
+    # df = pd.DataFrame(list(scores.dicts()))
+    # df = pd.merge(df, pd.DataFrame(list(pop.dicts())), on='geoid')
+    # # Now calculate the weighted average
+    # df = df[['score', 'date', 'value']].groupby("date").apply(lambda dfx: (dfx["value"] * dfx["score"]).sum() / dfx["value"].sum()).reset_index()
+    # df.columns = ['date', 'score']
+    # df['date'] = pd.to_datetime(df['date']).dt.date.astype(str)
 
-    return jsonify(df.to_dict())
+    return jsonify(scores)
 
 @app.route('/data/dates/<zone>')
 def zone_dates(zone):
@@ -119,6 +130,7 @@ def zone_dates(zone):
 def data_dot(zone, pop_key):
     dots = Dot.by_tag_type(zone, pop_key)
     return jsonify([model_to_dict(d) for d in dots])
+
 
 
 if __name__ == '__main__':

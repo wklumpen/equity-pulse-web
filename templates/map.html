@@ -46,7 +46,7 @@
       <div class="leaflet-sidebar-content">
           <div class="leaflet-sidebar-pane" id="home">
               <h1 class="leaflet-sidebar-header">
-                  Access and Equity in {{region.title()}}
+                  Access and Equity in {{view['title']}}
                   <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
               </h1>
               
@@ -75,6 +75,11 @@
                   <option value="C000" selected>Employment, All</option>
                   <option value="CE01" >Employment, Low Income</option>
                   <option value="snap" >Grocery Stores</option>
+                  <option value="hospitals" >Hospitals</option>
+                  <option value="urgentcare" >Urgent Care Facilities</option>
+                  <option value="pharmacies" >Pharmacies</option>
+                  <option value="parks" >Parks & Greenspace</option>
+                  <option value="schools" >Colleges & Universities</option>
                   <option value="los" >Transit Service</option>
                 </select>
               </div>
@@ -110,6 +115,8 @@
                 <select class="browser-default" id="zones" name="zones" title="Choose a portion of the region to display on the map.">
                   <option value="all">Entire Region</option>
                   <option value="msa">Metropolitan Statistical Area</option>
+                  <option value="urban">Urban Core</option>
+                  <option value="equity">Equity Neighborhoods</option>
                 </select>
               </div>
 
@@ -169,7 +176,7 @@
                 About This Application
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
             </h1>
-            <p>Web Application Version: <b>0.4.0-beta</b></p>
+            <p>Web Application Version: <b>0.5.0-beta</b></p>
             <p>This application and the data analysis behind it was proudly built for TransitCenter by
               <a href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
               SF2 Enterprises, and <a href="https://www.klumpentown.com/">Klumpentown Consulting</a>.

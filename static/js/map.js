@@ -22,8 +22,8 @@ var bottomChartHeight = bottomChartBoxHeight - bottomChartMargin.top - bottomCha
 
 // Legend dimensions and margins
 var legendMargin = {top: 10, right: 10, bottom: 10, left: 10}
-var legendBoxHeight = 200
-var legendBoxWidth = 200
+var legendBoxHeight = 220
+var legendBoxWidth = 250
 var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
 var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 
@@ -37,8 +37,8 @@ var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 // Color schemes
 var YlGnBu = ["#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"]
 var YlGnBu7 = ["#ffffcc", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84"]
-
-
+var Viridis7 = ["#472D7B", "#3B528B", "#2C728E", "#21918D", "#28AE80", "#5DC963", "#ABDC32"]
+var nan_color = "#FFEBCD"
 
 // All of the information for the current application state is kept in here
 var state = {
@@ -70,15 +70,8 @@ var state = {
 }
 
 var bgLayer = null
+var transitLayer = null
 var overlayLayer = null
-
-// TEMP Variable
-state['score']['url'] = "/data/score/" + state['tag'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("<DATE>", state['date'])
-var popURL = null
-state['time']['url'] = "/data/time/" + view['name'] + "/" + 'A_C000_c30_<DATE>_MP'.replace("_<DATE>", "")
-
-// Array to hold layer groups for filtering
-var areaGroups = []
 
 // Define a date parsing function for the data
 var parseDate = d3.timeParse("%Y-%m-%d");
@@ -122,28 +115,24 @@ sidebar.on('content', function(e){
   }
 })
 
+// Initialize legend, create div, and add to the map.
 var legend = L.control({position: 'topright'});
-
 legend.onAdd = function(map){
   var div = L.DomUtil.create('div', 'legend');
   div.setAttribute("id", "legend")
-
   return div
 }
-
 legend.addTo(map);
 
+// Initiale time bar, create div, and add to the map
 var time = L.control({position: 'bottomright'});
-
 time.onAdd = function(map){
   var sliderDiv = L.DomUtil.create('div', 'timebox');
   sliderDiv.setAttribute("id", "timebox")
   sliderDiv.innerHTML += "<div id='bottom-chart'></div>"
   return sliderDiv
 }
-
 time.addTo(map)
-
 // Create SVG for the time series chart on the bottom
 var bottomSvg = d3.select("#bottom-chart")
   .append('svg')
@@ -160,99 +149,22 @@ var legendSvg = d3.select("#legend")
   .append('g')
   .attr("transform", "translate(" + legendMargin.left + "," + legendMargin.top + ")");
 
-// Create the plot SVG for the scatter/histogram plots
-// var plotSvg = null;
-var plotSvg = d3.select("#plot")
-  .append('svg')
-  .attr("preserveAspectRatio", "xMinYMin meet")
-  .attr("viewBox", "0 0 300 300")
-  .classed("svg-content", true)
+// Load the appropriate GeoJSON Data with an AJAX call
+bgLayer = new L.GeoJSON.AJAX(bgURL,{
+  style: bgStyleDefault,
+}).addTo(map);
 
-// Initiate the slider
-var sliderTime = d3
-  .sliderBottom()
-  .min(d3.min(dateData))
-  .max(d3.max(dateData))
-  .width(bottomChartWidth)
-  .tickFormat(d3.timeFormat('%b %d'))
-  .tickValues(dateData)
-  .fill('#2d74ed')
-  .marks(dateData) // Allows for irregular steps as needed
-  .default(dateData[dateData.length - 1])
-  .on('end', val => {
-    sliderTrigger(val);
-  });
-
-initialize();
-
-function initialize(){
-  // Load the appropriate GeoJSON Data with an AJAX call
-  bgLayer = new L.GeoJSON.AJAX(bgURL,{
-    style: bgStyleDefault,
-  }).addTo(map);
-
-  transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geojson', {
-    style: {
-      color: '#3F3F3F',
-      opaicty: 0.5,
-      weight: 1
-    }
-  }).addTo(map)
-
-  bgLayer.on('data:loaded', function() {
-    setStateFromParams();
-  })
-}
-
-// Divide the layer into different groups as needed for filtering
-// (Currently sorting based on GEOID as a placeholder)
-// ==== 2. TRIGGERS AND EVENTS ====
-
-/**
- * Trigger function when zone context area is changed
- * @param {String} newZoneKey Key used to tag zones
-*/
-function zoneChanged(newZoneKey){
-  oldTag = state['tag']
-  if (newZoneKey == 'msa'){
-    state['tag'] = view['name'] + "-msa"
+transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geojson', {
+  style: {
+    color: '#3F3F3F',
+    opaicty: 0.5,
+    weight: 1
   }
-  else{
-    state['tag'] = view['name']
-  }
-  state['score']['url'] = state['score']['url'].replace(oldTag, state['tag'])
+}).addTo(map)
 
-  loadMapData();
-}
-
-/**
- * Trigger function when map measure is changed
- * @param {String} newMeasureKey Key used to select the data.
- */
-function measureChanged(newMeasureKey){
-  // Update the data URL
-  state['score']['url'] = "/data/score/" + state['tag'] + "/" + newMeasureKey.replace("<DATE>", state['date'])
-  var score = []
-
-  // Update the time series URL
-  state['time']['url'] = "/data/time/" + state['tag'] + "/" + newMeasureKey.replace("_<DATE>", "")
-
-  // Update the labels
-  if (newMeasureKey.split("_")[1].charAt(0) == 'C'){
-    state['score']['label'] = 'Jobs Accessible (jobs)'
-    state['score']['unit'] = 'jobs'
-  }
-  else{
-    state['score']['label'] = 'Travel Time (min)'
-    state['score']['unit'] = 'min'
-  }
-
-  // Reload the map data
-  loadMapData();
-
-  // Now let's grab the time series data also and update the time series plot
-  loadTimeData();
-}
+bgLayer.on('data:loaded', function() {
+  setStateFromParams();
+})
 
 function loadMapData(){
   // Fetch the data we need
@@ -264,14 +176,18 @@ function loadMapData(){
     });
 
   }).done( function (data) {
+    if (state['score']['url'].search('autoY') > 0){
+      state['score']['unit'] = ""
+      state['score']['label'] = "Ratio of accessible jobs (auto/transit)"
+    }
     updateMap();
-    updatePlot();
   })
 }
 
 function loadTimeData(){
   state['time']['data'] = []
   $.getJSON(state['time']['url'], function(data) {
+    console.log(data)
     $.each( data.date, function( key, val ) {
       state['time']['data'].push({"date": parseDate(val), "score": parseFloat(data.score[key])})
     });
@@ -289,11 +205,9 @@ function loadOverlayData(){
         state['overlay']['data'][parseInt(val['block_group']['geoid'])] = parseFloat(val['value'])
       });
     }).done( function (data) {
-      updatePlot();
     });
   }
   else{
-    updatePlot();
   }
 }
 
@@ -330,41 +244,30 @@ function updateMap(){
   
   // Style the map
   // For jenks, we'll need to calculate the breaks once for the data
-  var breaks = jenks(score, 6)
+  jenks_score = score.filter(d => d != -1.0)
+  var breaks = jenks(jenks_score, 6)
+  breaks[0] = 0.0;
+  console.log(breaks)
+  if (state['score']['url'].search("_M_") > 0){
+    var is_travel_time = true;
+  }
+  else{
+    var is_travel_time = false;
+  }
+  console.log(is_travel_time);
   bgLayer.setStyle(function(feature){
     return {
       // fillColor: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
       // color: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
-      fillColor: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, YlGnBu7),
-      color: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, YlGnBu7),
+      fillColor: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, Viridis7, is_travel_time),
+      color: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, Viridis7, is_travel_time),
       fillOpacity: 0.4,
       weight: 1.1,
       opacity: 0.2
     }
   })
   // Update the legend accordingly
-  setLegendBins(getSevenBreaksLabels(breaks, YlGnBu7, state['score']['unit']), state['score']['label']);
-}
-
-function updatePlot(){
-  // if (plotWidth > 0){
-  //   // Redo the plot based on currently set data
-  //   if (state['overlay']['url'] == null){
-  //     // We do a histogram
-  //     var score = []
-  //     for (var s in state['score']['data']){
-  //       score.push(state['score']['data'][s])
-  //     }
-  //     histogramPlot(state['score']['data'], 50, state['score']['label'], "Population")
-  //   }
-  //   else {
-  //     var plotData = []
-  //     for (var key of Object.keys(state['overlay']['data'])) {
-  //       plotData.push({'x': state['score']['data'][key], 'y': state['overlay']['data'][key]})
-  //     }
-  //     scatterPlot(plotData, state['score']['label'], state['overlay']['label'])
-  //   }
-  // }
+  setLegendBins(getSevenBreaksLabels(breaks, Viridis7, state['score']['unit'], is_travel_time), state['score']['label']);
 }
 
 // ==== 3. DISPLAY FUNCTIONS ====
@@ -377,6 +280,8 @@ function updatePlot(){
 */
 function updateTimeSeries(data, xlabel, ylabel){
   bottomSvg.selectAll("*").remove();
+
+  console.log(data);
 
   var x = d3.scaleTime()
     .domain(d3.extent(data, d => d.date))
@@ -400,21 +305,6 @@ function updateTimeSeries(data, xlabel, ylabel){
     .attr("y1", function(d) { return y(d.score); })
     .attr("y2", y(0))
     .attr("stroke", "grey")
-
-  // bottomSvg.append("g")
-  //   .call(d3.axisLeft(y));
-
-  // Add line for line char
-  // bottomSvg.append("path")
-  //   .data([data])
-  //   .style('fill', 'none')
-  //   .style('stroke', 'black')
-  //   .style('stroke-width', "2px")
-  //   .attr('d', d3.line()
-  //     .x(d => x(d.date))
-  //     .y(d => y(d.score)
-  //     )
-  //   )
 
   // Add circles to make things clearer
   var nodes = bottomSvg.append('g')
@@ -453,33 +343,4 @@ function updateTimeSeries(data, xlabel, ylabel){
   nodes.on('click', function (d){
     sliderTrigger(d.date)
   })
-
-  // Label the y-axis
-  // bottomSvg.append("text")
-  //   .attr("transform", "rotate(-90)")
-  //   .attr("y", 0 - bottomChartMargin.left)
-  //   .attr("x",0 - (bottomChartHeight / 2))
-  //   .attr("dy", "1em")
-  //   .style("text-anchor", "middle")
-  //   .style('font-weight', 'bold')
-  //   .text(ylabel); 
 }
-
-sidebar.on('content', function(e) {
-  if (e.id == 'charts'){
-    // Plot chart dimensions and margins
-    plotBoxHeight = d3.select("#plot").node().getBoundingClientRect().height
-    plotBoxWidth = d3.select("#plot").node().getBoundingClientRect().width
-    plotWidth = plotBoxWidth - plotMargin.left - plotMargin.right
-    plotHeight = plotBoxHeight - plotMargin.top - plotMargin.bottom
-
-    // Create the plot SVG for the scatter/histogram plots
-
-    // plotSvg.select('svg')
-    // .attr("preserveAspectRatio", "xMinYMin meet")
-    // .attr("viewBox", "0 0 300 300")
-    // .classed("svg-content", true);
-    
-    updatePlot()
-  }
-})

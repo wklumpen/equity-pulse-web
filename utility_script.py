@@ -1,12 +1,25 @@
-from db import setup_region, create_tables, BlockGroup
+from db import setup_region, create_tables, delete_tables, BlockGroup, Score, Population, Summary
+import os
 
-bg_path = r"C:\Users\Willem\Documents\Project\TransitCenter\boston_sample.csv"
-pop_path = r"C:\Users\Willem\Documents\Project\TransitCenter\demographics_whole.csv"
-bg_msa_path = r"C:\Users\Willem\Documents\Project\TransitCenter\boston-msa.csv"
+data_folder = r"C:\Users\Willem\Documents\Project\TransitCenter\data\nyc"
+bg_path = os.path.join(data_folder, "bg.csv")
+urban_path = os.path.join(data_folder, "bg_urban_core.csv")
+msa_path = os.path.join(data_folder, 'bg.csv')
+equity_path = os.path.join(data_folder, 'bg_equity.csv' )
+pop_path = os.path.join(data_folder, "nyc_demographics.csv")
+score_paths = ['measures_2020-02-23_MP.csv', 'measures_2020-05-10_MP.csv', 'measures_2020-09-20_MP.csv', 'measures_2020-10-11_MP.csv']
 
 # Starting with a blank DB
+delete_tables()
 create_tables()
-setup_region(bg_path, pop_path, "boston")
+BlockGroup.add_bg_from_csv(bg_path)
+BlockGroup.tag_bg_from_csv(bg_path, 'nyc', 'nyc', 'all')
+BlockGroup.tag_bg_from_csv(msa_path, 'nyc-msa', 'nyc', 'msa')
+BlockGroup.tag_bg_from_csv(urban_path,  'nyc-urban', 'nyc', 'urban')
+BlockGroup.tag_bg_from_csv(equity_path, 'nyc-equity', 'nyc', 'equity')
+for s in score_paths:
+    score_path = os.path.join(data_folder, s)
+    Score.score_from_csv(score_path)
 
-# # Use this to tag a region
-# BlockGroup.tag_bg_from_csv(bg_msa_path, "boston-msa")
+Population.population_from_csv(pop_path)
+Summary.refresh()

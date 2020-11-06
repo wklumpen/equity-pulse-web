@@ -14,6 +14,7 @@ function clearLegend(){
       .attr('cy', function(d, i){return legendMargin.top + 20 + i*20})
       .attr('r', 6)
       .style('fill', d => d.color)
+      .style('opacity', 0.7)
       .style('stroke', 'black')
     
     legendSvg.selectAll("legendLabels")

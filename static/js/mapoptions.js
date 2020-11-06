@@ -1,5 +1,5 @@
 // TO BE EXPANDED WITH MORE OPTIONS
-var zoneList = ['all', 'msa']
+var zoneList = ['all', 'msa', 'urban', 'equity']
 var measureList = ['A', 'M']
 var AGDestList = ['C000']
 var MDestList = ['snap']
@@ -151,6 +151,106 @@ var options = {
       },
       {
         "paramName": "3 SNAP stores",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "hospitals": {
+    "destName" : "Hospitals",
+    "destMeasureLabel": "Travel Time",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to hospitals is measured by calculating the minimum travel time to a specified number of hospitals.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 hospital",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 hospitals",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "urgentcare": {
+    "destName" : "Urgent Care Facilities",
+    "destMeasureLabel": "Travel Time",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to urgent care is measured by calculating the minimum travel time to a specified number of urgent care facilities.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 facility",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 facilities",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "pharmacies": {
+    "destName" : "Pharmacies",
+    "destMeasureLabel": "Travel Time",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to pharmacies is measured by calculating the minimum travel time to a specified number of pharmacies.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 pharmacy",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 pharmacies",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "parks": {
+    "destName" : "Parks & Greenspace",
+    "destMeasureLabel": "Park Space",
+    "destMeasureUnit": "acres",
+    "destMeasure": "Access to parks and greensapce is measured by calculating the total acerage accessible in a specified travel time.",
+    "measureCode": "P",
+    "params": [
+      {
+        "paramName": "15 minutes",
+        "paramCode": "c15"
+      },
+      {
+        "paramName": "30 minutes",
+        "paramCode": "c30"
+      }
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "schools": {
+    "destName" : "Colleges & Universities",
+    "destMeasureLabel": "Colleges & Universities",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to colleges and universities is measured by calculating the minimum travel time to a specified number of schools.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 school",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 schools",
         "paramCode": "t3"
       },
     ],
@@ -315,6 +415,7 @@ function setStateFromParams(){
 
     if (mapParams.has('date')){
       date = mapParams.get('date')
+      console.log("DATE")
     }
     else{
       // console.log("Setting Date:", view['max_date'])
@@ -360,6 +461,9 @@ function setStateFromParams(){
     }
     else if (zone == 'urban'){
       state['tag'] = view['name'] + "-urban"
+    }
+    else if (zone == 'equity'){
+      state['tag'] = view['name'] + "-equity"
     }
     else{
         state['tag'] = view['name']
@@ -442,10 +546,12 @@ function setOptionsFromParams(){
 function updateMapClicked(){
   // Start with a blank query string state
   queryParams = new URLSearchParams();
+  currentParams = new URLSearchParams(window.location.search)
 
   // Build all the options where possible
   var zoneList = document.getElementById('zones')
   var zone = zoneList.options[zoneList.selectedIndex].value
+  console.log("ZONE", zone)
 
   var destList = document.getElementById('destination');
   var destination = destList.options[destList.selectedIndex].value
@@ -473,6 +579,7 @@ function updateMapClicked(){
   queryParams.set("zone", zone)
   queryParams.set("key", key)
   queryParams.set("demo", demo)
+  queryParams.set("date", currentParams.get('date')) // Pass the date along
   history.replaceState(null, null, "?" + queryParams.toString())
   setStateFromParams();
 }

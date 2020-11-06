@@ -86,22 +86,33 @@ function bgStyleDefault(feature) {
     }
   }
   
-  function getSevenBreaksColor(d, breaks, colors) {
+  function getSevenBreaksColor(d, breaks, colors, travel_time) {
     // Handle NAN Value label
     if(isNaN(d)){
-      return "#717678";
+      return nan_color;
     }
-    else {
-      return  d >= breaks[5] ? colors[0]:
-      d >= breaks[4] ? colors[1]:
-      d >= breaks[3] ? colors[2]:
-      d >= breaks[2] ? colors[3]:
-      d >= breaks[1] ? colors[4]:
-      d >= breaks[0] ? colors[5]:
-      colors[6];
+    else if(travel_time == true){
+      if(d == -1.0){
+        return colors[0] // Greater than 90; worst outcome
+      }
+      else {
+        return  d >= breaks[5] ? colors[1]:
+                d >= breaks[4] ? colors[2]:
+                d >= breaks[3] ? colors[3]:
+                d >= breaks[2] ? colors[4]:
+                d >= breaks[1] ? colors[5]:
+                colors[6];
+      }
+    }
+    else{
+      return  d >= breaks[5] ? colors[6]:
+              d >= breaks[4] ? colors[5]:
+              d >= breaks[3] ? colors[4]:
+              d >= breaks[2] ? colors[3]:
+              d >= breaks[1] ? colors[2]:
+              colors[1];
     }
   }
-  
   /**
    * Get color scheme labels on five equal ranges.
    * @param {Number} min Minimum value in data range
@@ -114,7 +125,7 @@ function bgStyleDefault(feature) {
       {'label': styleNumbers(min + 2*(max-min)/5) + " to " + styleNumbers(min + 3*(max-min)/5)+ " " + unit, 'color': '#8c96c6'},
       {'label': styleNumbers(min + 3*(max-min)/5) + " to " + styleNumbers(min + 4*(max-min)/5)+ " " + unit, 'color': '#8856a7'},
       {'label': styleNumbers(min + 4*(max-min)/5) + " to " + styleNumbers(max)+ " " + unit, 'color': '#810f7c'},
-      {'label': "No data", 'color': '#717678'},
+      {'label': "No data/outside region", 'color': '#717678'},
     ]
   }
   
@@ -134,17 +145,32 @@ function bgStyleDefault(feature) {
     ]
   }
   
-  function getSevenBreaksLabels(breaks, color, unit){
-    return [
-      {'label': styleNumbers(breaks[0]) + " to " + styleNumbers(breaks[1]) + " " + unit, 'color': color[6]},
-      {'label': styleNumbers(breaks[1]) + " to " + styleNumbers(breaks[2])+ " " + unit, 'color': color[5]},
-      {'label': styleNumbers(breaks[2]) + " to " + styleNumbers(breaks[3])+ " " + unit, 'color': color[4]},
-      {'label': styleNumbers(breaks[3]) + " to " + styleNumbers(breaks[4])+ " " + unit, 'color': color[3]},
-      {'label': styleNumbers(breaks[4]) + " to " + styleNumbers(breaks[5])+ " " + unit, 'color': color[2]},
-      {'label': styleNumbers(breaks[5]) + " to " + styleNumbers(breaks[6])+ " " + unit, 'color': color[1]},
-      {'label': "More than " + styleNumbers(breaks[6]) + " " + unit, 'color': color[0]},
-      {'label': "No data", 'color': '#717678'},
-    ]
+  function getSevenBreaksLabels(breaks, color, unit, travel_time){
+    if (travel_time == true){
+      return [
+        {'label': styleNumbers(breaks[0]) + " to " + styleNumbers(breaks[1]) + " " + unit, 'color': color[6]},
+        {'label': styleNumbers(breaks[1]) + " to " + styleNumbers(breaks[2])+ " " + unit, 'color': color[5]},
+        {'label': styleNumbers(breaks[2]) + " to " + styleNumbers(breaks[3])+ " " + unit, 'color': color[4]},
+        {'label': styleNumbers(breaks[3]) + " to " + styleNumbers(breaks[4])+ " " + unit, 'color': color[3]},
+        {'label': styleNumbers(breaks[4]) + " to " + styleNumbers(breaks[5])+ " " + unit, 'color': color[2]},
+        {'label': styleNumbers(breaks[5]) + " to " + styleNumbers(breaks[6])+ " " + unit, 'color': color[1]},
+        {'label': "More than " + styleNumbers(breaks[6]) + " " + unit, 'color': color[0]},
+        {'label': "No data/outside region", 'color': nan_color},
+      ]
+    }
+    else{
+      return [
+        {'label': styleNumbers(breaks[0]) + " to " + styleNumbers(breaks[1]) + " " + unit, 'color': color[0]},
+        {'label': styleNumbers(breaks[1]) + " to " + styleNumbers(breaks[2])+ " " + unit, 'color': color[1]},
+        {'label': styleNumbers(breaks[2]) + " to " + styleNumbers(breaks[3])+ " " + unit, 'color': color[2]},
+        {'label': styleNumbers(breaks[3]) + " to " + styleNumbers(breaks[4])+ " " + unit, 'color': color[3]},
+        {'label': styleNumbers(breaks[4]) + " to " + styleNumbers(breaks[5])+ " " + unit, 'color': color[4]},
+        {'label': styleNumbers(breaks[5]) + " to " + styleNumbers(breaks[6])+ " " + unit, 'color': color[5]},
+        {'label': "More than " + styleNumbers(breaks[6]) + " " + unit, 'color': color[6]},
+        {'label': "No data/outside region", 'color': nan_color},
+      ]
+    }
+
   }
   
   function getXLabelBuffer(maxVal){
@@ -162,6 +188,9 @@ function bgStyleDefault(feature) {
       return val.toFixed(0).toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
     }
     else if (Math.abs(val) > 10){
+      return val.toFixed(0)
+    }
+    else if (val == 0.0){
       return val.toFixed(0)
     }
     else{
