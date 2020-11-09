@@ -135,6 +135,20 @@ class Score(BaseModel):
         sql = """
         SELECT score.score, score.block_group_id FROM score
         INNER JOIN score_type ON score.score_type_id = score_type.id
+        WHERE score_type.key = %s
+        AND score_type.date = %s
+        AND score.block_group_id IN 
+        (
+            SELECT block_group_tag.block_group_id
+            FROM block_group_tag
+            INNER JOIN tag ON block_group_tag.tag_id = tag.id
+            WHERE tag.name = %s
+        )"""
+
+        # Use this for SQLite
+        sql = """
+        SELECT score.score, score.block_group_id FROM score
+        INNER JOIN score_type ON score.score_type_id = score_type.id
         WHERE score_type.key = ?
         AND score_type.date = ?
         AND score.block_group_id IN 
@@ -144,9 +158,10 @@ class Score(BaseModel):
             INNER JOIN tag ON block_group_tag.tag_id = tag.id
             WHERE tag.name = ?
         )"""
+
         params = (score_key, date, tag)
         cursor = database.execute_sql(sql, params)
-        data = {}
+        data = dict()
         for row in cursor.fetchall():
             data[row[1]] = row[0]
         return data

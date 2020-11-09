@@ -49,15 +49,15 @@ var periodOptions = [
   {
     "periodName": "Weekday Morning",
     "periodCode": "AM"
-  },
-  {
-    "periodName": "Weekday Evening",
-    "periodCode": "PM"
-  },
-  {
-    "periodName": "Weekend",
-    "periodCode": "WE"
-  }
+  }//,
+  // {
+  //   "periodName": "Weekday Evening",
+  //   "periodCode": "PM"
+  // },
+  // {
+  //   "periodName": "Weekend",
+  //   "periodCode": "WE"
+  // }
 ]
 
 var periodNA = [

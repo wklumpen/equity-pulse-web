@@ -15,7 +15,7 @@
 
 // Bottom chart dimensions and margins
 var timeSelectMargin = {top: 2, right: 20, bottom: 10, left: 20}
-var timeSelectBoxWidth = d3.select(".container-main").node().getBoundingClientRect().width - 480
+var timeSelectBoxWidth = 500
 var timeSelectBoxHeight = 30
 var timeSelectWidth = timeSelectBoxWidth - timeSelectMargin.left - timeSelectMargin.right
 var timeSelectHeight = timeSelectBoxHeight - timeSelectMargin.top - timeSelectMargin.bottom
@@ -126,7 +126,7 @@ time.onAdd = function(map){
   return sliderDiv
 }
 time.addTo(map)
-
+timeSelectBoxWidth = d3.select("#timebox").node().getBoundingClientRect().width
 // Create SVG for the time series chart on the bottom
 var timeSVG = d3.select("#time-chart")
   .append('svg')
@@ -162,10 +162,19 @@ bgLayer.on('data:loaded', function() {
 
 function loadMapData(){
   // Fetch the data we need
-  state['score']['data'] = {}  // Reset the data state
+  state['score']['data'] = {}
   console.log(state['score']['url'])
   d3.json(state['score']['url']).then(function(data){
-    state['score']['data'] = data;
+    var keys = Object.keys(data)
+    keys.forEach(function(key, idx){
+      state['score']['data'][parseInt(key)] = parseFloat(data[key])
+    })
+
+    // data.forEach(function(item, idx){
+    //   console.log(key, val)
+    //   state['score']['data'][parseInt(item)] = parseFloat(val)
+    // })
+    // console.log(state['score']['data'])
     updateMap();
   })
   // $.getJSON(state['score']['url'], function(data) {
@@ -187,7 +196,8 @@ function loadTimeData(){
     var timeData = []
     data.forEach(function(val, idx){
       console.log(val)
-      timeData.push(moment(val).valueOf())
+      var m = moment.utc(val)
+      timeData.push(m.valueOf())
     })
     state['time']['data'] = timeData
     updateTimeSeries();
@@ -232,10 +242,11 @@ function loadDotData(){
 }
 
 function updateMap(){
-  var score = state['score']['data']
-  console.log(score)
-  score = score.filter(Boolean).sort(d3.ascending)
-  
+  var score = []
+  Object.keys(state['score']['data']).forEach(function(key, idx){
+    score.push(state['score']['data'][key])
+  })
+
   // Style the map
   // For jenks, we'll need to calculate the breaks once for the data
   jenks_score = score.filter(d => d != -1.0)
@@ -303,7 +314,7 @@ function updateTimeSeries(data, xlabel, ylabel){
     .append("text")
     .attr("x", d => x(d))
     .attr("y", timeSelectHeight + 5)
-    .text(d => moment(d).format('MMM D'))
+    .text(d => moment.utc(d).format('MMM D'))
     .attr('text-anchor', 'middle')
     .attr("dy", ".35em")
     .attr("font-size", "0.8em")
@@ -320,7 +331,7 @@ function updateTimeSeries(data, xlabel, ylabel){
     .style('fill', "#2d74ed")
     .style("stroke-width", "2")
     .style("stroke", function(d){
-      var md = moment(d)
+      var md = moment.utc(d)
       if (md.format('YYYYMMDD') == state['date']){
         return "black"
       }
