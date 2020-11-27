@@ -23,15 +23,16 @@ var timeSelectHeight = timeSelectBoxHeight - timeSelectMargin.top - timeSelectMa
 // Legend dimensions and margins
 var legendMargin = {top: 10, right: 10, bottom: 10, left: 10}
 var legendBoxHeight = 220
-var legendBoxWidth = 250
+var legendBoxWidth = 300
 var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
 var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
 
 // Color schemes
 var YlGnBu = ["#ffffcc", "#a1dab4", "#41b6c4", "#2c7fb8", "#253494"]
 var YlGnBu7 = ["#ffffcc", "#c7e9b4", "#7fcdbb", "#41b6c4", "#1d91c0", "#225ea8", "#0c2c84"]
+var Viridis5 = ["#443A83", "#31688E", "#21918D", "#35B779", "#8FD744"]
 var Viridis7 = ["#472D7B", "#3B528B", "#2C728E", "#21918D", "#28AE80", "#5DC963", "#ABDC32"]
-var nan_color = "#FFEBCD"
+var nan_color = "#F0F0F0"
 
 // All of the information for the current application state is kept in here
 var state = {
@@ -43,16 +44,7 @@ var state = {
     'unit': 'jobs', 
     data: {} // Format of data[<block_group_id>] = score
   }, 
-  'overlay': {
-    'url': null,  // Used for API lookups
-    'title': null, 
-    'label': null,
-    'unit': null, 
-    data: {} //Format of data[<block_group_id>] = people/hhld
-  },
-  'dot': {
-    'url': null,
-  },
+  'overlay': null, // Overlay key for map dots
   'time': {
     'url': null,  // Used for API lookups
     'title': null, 
@@ -65,6 +57,7 @@ var state = {
 var bgLayer = null
 var transitLayer = null
 var overlayLayer = null
+var message = ""
 
 // Define a date parsing function for the data
 var parseDate = d3.timeParse("%Y-%m-%d");
@@ -73,17 +66,22 @@ var parseDate = d3.timeParse("%Y-%m-%d");
 var dateData = [new Date(2020, 1, 29), new Date(2020, 5, 30)]
 
 // Loading splash (placeholder for now)
-var $loading = $('#loading').hide();
-$(document)
-  .ajaxStart(function () {
-    $loading.show();
-  })
-  .ajaxStop(function () {
-    $loading.hide();
-  });
+// var $loading = $('#loading').hide();
+// $(document)
+//   .ajaxStart(function () {
+//     $loading.show();
+//   })
+//   .ajaxStop(function () {
+//     $loading.hide();
+//   });
 
 // Initialze map object. View is set in html code by backend
-var map = L.map('map').setView([view['lat'], view['lon']], zoom);
+var map = L.map('map',
+  {
+    preferCanvas: true, // Great speedup
+    markerZoomAnimation: false
+  }
+).setView([view['lat'], view['lon']], zoom);
 
 // Load the basemap layer - currently using CartoDB Greyscale.
 var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
@@ -125,7 +123,18 @@ time.onAdd = function(map){
   sliderDiv.innerHTML += "<div id='time-chart'></div>"
   return sliderDiv
 }
+
 time.addTo(map)
+
+var messageBar = L.control({position: 'bottomright'});
+  messageBar.onAdd = function(map){
+    var div = L.DomUtil.create('div', 'message');
+    div.setAttribute("id", "message")
+    return div
+}
+
+messageBar.addTo(map);
+
 timeSelectBoxWidth = d3.select("#timebox").node().getBoundingClientRect().width
 // Create SVG for the time series chart on the bottom
 var timeSVG = d3.select("#time-chart")
@@ -151,8 +160,8 @@ bgLayer = new L.GeoJSON.AJAX(bgURL,{
 transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geojson', {
   style: {
     color: '#3F3F3F',
-    opaicty: 0.5,
-    weight: 1
+    opacity: 0.7,
+    weight: 0.5
   }
 }).addTo(map)
 
@@ -161,85 +170,63 @@ bgLayer.on('data:loaded', function() {
 })
 
 function loadMapData(){
+  showMessage("Fetching map data, please wait...")
   // Fetch the data we need
   state['score']['data'] = {}
-  console.log(state['score']['url'])
   d3.json(state['score']['url']).then(function(data){
     var keys = Object.keys(data)
     keys.forEach(function(key, idx){
       state['score']['data'][parseInt(key)] = parseFloat(data[key])
     })
-
-    // data.forEach(function(item, idx){
-    //   console.log(key, val)
-    //   state['score']['data'][parseInt(item)] = parseFloat(val)
-    // })
-    // console.log(state['score']['data'])
+    showMessage("Updating map...")
     updateMap();
+    clearMessage()
   })
-  // $.getJSON(state['score']['url'], function(data) {
-  //   $.each( data, function( key, val ) {
-  //     state['score']['data'][parseInt(val['block_group']['geoid'])] = parseFloat(val['score'])
-  //   });
-
-  // }).done( function (data) {
-  //   if (state['score']['url'].search('autoY') > 0){
-  //     state['score']['unit'] = ""
-  //     state['score']['label'] = "Ratio of accessible jobs (auto/transit)"
-  //   }
-    
-  // })
 }
 
-function loadTimeData(){
-  d3.json(state['time']['url']).then(function(data){
-    var timeData = []
-    data.forEach(function(val, idx){
-      console.log(val)
-      var m = moment.utc(val)
-      timeData.push(m.valueOf())
+function loadTimeData(updateTime){
+  if (updateTime){
+    d3.json(state['time']['url']).then(function(data){
+      var timeData = []
+      data.forEach(function(val, idx){
+        var m = moment.utc(val)
+        timeData.push(m.valueOf())
+      })
+      state['time']['data'] = timeData
+      updateTimeSeries();
     })
-    state['time']['data'] = timeData
-    updateTimeSeries();
-  })
-}
-
-function loadOverlayData(){
-  // Let's update the plot for funzies
-  if (state['overlay']['url'] != null){
-    $.getJSON(state['overlay']['url'], function(data) {
-      $.each( data, function( key, val ) {
-        state['overlay']['data'][parseInt(val['block_group']['geoid'])] = parseFloat(val['value'])
-      });
-    }).done( function (data) {
-    });
   }
   else{
+    updateTimeSeries();
   }
 }
 
-function loadDotData(){
-  // First, remove the existing layer
+function loadOverlay(){
+  // First, remove the existing layer if it exists
   if (overlayLayer != null){
     map.removeLayer(overlayLayer)
+    overlayLayer = null;
   }
 
-  // Now add one back in if it's not the one we need
-  if (state['dot']['url'] != null){
-    var geojsonMarkerOptions = {
-      radius: 1.5,
+  if (state['overlay'] != null){
+    // Set the options
+    var markerOptions = {
+      radius: 0.5,
       fillColor: "#000000",
       color: "#000",
       weight: 0,
       fillOpacity: 0.3
     };
-    overlayLayer = new L.GeoJSON.AJAX(state['dot']['url'], {
+    // Grab the appropriate overlay layer
+    overlayLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_' + state['overlay'] + '.geojson', {
       pointToLayer: function (feature, latlng) {
-        return L.circleMarker(latlng, geojsonMarkerOptions);
+        return L.circleMarker(latlng, markerOptions);
       }
     }).addTo(map);
   }
+  
 }
+
 
 function updateMap(){
   var score = []
@@ -247,30 +234,62 @@ function updateMap(){
     score.push(state['score']['data'][key])
   })
 
-  // Style the map
-  // For jenks, we'll need to calculate the breaks once for the data
-  jenks_score = score.filter(d => d != -1.0)
-  var breaks = jenks(jenks_score, 6)
-  breaks[0] = 0.0;
+  // Sort, or quantiles will break real good
+  score.sort(d3.ascending)
   if (state['score']['url'].search("_M_") > 0){
     var is_travel_time = true;
   }
   else{
     var is_travel_time = false;
   }
+  if (state['score']['url'].search("_autoY_") > 0){
+    var is_ratio = true;
+  }
+  else{
+    var is_ratio = false;
+  }
   bgLayer.setStyle(function(feature){
-    return {
-      // fillColor: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
-      // color: getQuartileColor(state['score']['data'][parseInt(feature.properties.GEOID)], score),
-      fillColor: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, Viridis7, is_travel_time),
-      color: getSevenBreaksColor(state['score']['data'][parseInt(feature.properties.GEOID)], breaks, Viridis7, is_travel_time),
-      fillOpacity: 0.4,
-      weight: 1.1,
-      opacity: 0.2
+    if ((is_travel_time == true) & (is_ratio == false)){
+      return {
+        fillColor: getTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], Viridis5),
+        color: getTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], Viridis5),
+        fillOpacity: 0.7,
+        weight: 1.0,
+        opacity: 0.5
+      }
     }
+    else if ((is_travel_time == true) & (is_ratio == true)){
+      return {
+        fillColor: getQuintileTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+        color: getQuintileTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+        fillOpacity: 0.7,
+        weight: 1.0,
+        opacity: 0.5
+      }
+    }
+    else{
+      return {
+        fillColor: getQuintileCumulativeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+        color: getQuintileCumulativeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+        fillOpacity: 0.7,
+        weight: 1.0,
+        opacity: 0.5
+      }
+    }
+    
   })
+  if ((is_travel_time == true) & (is_ratio == false)){
+    setLegendBins(getTravelTimeLabels(Viridis5), state['score']['label']);
+  }
+  else if ((is_travel_time == true) & (is_ratio == true)){
+    setLegendBins(getQuintileTravelTimeLabels(score, state['score']['unit'], Viridis5), state['score']['label'])
+  }
+  else{
+    console.log("Quintile, Cumulative")
+    setLegendBins(getQuintileCumulativeLabels(score, state['score']['unit'], Viridis5), state['score']['label']);
+  }
   // Update the legend accordingly
-  setLegendBins(getSevenBreaksLabels(breaks, Viridis7, state['score']['unit'], is_travel_time), state['score']['label']);
+  
 }
 
 // ==== 3. DISPLAY FUNCTIONS ====
@@ -289,14 +308,6 @@ function updateTimeSeries(data, xlabel, ylabel){
   var x = d3.scaleTime()
     .domain(d3.extent(data))
     .range([0, timeSelectWidth])
-  
-  // timeSVG.append("g")
-  //   .attr("transform", "translate(0," + timeSelectHeight + ")")
-  //   .call(d3.axisBottom(x));
-
-  // var y = d3.scaleLinear()
-  //   .domain([0, d3.max(data, d => d.score)])
-  //   .range([ timeSelectHeight, 0]);
 
   // Add horizontal lines
   timeSVG.append("line")
@@ -332,7 +343,7 @@ function updateTimeSeries(data, xlabel, ylabel){
     .style("stroke-width", "2")
     .style("stroke", function(d){
       var md = moment.utc(d)
-      if (md.format('YYYYMMDD') == state['date']){
+      if (md.format('YYYY-MM-DD') == state['date']){
         return "black"
       }
       else{
@@ -356,4 +367,13 @@ function updateTimeSeries(data, xlabel, ylabel){
   nodes.on('click', function (d){
     sliderTrigger(d)
   })
+}
+
+function showMessage(text){
+  m = d3.select('#message').node()
+  m.innerHTML = text
+}
+
+function clearMessage(){
+  showMessage("")
 }

@@ -79,7 +79,11 @@ class Score(BaseModel):
         print("Packaging keys")
         for s_key in score_keys:
             for date in df[df.score_key == s_key].date.unique():
-                s_type, new = ScoreType.get_or_create(key=s_key, date=datetime.strptime(date, '%Y-%m-%d'))
+                try:
+                    strpdate = datetime.strptime(date, '%Y-%m-%d')
+                except ValueError:
+                    strpdate = datetime.strptime(date, '%Y-%m-%d %H:%M:%S').date()
+                s_type, new = ScoreType.get_or_create(key=s_key, date=strpdate)
                 score_key_dict[(s_key, date)] = s_type.id
 
         print("Packaging scores")
@@ -144,20 +148,20 @@ class Score(BaseModel):
             INNER JOIN tag ON block_group_tag.tag_id = tag.id
             WHERE tag.name = %s
         )"""
-
-        # Use this for SQLite
-        sql = """
-        SELECT score.score, score.block_group_id FROM score
-        INNER JOIN score_type ON score.score_type_id = score_type.id
-        WHERE score_type.key = ?
-        AND score_type.date = ?
-        AND score.block_group_id IN 
-        (
-            SELECT block_group_tag.block_group_id
-            FROM block_group_tag
-            INNER JOIN tag ON block_group_tag.tag_id = tag.id
-            WHERE tag.name = ?
-        )"""
+        if type(database) == SqliteDatabase:
+            # Use this for SQLite
+            sql = """
+            SELECT score.score, score.block_group_id FROM score
+            INNER JOIN score_type ON score.score_type_id = score_type.id
+            WHERE score_type.key = ?
+            AND score_type.date = ?
+            AND score.block_group_id IN 
+            (
+                SELECT block_group_tag.block_group_id
+                FROM block_group_tag
+                INNER JOIN tag ON block_group_tag.tag_id = tag.id
+                WHERE tag.name = ?
+            )"""
 
         params = (score_key, date, tag)
         cursor = database.execute_sql(sql, params)
@@ -258,6 +262,10 @@ class Summary(BaseModel):
     description = TextField()
     score_key = TextField()
     value = FloatField()
+
+    def max_date(region):
+        q = (Summary.select(fn.MAX(Summary.date)).where(Summary.zone == region).scalar())
+        return q
 
     @staticmethod
     def refresh():

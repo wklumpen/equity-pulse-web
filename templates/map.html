@@ -60,6 +60,9 @@
                 on the left of this panel. Explore over time by selecting an available date from the timeline below to see how changes
                 in transit access and service have developed throughout the course of the COVID-19 pandemic.
               </p>
+              <p>
+                You can also see summary charts and a discussion for the region on the <a href="/charts/{{view['name']}}">charts page.</a>
+              </p>
           </div>
   
           <div class="leaflet-sidebar-pane" id="data">
@@ -124,9 +127,13 @@
               <div class="dropdown-select">
                 <select class="browser-default" id="demo" name="zones" title="Choose a population overlap to add to the map.">
                   <option value='none'>No Overlay</option>
-                  <option value="pop_total">1 dot = 50 people</option>
-                  <option value="pop_poverty">1 dot = 50 people below the poverty line</option>
-                  <option value="pop_black">1 dot = 50 black people</option>
+                  <option value="pop_asiapacific">1 dot = 100 Asian/Pacific Islanders</option>
+                  <option value="pop_black">1 dot = 100 Black people</option>
+                  <option value="pop_hispanic">1 dot = 100 Latinx people</option>
+                  <option value="pop_white">1 dot = 100 White people</option>
+                  <option value="pop_poverty">1 dot = 100 people at/below 200% poverty line (low-income)</option>
+                  <option value="workers_essential">1 dot = 50 essential workers</option>
+                  <option value="hhld_single_mother">1 dot = 50 single-mother households</option>
                 </select>
               </div>
 
@@ -144,15 +151,6 @@
                 </label>
               </div>
           </div>
-  
-          <!-- <div class="leaflet-sidebar-pane" id="charts">
-              <h1 class="leaflet-sidebar-header">
-                Charts and Context
-                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-              </h1>
-              <div id="plot" class="svg-container">
-              </div>
-          </div> -->
 
           <div class="leaflet-sidebar-pane" id="share">
             <h1 class="leaflet-sidebar-header">
@@ -176,7 +174,7 @@
                 About This Application
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
             </h1>
-            <p>Web Application Version: <b>0.5.0-beta</b></p>
+            <p>Version: <b>0.5.3-beta</b></p>
             <p>This application and the data analysis behind it was proudly built for TransitCenter by
               <a href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
               SF2 Enterprises, and <a href="https://www.klumpentown.com/">Klumpentown Consulting</a>.

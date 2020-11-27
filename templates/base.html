@@ -4,7 +4,7 @@
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta charset="utf-8">
-  <title>{% block title %}{% endblock %} | DEMO</title>
+  <title>{% block title %}{% endblock %} - TransitCenter Equity Pulse</title>
   <meta name="description" content="">
   <meta name="author" content="">
 
@@ -13,6 +13,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- FONT -->
   <link href="//fonts.googleapis.com/css?family=Signika:400,300,600" rel="stylesheet" type="text/css">
+  <link href="//db.onlinewebfonts.com/c/1846241fbfa2b978f919cb6d3ac51df7?family=MarkOT-Heavy" rel="stylesheet" type="text/css"/>
   <!--Import Google Icon Font-->
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
@@ -31,14 +32,14 @@
   <header>
     <nav class="blue transit">
       <div class="nav-wrapper">
-        <a href="/" class="brand-logo center">TransitCenter Equity Project</a>
+        <a href="/" class="brand-logo center"><img class="responsive-img" id="logo" src="{{ url_for('static', filename='img/logo.png') }}"/></a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul id="nav-mobile" class="left hide-on-med-and-down">
           <li><a href="#">About</a></li>
           <li><a href="/documentation">Documentation</a></li>
         </ul>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li><a href="https://twitter.com/wklumpen"><i class="fa fa-twitter"></i></a></li>
+          <li><a href="#" class='grey-text text-lighten-2'>v0.5.3-beta</i></a></li>
         </ul>
       </div>
     </nav>

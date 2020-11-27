@@ -58,7 +58,8 @@ def map(region):
 def charts(region):
     try:
         r = Region.get(Region.tag == region)
-        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'state': r.state, 'county': r.county, 'agencies': r.agencies}
+        maxDate = Summary.max_date(f"{region}-msa")
+        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'state': r.state, 'county': r.county, 'agencies': r.agencies, 'max_date': maxDate}
         return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')
@@ -107,7 +108,7 @@ def data_time(zone, score_key):
     """
     Format of score_key should be:
     """
-    # Grab scores with dates
+    # Grab scores with dates, tag with MSA as we know that score is in the summary
     scores = Score.get_dates(f"{zone}-msa", score_key)
     score_d = [model_to_dict(s)['date'] for s in scores]
 

@@ -2,6 +2,10 @@ html {
   font-family: Raleway, GillSans, Calibri, Trebuchet, sans-serif;
 }
 
+.nav-wrapper .brand-logo img {
+  height: 64px;
+}
+
 
 /* Remove margins and padding from the list, and add a black background color */
 ul.topnav {
