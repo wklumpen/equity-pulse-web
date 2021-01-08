@@ -89,10 +89,10 @@ function getQuintileTravelTimeColor(d, data, colors) {
     return colors[0]
   }
   else {
-    return  d >= d3.quantile(data, 0.8) ? colors[0]: 
-    d >= d3.quantile(data, 0.6) ? colors[1]:
-    d >= d3.quantile(data, 0.4) ? colors[2]:
-    d >= d3.quantile(data, 0.2) ? colors[3]:
+    return  d >= d3.quantile(qData, 0.8) ? colors[0]: 
+    d >= d3.quantile(qData, 0.6) ? colors[1]:
+    d >= d3.quantile(qData, 0.4) ? colors[2]:
+    d >= d3.quantile(qData, 0.2) ? colors[3]:
     colors[4];
   }
 }
@@ -168,10 +168,10 @@ function getTravelTimeColor(d, colors){
     return nan_color;
   }
   else {
-    return  d >= 60 ? colors[0]: 
-      d >= 45 ? colors[1]:
-      d >= 30 ? colors[2]:
-      d >= 15 ? colors[3]:
+    return  d >= 40 ? colors[0]: 
+      d >= 30 ? colors[1]:
+      d >= 20 ? colors[2]:
+      d >= 10 ? colors[3]:
       d >= 0 ? colors[4]:
       colors[0];
   }
@@ -179,11 +179,11 @@ function getTravelTimeColor(d, colors){
 
 function getTravelTimeLabels(colors){
   return [
-    {'label': 'Less than 15 minutes', 'color': colors[4]},
-    {'label': '15 to 30 minutes', 'color': colors[3]},
-    {'label': '30 to 45 minutes', 'color': colors[2]},
-    {'label': '45 to 60 minutes', 'color': colors[1]},
-    {'label': 'More than 60 minutes', 'color': colors[0]},
+    {'label': 'Less than 10 minutes', 'color': colors[4]},
+    {'label': '10 to 20 minutes', 'color': colors[3]},
+    {'label': '20 to 30 minutes', 'color': colors[2]},
+    {'label': '30 to 40 minutes', 'color': colors[1]},
+    {'label': 'More than 40 minutes', 'color': colors[0]},
     {'label': "No data/outside region", 'color': nan_color},
   ]
 }

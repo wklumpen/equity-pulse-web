@@ -7,9 +7,12 @@ import datetime as dt
 
 # Third Party Modules
 from flask import Flask, render_template, jsonify, redirect
+from flask_csv import send_csv
 from playhouse.shortcuts import model_to_dict
 from peewee import DoesNotExist
 import pandas as pd
+from io import StringIO
+import csv
 
 # Configuration imports
 from config import DevelopmentConfig, REGION_LIST
@@ -42,6 +45,9 @@ def home():
 def documentation():
     return render_template('documentation.html')
 
+@app.route('/download')
+def download():
+    return render_template('download.html')
 
 @app.route('/map/<region>')
 def map(region):
@@ -86,6 +92,18 @@ def score(zone, score_key, date_key):
 def data_bg_tag(tag):
     bg = BlockGroup.by_tag(tag)
     return jsonify([model_to_dict(b) for b in bg])
+
+@app.route('/data/dl/view/csv/<zone>/<score_key>/<date_key>')
+def current_data_csv(zone, score_key, date_key):
+    scores = Score.by_tag_type_with_date(zone, score_key, date_key)
+    out = []
+    for key, val in scores.items():
+        out.append({'block_group': key, 'score': val})
+    return send_csv(out, f"tc_{zone}_{score_key}_{date_key}.csv", ['block_group', 'score'])
+
+@app.route('/data/dl/view/geojson/<score_key>')
+def current_data_geojson(score_key):
+    print(score_key)
 
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):

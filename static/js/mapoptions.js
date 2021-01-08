@@ -469,11 +469,12 @@ function setStateFromParams(){
 
     // TODO: Check if date is valid
     state['date'] = date
+    state['score']['key'] = key
 
     var updateScore = false;
     if (state['score']['url'] != "/data/score/" + state['tag'] + "/" + key + "/" + date){
       updateScore = true;
-      state['score']['url'] = "/data/score/" + state['tag'] + "/" + key + "/" + date
+      state['score']['url'] = "/data/score/" + state['tag'] + "/" + key + "/" + date 
     }
 
     

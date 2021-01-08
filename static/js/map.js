@@ -38,6 +38,7 @@ var nan_color = "#F0F0F0"
 var state = {
   'tag': view['name'], // The geographical region tag
   'score': { // Information about the "score" or "measure"
+    'key': '',
     'url': null,  // Used for API lookups
     'title': 'Access to Jobs in 30 minutes', 
     'label': "Jobs Accessible",
@@ -84,10 +85,22 @@ var map = L.map('map',
 ).setView([view['lat'], view['lon']], zoom);
 
 // Load the basemap layer - currently using CartoDB Greyscale.
-var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_all/{z}/{x}/{y}.png", {
+var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_nolabels/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
 }).addTo(map);
+
+map.createPane('labels');
+map.getPane('labels').style.zIndex = 650;
+map.getPane('labels').style.pointerEvents = 'none';
+
+var cartoLabels = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}.png", {
+  maxZoom: 19,
+  attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>',
+  pane: 'labels'
+}).addTo(map);
+
+cartoLabels.setZIndex(100);
 
 var sidebar = L.control.sidebar({
   autopan: true,       // whether to maintain the centered map point when opening the sidebar
@@ -103,6 +116,10 @@ sidebar.on('content', function(e){
     console.log(window.location.href);
     var shareText = document.getElementById('share-link')
     shareText.innerHTML = window.location.href
+  }
+  if (e.id == 'download'){
+    var dlCSVLink = document.getElementById('csv-link')
+    dlCSVLink.setAttribute('href', '/data/dl/view/csv/'+ view['name'] + '/' + state['score']['key'] + '/' + state['date'])
   }
 })
 
@@ -288,7 +305,6 @@ function updateMap(){
     console.log("Quintile, Cumulative")
     setLegendBins(getQuintileCumulativeLabels(score, state['score']['unit'], Viridis5), state['score']['label']);
   }
-  // Update the legend accordingly
   
 }
 
