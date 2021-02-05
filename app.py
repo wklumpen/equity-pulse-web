@@ -6,7 +6,7 @@ import datetime as dt
 # sys.path.append(r"C:\Users\Willem\Documents\Project\TransitCenter\TransitCenter\utils")
 
 # Third Party Modules
-from flask import Flask, render_template, jsonify, redirect
+from flask import Flask, render_template, jsonify, redirect, Response
 from flask_csv import send_csv
 from playhouse.shortcuts import model_to_dict
 from peewee import DoesNotExist
@@ -18,7 +18,7 @@ import csv
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Tag, Region, Summary
+from db import Score, Population, BlockGroup, Tag, Region, Summary, ScoreType
 from dbconfig import database
 
 app = Flask(__name__)
@@ -45,9 +45,18 @@ def home():
 def documentation():
     return render_template('documentation.html')
 
-@app.route('/download')
-def download():
-    return render_template('download.html')
+@app.route('/download/<region>')
+def download(region):
+    try:
+        r = Region.get(Region.tag == region)
+        dates = ScoreType.get_dates()
+        datelist = []
+        for d in dates:
+            datelist.append(d.date)
+        return render_template('download.html', tag=r.tag, title=r.name, dates=datelist)
+    except DoesNotExist:
+        return redirect('/')
+    
 
 @app.route('/map/<region>')
 def map(region):
@@ -101,9 +110,26 @@ def current_data_csv(zone, score_key, date_key):
         out.append({'block_group': key, 'score': val})
     return send_csv(out, f"tc_{zone}_{score_key}_{date_key}.csv", ['block_group', 'score'])
 
-@app.route('/data/dl/view/geojson/<score_key>')
-def current_data_geojson(score_key):
-    print(score_key)
+@app.route('/data/dl/view/geojson/<zone>/<score_key>/<date_key>')
+def current_data_geojson(zone, score_key, date_key):
+    # Grab the data first
+    scores = Score.by_tag_type_with_date(zone, score_key, date_key)
+    out = {}
+    for key, val in scores.items():
+        out[int(key)] = val
+    # Read in the json file
+    with open(f'static/data/{zone}_bg.geojson') as bgfile:
+        data = json.load(bgfile)
+        for feature in data['features']:
+           feature['properties']['score'] = out[int(feature['properties']['GEOID'])] 
+        return Response(json.dumps(data),
+            mimetype='application/json',
+            headers={'Content-Disposition':f'attachment;filename={score_key}_{date_key}.geojson'})
+
+@app.route('/data/dl/all/<zone>/<date_key>')
+def all_data_csv(zone, date_key):
+    scores = Score.by_tag_type_with_date_all(zone, date_key)
+    return send_csv(scores, f"tc_{zone}_{date_key}_all.csv", ['block_group', 'key', 'score'])
 
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):

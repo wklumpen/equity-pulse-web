@@ -94,6 +94,10 @@ map.createPane('labels');
 map.getPane('labels').style.zIndex = 650;
 map.getPane('labels').style.pointerEvents = 'none';
 
+map.createPane('overlays')
+map.getPane('overlays').style.zIndex = 500;
+map.getPane('overlays').style.pointerEvents = 'none';
+
 var cartoLabels = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net/light_only_labels/{z}/{x}/{y}.png", {
   maxZoom: 19,
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>',
@@ -120,6 +124,8 @@ sidebar.on('content', function(e){
   if (e.id == 'download'){
     var dlCSVLink = document.getElementById('csv-link')
     dlCSVLink.setAttribute('href', '/data/dl/view/csv/'+ view['name'] + '/' + state['score']['key'] + '/' + state['date'])
+    var dlGeoJSONLink = document.getElementById('geojson-link')
+    dlGeoJSONLink.setAttribute('href', '/data/dl/view/geojson/'+ view['name'] + '/' + state['score']['key'] + '/' + state['date'])
   }
 })
 
@@ -176,10 +182,11 @@ bgLayer = new L.GeoJSON.AJAX(bgURL,{
 
 transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geojson', {
   style: {
-    color: '#3F3F3F',
+    color: '#B90E0A',
     opacity: 0.7,
     weight: 0.5
-  }
+  },
+  pane: 'overlays'
 }).addTo(map)
 
 bgLayer.on('data:loaded', function() {

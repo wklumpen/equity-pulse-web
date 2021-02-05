@@ -11,8 +11,8 @@ score_paths = ['measures_2020-02-23_LOS.csv', 'measures_2020-05-10_LOS.csv', 'me
 
 # Starting with a blank DB
 # delete_tables()
-# create_tables()
-# BlockGroup.add_bg_from_csv(bg_path)
+create_tables()
+BlockGroup.add_bg_from_csv(bg_path)
 # BlockGroup.tag_bg_from_csv(bg_path, 'nyc', 'nyc', 'all')
 # BlockGroup.tag_bg_from_csv(msa_path, 'nyc-msa', 'nyc', 'msa')
 # BlockGroup.tag_bg_from_csv(urban_path,  'nyc-urban', 'nyc', 'urban')
@@ -20,6 +20,5 @@ score_paths = ['measures_2020-02-23_LOS.csv', 'measures_2020-05-10_LOS.csv', 'me
 # for s in score_paths:
 #     score_path = os.path.join(data_folder, s)
 #     Score.score_from_csv(score_path)
-
-# Population.population_from_csv(pop_path)
-Summary.refresh()
+Population.population_from_csv(pop_path)
+# Summary.refresh()

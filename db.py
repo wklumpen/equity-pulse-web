@@ -6,7 +6,7 @@ object-relational-mapper, along with helper functions to assist data management.
 """
 from datetime import date, datetime
 
-from peewee import Model, SqliteDatabase, TextField, ForeignKeyField, IntegerField, BigIntegerField, FloatField, DateField, BooleanField, chunked, fn
+from peewee import Model, SqliteDatabase, TextField, DateTimeField, ForeignKeyField, IntegerField, BigIntegerField, FloatField, DateField, BooleanField, chunked, fn
 import pandas as pd
 
 from dbconfig import database
@@ -61,6 +61,12 @@ class ScoreType(BaseModel):
     key = TextField()
     date = DateField()
     description = TextField(null=True)
+
+    @staticmethod
+    def get_dates():
+        q = ScoreType.select(ScoreType.date).distinct().order_by(ScoreType.date.desc())
+        return q
+
 
 
 class Score(BaseModel):
@@ -133,6 +139,27 @@ class Score(BaseModel):
         #     with database.atomic():
         #         for batch in chunked(to_insert, 100):
         #             Score.insert_many(batch).execute()
+
+    @staticmethod
+    def by_tag_type_with_date_all(tag, date):
+        sql = """
+        SELECT score.score, score.block_group_id, score_type.key FROM score
+        INNER JOIN score_type ON score.score_type_id = score_type.id
+        WHERE score_type.date = %s
+        AND score.block_group_id IN 
+        (
+            SELECT block_group_tag.block_group_id
+            FROM block_group_tag
+            INNER JOIN tag ON block_group_tag.tag_id = tag.id
+            WHERE tag.name = %s
+        )"""
+
+        params = (date, tag)
+        cursor = database.execute_sql(sql, params)
+        data = []
+        for row in cursor.fetchall():
+            data.append({'block_group': row[1], 'key': row[2], 'score': row[0]})
+        return data
 
     @staticmethod
     def by_tag_type_with_date(tag, score_key, date):
@@ -289,7 +316,7 @@ class Summary(BaseModel):
             score_type ON
             score.score_type_id = score_type.id 
         ) AS scores ON populations.block_group_id = scores.block_group_id
-        GROUP BY area_tag, score_key, score_type_id, description;""".replace('\n', '')
+        GROUP BY area_tag, score_key, score_type_id, description, date""".replace('\n', '')
         print("Generating New Summary")
         cursor = database.execute_sql(sql)
         data = []
@@ -385,6 +412,7 @@ class BlockGroupTag(BaseModel):
     block_group = ForeignKeyField(BlockGroup, field="geoid", backref='block_group_tags')
     tag = ForeignKeyField(Tag, backref='block_group_tags')
 
+
 class Region(BaseModel):
     name = TextField()
     description = TextField(null=True)
@@ -397,15 +425,29 @@ class Region(BaseModel):
     agencies = TextField()
     live = BooleanField(default=False)
 
+
+class Run(BaseModel):
+    date = DateField(default=date.today)
+    note = TextField()
+
+
+class RunLog(BaseModel):
+    timestamp = DateTimeField(default=datetime.now)
+    note = TextField()
+
 def delete_tables():
     with database:
         print("Dropping Tables on", database)
-        database.drop_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag, Region, Summary])
+        database.drop_tables([BlockGroup, ScoreType, Score, PopulationType, 
+        Population, Tag, BlockGroupTag, Region, Summary,
+        Run, RunLog])
 
 def create_tables():
     with database:
         print("Creating Tables on", database)
-        database.create_tables([BlockGroup, ScoreType, Score, PopulationType, Population, Tag, BlockGroupTag, Region, Summary], safe=True)
+        database.create_tables([BlockGroup, ScoreType, Score, PopulationType, 
+        Population, Tag, BlockGroupTag, Region, Summary,
+        Run, RunLog], safe=True)
 
 def setup_region(bg_filepath, pop_filepath, score_filepath, initial_zone_name):
     BlockGroup.add_bg_from_csv(bg_filepath)
