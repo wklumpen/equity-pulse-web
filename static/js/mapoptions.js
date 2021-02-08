@@ -1,5 +1,5 @@
 // TO BE EXPANDED WITH MORE OPTIONS
-var zoneList = ['all', 'msa']
+var zoneList = ['all', 'msa', 'urban', 'equity']
 var measureList = ['A', 'M']
 var AGDestList = ['C000']
 var MDestList = ['snap']
@@ -7,7 +7,7 @@ var periodOptionsList = ['AM']
 var AParamList = ['c30', 'c60', 'c45']
 var MParamList = ['time1', 'time3']
 var fareYesNo = ['No', 'Yes']
-var demoList = ['none', 'pop_total', 'pop_poverty', 'pop_black']
+var demoList = ['none', 'pop_black', 'pop_white', 'pop_hispanic', 'pop_asiapacific', 'hhld_single_mother', 'workers_essential', 'pop_poverty', 'pop_black']
 
 var autoOptions = [
   {
@@ -49,15 +49,15 @@ var periodOptions = [
   {
     "periodName": "Weekday Morning",
     "periodCode": "AM"
-  },
-  {
-    "periodName": "Weekday Evening",
-    "periodCode": "PM"
-  },
-  {
-    "periodName": "Weekend",
-    "periodCode": "WE"
-  }
+  }//,
+  // {
+  //   "periodName": "Weekday Evening",
+  //   "periodCode": "PM"
+  // },
+  // {
+  //   "periodName": "Weekend",
+  //   "periodCode": "WE"
+  // }
 ]
 
 var periodNA = [
@@ -75,7 +75,7 @@ var demoOptions = {
     "demoLabel": "people"
   },
   "pop_poverty" : {
-    "demoName": "Population below the poverty line",
+    "demoName": "People at/below 200% poverty line (“low-income”)",
     "demoTitle": "People below the poverty line",
     "demoUnit": "people",
     "demoLabel": "people below the poverty line"
@@ -140,7 +140,7 @@ var options = {
   },
   "snap": {
     "destName" : "Grocery Stores",
-    "destMeasureLabel": "Travel Time",
+    "destMeasureLabel": "Travel Time to Groceries",
     "destMeasureUnit": "min",
     "destMeasure": "Access to groceries is measured by calculating the minimum travel time to a specified number of stores which are part of the SNAP program.",
     "measureCode": "M",
@@ -158,9 +158,109 @@ var options = {
     "autos": autoOptions,
     "fares": fareNA
   },
+  "hospitals": {
+    "destName" : "Hospitals",
+    "destMeasureLabel": "Travel Time - Hospitals",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to hospitals is measured by calculating the minimum travel time to a specified number of hospitals.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 hospital",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 hospitals",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "urgentcare": {
+    "destName" : "Urgent Care Facilities",
+    "destMeasureLabel": "Travel Time - Urgent Care",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to urgent care is measured by calculating the minimum travel time to a specified number of urgent care facilities.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 facility",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 facilities",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "pharmacies": {
+    "destName" : "Pharmacies",
+    "destMeasureLabel": "Travel Time - Pharmacies",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to pharmacies is measured by calculating the minimum travel time to a specified number of pharmacies.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 pharmacy",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 pharmacies",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "parks": {
+    "destName" : "Parks & Greenspace",
+    "destMeasureLabel": "Access to Park Space",
+    "destMeasureUnit": "acres",
+    "destMeasure": "Access to parks and greensapce is measured by calculating the total acerage accessible in a specified travel time.",
+    "measureCode": "P",
+    "params": [
+      {
+        "paramName": "15 minutes",
+        "paramCode": "c15"
+      },
+      {
+        "paramName": "30 minutes",
+        "paramCode": "c30"
+      }
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
+  "schools": {
+    "destName" : "Colleges & Universities",
+    "destMeasureLabel": "Travel Time - Colleges & Universities",
+    "destMeasureUnit": "min",
+    "destMeasure": "Access to colleges and universities is measured by calculating the minimum travel time to a specified number of schools.",
+    "measureCode": "M",
+    "params": [
+      {
+        "paramName": "1 school",
+        "paramCode": "t1"
+      },
+      {
+        "paramName": "3 schools",
+        "paramCode": "t3"
+      },
+    ],
+    "periods": periodOptions,
+    "autos": autoOptions,
+    "fares": fareNA
+  },
   "los": {
     "destName" : "Transit Service",
-    "destMeasureLabel": "Trips accessible",
+    "destMeasureLabel": "Weekly Trips",
     "destMeasureUnit": "trips",
     "destMeasure": "Access to transit service is measured by counting the total number of unique transit trips that visit a zone in a week.",
     "measureCode": "T",
@@ -317,7 +417,6 @@ function setStateFromParams(){
       date = mapParams.get('date')
     }
     else{
-      // console.log("Setting Date:", view['max_date'])
       date = view['max_date']
     }
     if (mapParams.has('demo') & demoList.includes(mapParams.get('demo'))){
@@ -361,35 +460,50 @@ function setStateFromParams(){
     else if (zone == 'urban'){
       state['tag'] = view['name'] + "-urban"
     }
+    else if (zone == 'equity'){
+      state['tag'] = view['name'] + "-equity"
+    }
     else{
         state['tag'] = view['name']
     }
 
     // TODO: Check if date is valid
     state['date'] = date
+    state['score']['key'] = key
 
-    state['score']['url'] = "/data/score/" + state['tag'] + "/" + key + "/" + date
+    var updateScore = false;
+    if (state['score']['url'] != "/data/score/" + state['tag'] + "/" + key + "/" + date){
+      updateScore = true;
+      state['score']['url'] = "/data/score/" + state['tag'] + "/" + key + "/" + date 
+    }
+
+    
 
     // Update the time series URL
-    state['time']['url'] = "/data/time/" + state['tag'] + "/" + key
-
-    // console.log(state['score']['url'])
-    // console.log(state['time']['url'])
+    var updateTime = false;
+    if (state['time']['url'] != "/data/time/" + view['name'] + "/" + key){
+      updateTime = true;
+      state['time']['url'] = "/data/time/" + view['name'] + "/" + key
+    }
 
     // Update the labels
     state['score']['label'] = options[s_key[0]]['destMeasureLabel']
-    state['score']['unit'] = options[s_key[0]]['destMeasureUnit']
-    // Update overlay data
-    if (demo == 'none'){
-        state['overlay']['url'] = null;
-        state['dot']['url'] = null;
+    if (key.includes('_autoY_')){
+      state['score']['unit'] = ''
+      state['score']['label'] += " (transit/auto)"
     }
     else{
-      state['overlay']['url'] = "/data/pop/" + state['tag'] + "/" + demo
-      state['overlay']['label'] = demoOptions[demo]['demoLabel']
-      state['overlay']['title'] = demoOptions[demo]['demoTitle']
-      state['overlay']['unit'] = demoOptions[demo]['demoUnit']
-      state['dot']['url'] = "/static/data/" + view['name'] + "_" + demo +".geojson"
+      state['score']['unit'] = options[s_key[0]]['destMeasureUnit']
+    }
+    
+    // Update overlay data
+    var updateOverlay = false;
+    if (demo == 'none'){
+      demo = null
+    }
+    if (state['overlay'] != demo){
+      updateOverlay = true;
+      state['overlay'] = demo
     }
 
     setOptionsFromParams();
@@ -397,12 +511,16 @@ function setStateFromParams(){
     // Now update the sharable link
 
     // Reload the map data
-    loadMapData();
-    loadTimeData();
-    loadOverlayData();
-    loadDotData();
+    if (updateScore){
+      loadMapData();
+    }
+    
+    loadTimeData(updateTime);
+    
+    if (updateOverlay){
+      loadOverlay();
+    }
 }
-
 
 /*
     ONLY CALL THIS AFTER VALIDATION OF QUERYSTRING
@@ -442,6 +560,7 @@ function setOptionsFromParams(){
 function updateMapClicked(){
   // Start with a blank query string state
   queryParams = new URLSearchParams();
+  currentParams = new URLSearchParams(window.location.search)
 
   // Build all the options where possible
   var zoneList = document.getElementById('zones')
@@ -473,6 +592,7 @@ function updateMapClicked(){
   queryParams.set("zone", zone)
   queryParams.set("key", key)
   queryParams.set("demo", demo)
+  queryParams.set("date", currentParams.get('date')) // Pass the date along
   history.replaceState(null, null, "?" + queryParams.toString())
   setStateFromParams();
 }

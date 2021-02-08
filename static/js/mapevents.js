@@ -1,5 +1,5 @@
 function transitToggle(value){
-  if (document.getElementById('transitToggle').checked){
+  if (document.getElementById('transitCheck').checked){
       transitLayer.setStyle({
       weight: 1
       })
@@ -12,7 +12,7 @@ function transitToggle(value){
 }
 
 function sliderTrigger(value){
-  var m = moment(value) // Easier to format using moments.
+  var m = moment.utc(value) // Easier to format using moments.
   var newDate = m.format('YYYY-MM-DD')
   if (newDate != state['date']){
     queryParams = new URLSearchParams(window.location.search);

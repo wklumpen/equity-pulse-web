@@ -1,0 +1,51 @@
+{% extends 'base.html' %}
+{% block title %}Transit Scorecard{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/scorecard.css') }}">
+{% endblock%}
+
+{% block content %}
+
+<!-- Primary Page Layout
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="container">
+    <div class="row">
+        <div class="col s12 l8">
+            <h2>Download Center for {{title}}</h2>
+            <p>Below are a list of static files and a comprehensive list of dates for which scores are available in {{title}}. For a given date, all available scores are downloaded as a CSV file. <b>Please note that this file will be quite large and may take some time to package.</b> If you would like specific scores for specific dates in the region, please select them on the <a href="/map/{{tag}}">map</a> page, and use the download link in the sidebar for that specific score.</p>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col s12 l6'>
+            <h3>Static Files</h3>
+            <p>These files contain spatial data on block groups, transit layers, and demographics. You can use these as base layers for maps and analysis. <b>All static files are in GeoJSON format.</b></p>
+        </div>
+        <div class='col s12 l6'>
+            <h3>Individual Result Sets</h3>
+            <p>These files contain all of the scores for individual block groups in each region for a given date. <b>All run files are in CSV format.</b></p>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col s12 l6'>
+            <div class="collection text-black">
+                <a href="{{ url_for('static', filename='data/'+tag+'_bg.geojson') }}" class="collection-item">Block Groups</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_transit.geojson') }}" class="collection-item">Transit Layer</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_pop_asiapacific.geojson') }}" class="collection-item">Demographics: 1 dot = 100 Asian/Pacific Islanders</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_pop_black.geojson') }}" class="collection-item">Demographics: 1 dot = 100 Black people</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_pop_hispanic.geojson') }}" class="collection-item">Demographics: 1 dot = 100 Latinx people</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_pop_white.geojson') }}" class="collection-item">Demographics: 1 dot = 100 White people</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_poverty.geojson') }}" class="collection-item">Demographics: 1 dot = 100 people at/below 200% poverty line (low-income)</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_workers_essential.geojson') }}" class="collection-item">Demographics: 1 dot = 50 essential workers</a>
+                <a href="{{ url_for('static', filename='data/'+tag+'_hhld_single_mother.geojson') }}" class="collection-item">Demographics: 1 dot = 50 single-mother households</a>
+              </div>
+        </div>
+        <div class='col s12 l6'>
+            <div class="collection text-black">
+                {% for d in dates %}
+                    <a href="/data/dl/all/{{tag}}/{{d.strftime('%Y-%m-%d')}}" class="collection-item">{{d.strftime('%B %d, %Y')}}</a>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

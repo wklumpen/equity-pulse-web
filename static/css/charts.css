@@ -1,0 +1,67 @@
+.container h1, h2, h3, h4, h5{
+    text-align: center;
+}
+
+.wrapper{
+    margin: 0;
+}
+
+.row {
+    margin-bottom: 0;
+    padding-bottom: 20px;
+}
+
+.section {
+    padding-top: 20px;
+}
+
+#corona{
+    width: 100%;
+    height: 150px;
+}
+
+#jobs-access-theme{
+    background-image: url("/static/img/transit.jpg");
+    background-repeat: no-repeat;
+    background-size: 100%;
+}
+
+#jobs-access-groups-date{
+    width: 100%;
+    height: 400px;
+}
+
+#jobs-access-series{
+    width: 100%;
+    height: 400px;
+}
+
+#store-access-series{
+    width: 100%;
+    height: 400px;
+}
+
+#jobs-fares-series{
+    width: 100%;
+    height: 400px;
+}
+
+#los-series{
+    width: 100%;
+    height: 400px;
+}
+
+#car-jobs-access-series{
+    width: 100%;
+    height: 400px;
+}
+
+#car-low-wage-jobs-access-series{
+    width: 100%;
+    height: 400px;
+}
+
+#car-hospital-travel-series{
+    width: 100%;
+    height: 400px;
+}

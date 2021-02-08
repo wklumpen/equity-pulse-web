@@ -1,5 +1,4 @@
 # Data folder
-static/data
 *.db
 
 # Byte-compiled / optimized / DLL files

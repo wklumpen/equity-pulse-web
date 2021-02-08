@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/scorecard.css') }}">
+{% endblock%}
+
+{% block content %}
+
+<!-- Primary Page Layout
+–––––––––––––––––––––––––––––––––––––––––––––––––– -->
+<div class="container">
+    <div class="row">
+        <div class="col s12">
+            <h1>Measures of Transit Equity in US Cities</h2>
+            <p class='flow-text'>As the COVID-19 pandemic affects transit across the country, we're keeping a pulse on how agencies are responding to the challenge, and what that means for the people that use it. That's why we've produced a live, updating transit scorecard that tracks important measures for transit service in seven major metropolitan areas.</p>
+        </div>
+    </div>
+
+    <div class="row">
+    {% for region in regions %}
+      {% if loop.index0 % 2 == 0 %}
+          </div><div class="row">
+      {% endif %}
+      <div class="col s12 m12 l6">
+        <div class="card large">
+          <div class="card-image">
+            <img src="{{ url_for('static', filename='img/'+region.tag+'.jpg') }}">
+          </div>
+          <div class="card-content">
+          <span class="card-title">{{region.name}}</span>
+            <p>{{region.description}}</p>
+          </div>
+          <div class="card-action tile-link">
+              <a href="/map/{{region.tag}}">View Map</a><a href="/charts/{{region.tag}}">View Charts</a><a href="/download/{{region.tag}}">View Downloads</a>
+            </div>
+        </div>
+      </div>
+    {% endfor %}
+    </div>
+</div>
+
+<script src="https://d3js.org/d3.v5.js"></script>
+<script src="{{ url_for('static', filename='js/scorecard_boston.js') }}"></script>
+{% endblock %}
