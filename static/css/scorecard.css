@@ -41,3 +41,7 @@ p.tile-title {
 .card-action a:not(.btn):not(.btn-large):not(.btn-small):not(.btn-large):not(.btn-floating) {
     color: #2D74ED !important;
 }
+
+.collection a.collection-item {
+    color:#2D74ED !important;
+}

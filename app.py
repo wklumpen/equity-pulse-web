@@ -18,7 +18,7 @@ import csv
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Tag, Region, Summary, ScoreType
+from db import Score, Population, BlockGroup, Tag, Region, Summary, Run
 from dbconfig import database
 
 app = Flask(__name__)
@@ -45,14 +45,19 @@ def home():
 def documentation():
     return render_template('documentation.html')
 
+@app.route('/download')
+def download():
+    return redirect('/')
+
 @app.route('/download/<region>')
-def download(region):
+def download_region(region):
     try:
         r = Region.get(Region.tag == region)
-        dates = ScoreType.get_dates()
+        dates = Run.select(Run.date, Run.note).where(Run.region == region).where(Run.live == True).order_by(Run.date.desc())
         datelist = []
         for d in dates:
-            datelist.append(d.date)
+            datelist.append([d.date, d.note])
+        print(datelist)
         return render_template('download.html', tag=r.tag, title=r.name, dates=datelist)
     except DoesNotExist:
         return redirect('/')
@@ -153,7 +158,7 @@ def data_time(zone, score_key):
     Format of score_key should be:
     """
     # Grab scores with dates, tag with MSA as we know that score is in the summary
-    scores = Score.get_dates(f"{zone}-msa", score_key)
+    scores = Tag.get_tag_dates(zone)
     score_d = [model_to_dict(s)['date'] for s in scores]
 
     return jsonify(score_d)

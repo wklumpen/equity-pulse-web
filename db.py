@@ -62,11 +62,6 @@ class ScoreType(BaseModel):
     date = DateField()
     description = TextField(null=True)
 
-    @staticmethod
-    def get_dates():
-        q = ScoreType.select(ScoreType.date).distinct().order_by(ScoreType.date.desc())
-        return q
-
 
 
 class Score(BaseModel):
@@ -164,10 +159,16 @@ class Score(BaseModel):
     @staticmethod
     def by_tag_type_with_date(tag, score_key, date):
         sql = """
-        SELECT score.score, score.block_group_id FROM score
-        INNER JOIN score_type ON score.score_type_id = score_type.id
-        WHERE score_type.key = %s
-        AND score_type.date = %s
+        select score.score, score.block_group_id from score
+        where (select run.live from run where run.region = %s limit 1) = true
+        and score.score_type_id =
+        ( 
+            select score_type.id
+            from score_type
+            where score_type.key = %s
+            and score_type.date = %s
+            limit 1
+        )
         AND score.block_group_id IN 
         (
             SELECT block_group_tag.block_group_id
@@ -175,22 +176,8 @@ class Score(BaseModel):
             INNER JOIN tag ON block_group_tag.tag_id = tag.id
             WHERE tag.name = %s
         )"""
-        if type(database) == SqliteDatabase:
-            # Use this for SQLite
-            sql = """
-            SELECT score.score, score.block_group_id FROM score
-            INNER JOIN score_type ON score.score_type_id = score_type.id
-            WHERE score_type.key = ?
-            AND score_type.date = ?
-            AND score.block_group_id IN 
-            (
-                SELECT block_group_tag.block_group_id
-                FROM block_group_tag
-                INNER JOIN tag ON block_group_tag.tag_id = tag.id
-                WHERE tag.name = ?
-            )"""
 
-        params = (score_key, date, tag)
+        params = (tag.split('-')[0], score_key, date, tag)
         cursor = database.execute_sql(sql, params)
         data = dict()
         for row in cursor.fetchall():
@@ -392,12 +379,14 @@ class Tag(BaseModel):
 
     @staticmethod
     def get_tag_dates(tag_name):
-        return (ScoreType.select(ScoreType.date)
-                .join(Score)
-                .join(BlockGroup)
-                .join(BlockGroupTag)
-                .join(Tag)
-                .where(Tag.name == tag_name).distinct())
+        return (Run.select(Run.date)
+                .where(Run.region == tag_name.split('-')[0]))
+        # return (ScoreType.select(ScoreType.date)
+        #         .join(Score)
+        #         .join(BlockGroup)
+        #         .join(BlockGroupTag)
+        #         .join(Tag)
+        #         .where(Tag.name == tag_name).distinct())
         # return (BlockGroup.select()
         #         .join(BlockGroupTag)
         #         .join(Tag)
@@ -425,15 +414,55 @@ class Region(BaseModel):
     agencies = TextField()
     live = BooleanField(default=False)
 
+    
+
 
 class Run(BaseModel):
+    region = TextField()
     date = DateField(default=date.today)
-    note = TextField()
+    live = BooleanField(default=False)
+    note = TextField(null=True, default=None)
 
 
 class RunLog(BaseModel):
     timestamp = DateTimeField(default=datetime.now)
     note = TextField()
+
+
+class Realtime(BaseModel):
+    timestamp = DateTimeField()
+    region = TextField()
+    agency = TextField()
+    mode = TextField()
+    delay_abs = FloatField(null=True)
+    delay_late = FloatField(null=True)
+    delay_early = FloatField(null=True)
+    otp = FloatField(null=True)
+    fraction = FloatField(null=True)
+
+    @staticmethod
+    def realtime_from_csv(filepath):
+        print(f"Inserting Real time data from CSV: {filepath}")
+        df = pd.read_csv(filepath)
+        df = df.where(df.notnull(), None)
+        to_insert = []
+        for idx, real in df.iterrows():
+            insert_row = dict()
+            insert_row['timestamp'] = real['timestamp']
+            insert_row['region'] = real['region']
+            insert_row['agency'] = real['agency']
+            insert_row['mode'] = real['mode']
+            insert_row['delay_abs'] = real['delay_abs']
+            insert_row['delay_late'] = real['delay_late']
+            insert_row['delay_early'] = real['delay_early']
+            insert_row['otp'] = real['otp']
+            insert_row['fraction'] = real['fraction']
+            to_insert.append(insert_row)
+
+        with database.atomic():
+            for batch in chunked(to_insert, 100):
+                Realtime.insert_many(batch).on_conflict('ignore').execute()
+
 
 def delete_tables():
     with database:
@@ -447,7 +476,7 @@ def create_tables():
         print("Creating Tables on", database)
         database.create_tables([BlockGroup, ScoreType, Score, PopulationType, 
         Population, Tag, BlockGroupTag, Region, Summary,
-        Run, RunLog], safe=True)
+        Run, RunLog, Realtime], safe=True)
 
 def setup_region(bg_filepath, pop_filepath, score_filepath, initial_zone_name):
     BlockGroup.add_bg_from_csv(bg_filepath)

@@ -182,7 +182,7 @@ bgLayer = new L.GeoJSON.AJAX(bgURL,{
 
 transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geojson', {
   style: {
-    color: '#B90E0A',
+    color: '#000000',
     opacity: 0.7,
     weight: 0.5
   },
@@ -199,6 +199,7 @@ function loadMapData(){
   state['score']['data'] = {}
   d3.json(state['score']['url']).then(function(data){
     var keys = Object.keys(data)
+    showMessage("Packaging data, please wait...")
     keys.forEach(function(key, idx){
       state['score']['data'][parseInt(key)] = parseFloat(data[key])
     })
