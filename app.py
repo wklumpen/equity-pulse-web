@@ -2,6 +2,8 @@ import json
 import sys
 import datetime as dt
 
+sys.path.append('../equity-pulse-db')
+
 # Temporary path to project
 # sys.path.append(r"C:\Users\Willem\Documents\Project\TransitCenter\TransitCenter\utils")
 
