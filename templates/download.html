@@ -43,7 +43,7 @@
             <div class="collection text-black">
                 {% for d in dates %}
                     <a href="/data/dl/all/{{tag}}/{{d[0].strftime('%Y-%m-%d')}}" class="collection-item">{{d[0].strftime('%B %d, %Y')}}
-                    {% if d[1] %}
+                    {% if d[1] != None and d[1] != 'nan' %}
                         ({{d[1]}})
                     {% endif %}
                     </a>

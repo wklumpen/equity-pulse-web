@@ -3,7 +3,7 @@ var zoneList = ['all', 'msa', 'urban', 'equity']
 var measureList = ['A', 'M']
 var AGDestList = ['C000']
 var MDestList = ['snap']
-var periodOptionsList = ['AM']
+var periodOptionsList = ['AM', 'PM']
 var AParamList = ['c30', 'c60', 'c45']
 var MParamList = ['time1', 'time3']
 var fareYesNo = ['No', 'Yes']
@@ -49,15 +49,26 @@ var periodOptions = [
   {
     "periodName": "Weekday Morning",
     "periodCode": "AM"
-  }//,
-  // {
-  //   "periodName": "Weekday Evening",
-  //   "periodCode": "PM"
-  // },
+  },
+  {
+    "periodName": "Weekday Evening",
+    "periodCode": "PM"
+  },
   // {
   //   "periodName": "Weekend",
   //   "periodCode": "WE"
   // }
+]
+
+var losPeriodOptions = [
+  {
+    "periodName": "Weekday",
+    "periodCode": "WKD"
+  },
+  {
+    "periodName": "Saturday",
+    "periodCode": "SAT"
+  },
 ]
 
 var periodNA = [
@@ -260,17 +271,17 @@ var options = {
   },
   "los": {
     "destName" : "Transit Service",
-    "destMeasureLabel": "Weekly Trips",
+    "destMeasureLabel": "Daily Trips",
     "destMeasureUnit": "trips",
     "destMeasure": "Access to transit service is measured by counting the total number of unique transit trips that visit a zone in a week.",
-    "measureCode": "T",
+    "measureCode": "trips",
     "params": [
       {
         "paramName": "Total Trips",
         "paramCode": "NA"
       }
     ],
-    "periods": periodNA,
+    "periods": losPeriodOptions,
     "autos": autoNA,
     "fares": fareNA
   }
@@ -295,8 +306,6 @@ $(document).ready(function () {
 });
 
 function optionsUpdate(){
-  // console.log("Updating dropdown options");
-    // Start by getting the elements needed for destinations
     var destList = document.getElementById('destination');
     var destination = destList.options[destList.selectedIndex].value
 
@@ -396,12 +405,14 @@ function setStateFromParams(){
     var demo = null;
     var zone = null;
 
+
     // We need to check if the state is correct
     // If no measure passed, we just go for the default
     if (mapParams.has('key')){
       // Make sure it's a valid key
-      var s_key = mapParams.get('key').split("_");
-        
+
+      console.log("Initial Key: " + mapParams.get('key'));
+      var s_key = mapParams.get('key').split("_");  
       if (s_key[0] in options){
         // Fix the measurement code whether it needs it or not
         s_key[1] = options[s_key[0]]['measureCode']
@@ -419,12 +430,14 @@ function setStateFromParams(){
     else{
       date = view['max_date']
     }
+
     if (mapParams.has('demo') & demoList.includes(mapParams.get('demo'))){
       demo = mapParams.get('demo')
     }
     else{
       demo = demoList[0];
     }
+
     if (mapParams.has('zone') & zoneList.includes(mapParams.get('zone'))){
       zone = mapParams.get('zone')
     }
@@ -432,8 +445,12 @@ function setStateFromParams(){
       zone = zoneList[0];
       // console.log("Set Zone to default:", zone);
     }
-    if (s_key[0] == 'los'){
-      var key = "los_trips"
+
+    console.log('Key list check-in...');
+    console.log(s_key);
+
+    if ((s_key[0] == 'los_trips') & (s_key.length > 3)){
+      var key = 'los_trips_' + s_key[3]
     }
     else{
       var key = s_key.join("_")
@@ -470,6 +487,8 @@ function setStateFromParams(){
     // TODO: Check if date is valid
     state['date'] = date
     state['score']['key'] = key
+
+    console.log("Final key before update: " + key)
 
     var updateScore = false;
     if (state['score']['url'] != "/data/score/" + state['tag'] + "/" + key + "/" + date){
@@ -583,10 +602,14 @@ function updateMapClicked(){
 
   var demoList = document.getElementById('demo')
   var demo = demoList.options[demoList.selectedIndex].value
+  if (destination != 'los'){
+    var key = destination + "_" + options[destination]['measureCode'] + "_" + param + "_" + period + "_" + auto + "_" + fare
+  }
+  else{
+    var key = "los_trips_" + period
+  }
 
-  var key = destination + "_" + options[destination]['measureCode'] + "_" + param + "_" + period + "_" + auto + "_" + fare
-
-  // console.log("Key after updateMapClicked:", key);
+  console.log("Key after updateMapClicked:", key);
   // console.log("Demo after updateMapClicked:", demo);
 
   queryParams.set("zone", zone)

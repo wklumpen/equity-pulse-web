@@ -81,11 +81,13 @@ var carHospitalTravelSeriesSVG = carHospitalTravelSeriesBox.append('g').attr("tr
 
 d3.select(window).on('resize', handleResize);
 
+loadCoronaData();
 handleResize();
 
 function loadCoronaData(){
     d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
     .then(function(data){
+        console.log("Loaded Corona Data");
         // First we filter down to the one region
         if (view['name'] == 'nyc'){
             counties = ['New York', 'Kings', 'Queens', 'Bronx', 'Richmond']
@@ -121,8 +123,17 @@ function loadCoronaData(){
 }
 
 function loadChartData(){
-    d3.json("/data/summary/"+ view['name'])
+    console.log("/data/summary/"+ view['name'])
+    // "/data/summary/"+ view['name']
+    
+    d3.json("/data/summary/"+ view['name'], {
+        headers : new Headers({
+            "Content-Type": "application/json",
+            'Accept': 'application/json'
+        }),
+    })
     .then(function(data){
+        console.log(data);
         chartData = []
         data.forEach(function(item, index){
             chartData.push({'date': moment(item.date).valueOf(), 'description': item.description, 'zone': item.zone, 'score_key':item.score_key, 'value': +item.value})
