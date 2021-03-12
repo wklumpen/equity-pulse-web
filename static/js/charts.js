@@ -133,7 +133,6 @@ function loadChartData(){
         }),
     })
     .then(function(data){
-        console.log(data);
         chartData = []
         data.forEach(function(item, index){
             chartData.push({'date': moment(item.date).valueOf(), 'description': item.description, 'zone': item.zone, 'score_key':item.score_key, 'value': +item.value})
@@ -273,7 +272,7 @@ function updateAllCharts(){
     var maxDate = d3.max(chartData, d => d['date'])
     // == Get job access and add in fare capped data ==
     var scores = chartData.filter(d => (d['score_key'] == 'C000_P_c30_AM_autoN_fareN') & (d['zone'] == view['name']+'-urban'))
-    var everyoneFares = chartData.filter(d => (d['score_key'] == 'C000_P_c30_AM_autoN_fareY') & (d['zone'] == view['name']+'-urban') & (d['description'] == 'pop_total'))
+    var everyoneFares = chartData.filter(d => (d['score_key'] == 'C000_P_c30_AM_autoN_fareN') & (d['zone'] == view['name']+'-urban') & (d['description'] == 'pop_total'))
     everyoneFares.forEach(function(item, index){
         scores.push({
             'date':item.date, 
@@ -281,7 +280,7 @@ function updateAllCharts(){
             'everyone_fares', 
             'zone': view['name'] + '-urban', 
             'value': item.value, 
-            'score_key': 'C000_P_c30_AM_autoN_fareY'
+            'score_key': 'C000_P_c30_AM_autoN_fareN'
         })
     });
 
@@ -383,7 +382,7 @@ function updateAllCharts(){
     )
     
     // == Time series comparison of weekly trips (level of service)  
-    var scores = chartData.filter(d => (d['score_key'] == 'los_trips') & (d['zone'] == view['name']+'-urban'))
+    var scores = chartData.filter(d => (d['score_key'] == 'los_trips_WKD') & (d['zone'] == view['name']+'-urban'))
     groups = [
         'pop_total',
         'pop_asiapacific',
@@ -446,6 +445,9 @@ function multilinePlot(box, svg, scores, id, margin, groups, ylabel, note){
 
     box.attr('width', boxWidth).attr('height', boxHeight);
     svg.selectAll('*').remove();
+
+    scores.sort((a,b) => d3.ascending(a.date, b.date))
+    // console.log(scores)
 
     var x = d3.scaleTime()
     .domain(d3.extent(scores, d => d.date))

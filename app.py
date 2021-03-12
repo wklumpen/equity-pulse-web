@@ -115,7 +115,7 @@ def current_data_csv(zone, score_key, date_key):
     out = []
     for key, val in scores.items():
         out.append({'block_group': key, 'score': val})
-    return send_csv(out, f"tc_{zone}_{score_key}_{date_key}.csv", ['block_group', 'score'])
+    return send_csv(out, f"tcep_{zone}_{score_key}_{date_key}.csv", ['block_group', 'score'])
 
 @app.route('/data/dl/view/geojson/<zone>/<score_key>/<date_key>')
 def current_data_geojson(zone, score_key, date_key):
@@ -131,12 +131,12 @@ def current_data_geojson(zone, score_key, date_key):
            feature['properties']['score'] = out[int(feature['properties']['GEOID'])] 
         return Response(json.dumps(data),
             mimetype='application/json',
-            headers={'Content-Disposition':f'attachment;filename={score_key}_{date_key}.geojson'})
+            headers={'Content-Disposition':f'attachment;filename=tcep_{score_key}_{date_key}.geojson'})
 
 @app.route('/data/dl/all/<zone>/<date_key>')
 def all_data_csv(zone, date_key):
     scores = Score.by_tag_type_with_date_all(zone, date_key)
-    return send_csv(scores, f"tc_{zone}_{date_key}_all.csv", ['block_group', 'key', 'score'])
+    return send_csv(scores, f"tcep_{zone}_{date_key}_all.csv", ['block_group', 'key', 'score'])
 
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):

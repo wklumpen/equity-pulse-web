@@ -3,8 +3,8 @@
  * Table of Contents
  * -----------------
  * 1. Initializations
- * 2. Triggers and Events
- * 3. Display Functions
+ * 2. Loading map data
+ * 3. Update functions
  *  3.1. Bottom Chart
  *  3.2. Time Slider
  *  3.3. Legend
@@ -14,9 +14,9 @@
 // ==== 1. INITIALIZATIONS ====
 
 // Bottom chart dimensions and margins
-var timeSelectMargin = {top: 2, right: 20, bottom: 10, left: 20}
-var timeSelectBoxWidth = 500
-var timeSelectBoxHeight = 30
+var timeSelectMargin = {top: 2, right: 20, bottom: 10, left: 40}
+var timeSelectBoxWidth = 800
+var timeSelectBoxHeight = 60
 var timeSelectWidth = timeSelectBoxWidth - timeSelectMargin.left - timeSelectMargin.right
 var timeSelectHeight = timeSelectBoxHeight - timeSelectMargin.top - timeSelectMargin.bottom
 
@@ -90,10 +90,12 @@ var cartoLight = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.net
   attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, &copy; <a href="https://cartodb.com/attributions">CartoDB</a>'
 }).addTo(map);
 
+// Create the layer group of place labels, which sits highest
 map.createPane('labels');
 map.getPane('labels').style.zIndex = 650;
 map.getPane('labels').style.pointerEvents = 'none';
 
+// Create a layer group of overlays (transit, demographis), which sits 2nd highest
 map.createPane('overlays')
 map.getPane('overlays').style.zIndex = 500;
 map.getPane('overlays').style.pointerEvents = 'none';
@@ -104,8 +106,7 @@ var cartoLabels = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.ne
   pane: 'labels'
 }).addTo(map);
 
-cartoLabels.setZIndex(100);
-
+// Define the sidebar control and add it to the map.
 var sidebar = L.control.sidebar({
   autopan: true,       // whether to maintain the centered map point when opening the sidebar
   closeButton: true,    // whether t add a close button to the panes
@@ -113,11 +114,12 @@ var sidebar = L.control.sidebar({
   position: 'left',     // left or right
 }).addTo(map);
 
+// Set initial sidebar tab.
 sidebar.open('home');
 
+// Initialize sidebar triggers for sharing the map and downloading
 sidebar.on('content', function(e){
   if (e.id == 'share'){
-    console.log(window.location.href);
     var shareText = document.getElementById('share-link')
     shareText.innerHTML = window.location.href
   }
@@ -138,7 +140,7 @@ legend.onAdd = function(map){
 }
 legend.addTo(map);
 
-// Initiale time bar, create div, and add to the map
+// Initialize time bar, create div, and add to the map
 var time = L.control({position: 'bottomright'});
 time.onAdd = function(map){
   var sliderDiv = L.DomUtil.create('div', 'timebox');
@@ -146,20 +148,20 @@ time.onAdd = function(map){
   sliderDiv.innerHTML += "<div id='time-chart'></div>"
   return sliderDiv
 }
-
 time.addTo(map)
 
+// Initialize message bar, create, div, and add to the map
 var messageBar = L.control({position: 'bottomright'});
   messageBar.onAdd = function(map){
     var div = L.DomUtil.create('div', 'message');
     div.setAttribute("id", "message")
     return div
 }
-
 messageBar.addTo(map);
 
-timeSelectBoxWidth = d3.select("#timebox").node().getBoundingClientRect().width
+
 // Create SVG for the time series chart on the bottom
+timeSelectBoxWidth = d3.select("#timebox").node().getBoundingClientRect().width
 var timeSVG = d3.select("#time-chart")
   .append('svg')
   .attr("width", timeSelectBoxWidth)
@@ -175,11 +177,12 @@ var legendSvg = d3.select("#legend")
   .append('g')
   .attr("transform", "translate(" + legendMargin.left + "," + legendMargin.top + ")");
 
-// Load the appropriate GeoJSON Data with an AJAX call
+// Load the appropriate GeoJSON block-group data with an AJAX call and add to map
 bgLayer = new L.GeoJSON.AJAX(bgURL,{
   style: bgStyleDefault,
 }).addTo(map);
 
+// Load the transit layer with an AJAX call and add to map
 transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geojson', {
   style: {
     color: '#000000',
@@ -189,10 +192,14 @@ transitLayer = new L.GeoJSON.AJAX('/static/data/' + view['name'] + '_transit.geo
   pane: 'overlays'
 }).addTo(map)
 
+// Once the data is loaded, update the URL querystring and parameters to match
 bgLayer.on('data:loaded', function() {
   setStateFromParams();
 })
 
+// === 
+
+// Load in the map data from the database
 function loadMapData(){
   showMessage("Fetching map data, please wait...")
   // Fetch the data we need
@@ -209,6 +216,7 @@ function loadMapData(){
   })
 }
 
+// Load in the time data (if needed)
 function loadTimeData(updateTime){
   if (updateTime){
     d3.json(state['time']['url']).then(function(data){
@@ -226,6 +234,7 @@ function loadTimeData(updateTime){
   }
 }
 
+// Load in the dots overlay
 function loadOverlay(){
   // First, remove the existing layer if it exists
   if (overlayLayer != null){
@@ -252,7 +261,9 @@ function loadOverlay(){
   
 }
 
+// === 3. UPDATE FUNCTIONS ===
 
+// Run a map update, selecting the appropriate legend and colors
 function updateMap(){
   var score = []
   Object.keys(state['score']['data']).forEach(function(key, idx){
@@ -310,15 +321,10 @@ function updateMap(){
     setLegendBins(getQuintileTravelTimeLabels(score, state['score']['unit'], Viridis5), state['score']['label'])
   }
   else{
-    console.log("Quintile, Cumulative")
     setLegendBins(getQuintileCumulativeLabels(score, state['score']['unit'], Viridis5), state['score']['label']);
   }
   
 }
-
-// ==== 3. DISPLAY FUNCTIONS ====
-
-// ======== 3.1. BOTTOM CHART ====
 
 /**
 * Creates a time series plot in the bottom chart panel
@@ -347,11 +353,14 @@ function updateTimeSeries(data, xlabel, ylabel){
     .data(data)
     .enter()
     .append("text")
-    .attr("x", d => x(d))
-    .attr("y", timeSelectHeight + 5)
-    .text(d => moment.utc(d).format('MMM D'))
-    .attr('text-anchor', 'middle')
-    .attr("dy", ".35em")
+    // .attr("x", d => x(d))
+    // .attr("y", timeSelectHeight + 5)
+    .text(d => moment.utc(d).format('MMM D/YY'))
+    .attr('text-anchor', 'right')
+    // .attr("dy", ".35em")
+    .attr("transform", d =>{
+      return 'translate(' + (x(d)-30) + ',' + (55) + ')rotate(-45)';}
+    )
     .attr("font-size", "0.8em")
 
   // Add circles! to make things clearer
@@ -379,7 +388,7 @@ function updateTimeSeries(data, xlabel, ylabel){
   nodes.on('mouseover', function (d) {
       // Highlight the nodes: every node is green except of him
       nodes.style('fill', "#2d74ed")
-      d3.select(this).style('fill', '#69b3b2')
+      d3.select(this).style('fill', 'black')
       
       // Highlight the connections
     })
@@ -393,11 +402,15 @@ function updateTimeSeries(data, xlabel, ylabel){
   })
 }
 
+// Shows a message to the user while things happen in the background
 function showMessage(text){
+  d3.select('#message').style("padding", '10px')
   m = d3.select('#message').node()
   m.innerHTML = text
 }
 
+// Clears the message shown to the user
 function clearMessage(){
   showMessage("")
+  d3.select('#message').style("padding", '0')
 }

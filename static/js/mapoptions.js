@@ -1,5 +1,11 @@
+/*
+* Option Parameters and Update Functions for the Map Options
+* This document contains a set of definitions and update functions for populating
+* all of the map option dropdowns, and for handling the querystring feature
+* that allows for sharing of a particular map state.
+*/
 // TO BE EXPANDED WITH MORE OPTIONS
-var zoneList = ['all', 'msa', 'urban', 'equity']
+var zoneList = ['all', 'er', 'msa', 'urban', 'equity']
 var measureList = ['A', 'M']
 var AGDestList = ['C000']
 var MDestList = ['snap']
@@ -9,6 +15,7 @@ var MParamList = ['time1', 'time3']
 var fareYesNo = ['No', 'Yes']
 var demoList = ['none', 'pop_black', 'pop_white', 'pop_hispanic', 'pop_asiapacific', 'hhld_single_mother', 'workers_essential', 'pop_poverty', 'pop_black']
 
+// Options related to auto travel time ratio.
 var autoOptions = [
   {
     "autoName": "No auto travel time ratios",
@@ -20,6 +27,7 @@ var autoOptions = [
   }
 ]
 
+// Used then auto travel time ratios are not applicable.
 var autoNA = [
   {
     "autoName": "--Auto Ratio Not Applicable--",
@@ -27,6 +35,7 @@ var autoNA = [
   }
 ]
 
+// Options related to fare-sensitive choices
 var fareOptions = [
   {
     "fareName": "No",
@@ -38,6 +47,7 @@ var fareOptions = [
   }
 ]
 
+// Used when fare-sensitive information isn't applicable.
 var fareNA = [
   {
     "fareName": "--Fare Not Applicable--",
@@ -45,6 +55,15 @@ var fareNA = [
   }
 ]
 
+// Used as a temporary measure to remove fare options
+var fareTemp = [
+  {
+    "fareName": "--Coming Soon!--",
+    "fareCode": "fareN"
+  }
+]
+
+// Options for time-of-day filtering of data (all except level-of-service)
 var periodOptions = [
   {
     "periodName": "Weekday Morning",
@@ -54,12 +73,13 @@ var periodOptions = [
     "periodName": "Weekday Evening",
     "periodCode": "PM"
   },
-  // {
-  //   "periodName": "Weekend",
-  //   "periodCode": "WE"
-  // }
+  {
+    "periodName": "Weekend",
+    "periodCode": "WE"
+  }
 ]
 
+// Options for the time-of-day filtering for the level-of-service measure only
 var losPeriodOptions = [
   {
     "periodName": "Weekday",
@@ -71,35 +91,7 @@ var losPeriodOptions = [
   },
 ]
 
-var periodNA = [
-  {
-    "periodName": "--Time Period Not Applicable--",
-    "periodCode": "NA"
-  }
-]
-
-var demoOptions = {
-  "pop_total" : {
-    "demoName": "Total populaiton",
-    "demoTitle": "Total Population",
-    "demoUnit": "people",
-    "demoLabel": "people"
-  },
-  "pop_poverty" : {
-    "demoName": "People at/below 200% poverty line (“low-income”)",
-    "demoTitle": "People below the poverty line",
-    "demoUnit": "people",
-    "demoLabel": "people below the poverty line"
-  },
-  "pop_black" : {
-    "demoName": "Black Population",
-    "demoTitle": "Black Population",
-    "demoUnit": "black people",
-    "demoLabel": "black people"
-  }
-}
-
-// MAIN OPTIONS LIST FOR DROPDOWNS
+// Main collection of dropdown options used.
 var options = {
   "C000": {
     "destName" : "Employment, All",
@@ -123,7 +115,7 @@ var options = {
     ],
     "periods": periodOptions,
     "autos": autoOptions,
-    "fares": fareOptions
+    "fares": fareTemp
   },
   "CE01": {
     "destName" : "Employment, Low Income",
@@ -147,7 +139,7 @@ var options = {
     ],
     "periods": periodOptions,
     "autos": autoOptions,
-    "fares": fareOptions
+    "fares": fareTemp
   },
   "snap": {
     "destName" : "Grocery Stores",
@@ -296,15 +288,10 @@ var defaultKey = defaultMeasure + "_"
                     + options[defaultMeasure]['fares'][0]['fareCode']
 
 /*
-    Code to manage the options portion of the application, including
-    dynamically linked drop down lists, etc.
+  Updates the options available on the dropdowns in the sidebar based on the
+  destination chosen by the user. This requires removing and re-populating
+  the dropdowns on a selection change in destinations.
 */
-// Start by populating the lists with appropriate data
-$(document).ready(function () {
-    // console.log("Document ready");
-    // optionsUpdate()
-});
-
 function optionsUpdate(){
     var destList = document.getElementById('destination');
     var destination = destList.options[destList.selectedIndex].value
@@ -411,7 +398,6 @@ function setStateFromParams(){
     if (mapParams.has('key')){
       // Make sure it's a valid key
 
-      console.log("Initial Key: " + mapParams.get('key'));
       var s_key = mapParams.get('key').split("_");  
       if (s_key[0] in options){
         // Fix the measurement code whether it needs it or not
@@ -437,17 +423,12 @@ function setStateFromParams(){
     else{
       demo = demoList[0];
     }
-
     if (mapParams.has('zone') & zoneList.includes(mapParams.get('zone'))){
       zone = mapParams.get('zone')
     }
     else{
       zone = zoneList[0];
-      // console.log("Set Zone to default:", zone);
     }
-
-    console.log('Key list check-in...');
-    console.log(s_key);
 
     if ((s_key[0] == 'los_trips') & (s_key.length > 3)){
       var key = 'los_trips_' + s_key[3]
@@ -455,8 +436,6 @@ function setStateFromParams(){
     else{
       var key = s_key.join("_")
     }
-
-    // console.log(key)
     // Now we gotta update the paramz
     var newParams = new URLSearchParams()
     
@@ -470,7 +449,6 @@ function setStateFromParams(){
     // Now to update the map state itself
 
     // Start with the zone update
-    // console.log("Zone Querystring", zone);
     if (zone == 'msa'){
         state['tag'] = view['name'] + "-msa"
     }
@@ -487,8 +465,6 @@ function setStateFromParams(){
     // TODO: Check if date is valid
     state['date'] = date
     state['score']['key'] = key
-
-    console.log("Final key before update: " + key)
 
     var updateScore = false;
     if (state['score']['url'] != "/data/score/" + state['tag'] + "/" + key + "/" + date){
@@ -608,9 +584,6 @@ function updateMapClicked(){
   else{
     var key = "los_trips_" + period
   }
-
-  console.log("Key after updateMapClicked:", key);
-  // console.log("Demo after updateMapClicked:", demo);
 
   queryParams.set("zone", zone)
   queryParams.set("key", key)
