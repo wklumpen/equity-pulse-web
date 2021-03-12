@@ -89,6 +89,8 @@ function loadCoronaData(){
     .then(function(data){
         console.log("Loaded Corona Data");
         // First we filter down to the one region
+        console.log(view['county'])
+        console.log(view['state'])
         if (view['name'] == 'nyc'){
             counties = ['New York', 'Kings', 'Queens', 'Bronx', 'Richmond']
             d = data.filter(d => (counties.includes(d['Admin2']) & d['Province_State'] == view['state']));
