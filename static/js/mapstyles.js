@@ -54,7 +54,7 @@ function getQuintileColor(d, data, colors) {
  * @param {Array} colors Color data
  */
 function getQuintileCumulativeColor(d, data, colors) {
-  qData = data.filter(d => d > 0.0)
+  qData = data.filter(d => d >= 0.0)
   // Handle NAN Value label
   if(isNaN(d)){
     return nan_color;
@@ -98,15 +98,14 @@ function getQuintileTravelTimeColor(d, data, colors) {
 }
 
 /**
- * Colour labels based on quintiles.
+ * Color labels based on quintiles.
  * @param {Number} data Data to quintile.
  * @param {String} unit Unit label.
  * @param {Array} colors Array of 5 colors to use.
  */
 function getQuintileCumulativeLabels(data, unit, colors){
   // Drop out the NaNs
-  data = data.filter(Boolean).filter(d => d >= 0.0)
-  data.sort(d3.ascending)
+  qData = data.filter(d => d >= 0.0)
   return [
     {'label': "Top 20% (more than " + styleNumbers(d3.quantile(data, 0.8)) + " " + unit + ')', 'color': colors[4]},
     {'label': '60 to 80% (' + styleNumbers(d3.quantile(data, 0.6)) + " to " + styleNumbers(d3.quantile(data, 0.8))+ " " + unit + ")", 'color': colors[3]},
@@ -118,15 +117,13 @@ function getQuintileCumulativeLabels(data, unit, colors){
 }
 
 /**
- * Colour labels based on quintiles.
+ * Color labels based on quintiles.
  * @param {Number} data Data to quintile.
  * @param {String} unit Unit label.
  * @param {Array} colors Array of 5 colors to use.
  */
 function getQuintileTravelTimeLabels(data, unit, colors){
-  // Drop out the NaNs
-  data = data.filter(Boolean).filter(d => d >= 0.0)
-  data.sort(d3.ascending)
+  qData = data.filter(d => d >= 0.0)
   return [
     {'label': "Top 20% (less than " + styleNumbers(d3.quantile(data, 0.2)) + " " + unit + ')', 'color': colors[4]},
     {'label': '60 to 80% (' + styleNumbers(d3.quantile(data, 0.4)) + " to " + styleNumbers(d3.quantile(data, 0.2))+ " " + unit + ")", 'color': colors[3]},
@@ -138,15 +135,13 @@ function getQuintileTravelTimeLabels(data, unit, colors){
 }
 
 /**
- * Colour labels based on quintiles.
+ * Color labels based on quintiles.
  * @param {Number} data Data to quintile.
  * @param {String} unit Unit label.
  * @param {Array} colors Array of 5 colors to use.
  */
 function getQuintileRatioLabels(data, unit, colors){
-  // Drop out the NaNs
-  data = data.filter(Boolean).filter(d => d >= 0.0)
-  data.sort(d3.ascending)
+  qData = data.filter(d => d >= 0.0)
   return [
     {'label': "Top 20% (less than " + styleNumbers(d3.quantile(data, 0.2)) + " " + unit + ')', 'color': colors[4]},
     {'label': '60 to 80% (' + styleNumbers(d3.quantile(data, 0.2)) + " to " + styleNumbers(d3.quantile(data, 0.4))+ " " + unit + ")", 'color': colors[3]},

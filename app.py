@@ -70,7 +70,7 @@ def map(region):
     try:
         r = Region.get(Region.tag == region)
         # Get the maximum date
-        start_date = Tag.max_tag_date(region.lower()).strftime("%Y-%m-%d")
+        start_date = Run.max_run_date(region.lower()).strftime("%Y-%m-%d")
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'max_date': start_date}
         return render_template('map.html', region=r.tag, zoom=r.zoom, view=view)
     except DoesNotExist:
@@ -104,10 +104,10 @@ def score(zone, score_key, date_key):
     scores = Score.by_tag_type_with_date(zone, score_key, date_key)
     return jsonify(scores)
 
-@app.route('/data/bg/<tag>')
-def data_bg_tag(tag):
-    bg = BlockGroup.by_tag(tag)
-    return jsonify([model_to_dict(b) for b in bg])
+# @app.route('/data/bg/<tag>')
+# def data_bg_tag(tag):
+#     bg = BlockGroup.by_tag(tag)
+#     return jsonify([model_to_dict(b) for b in bg])
 
 @app.route('/data/dl/view/csv/<zone>/<score_key>/<date_key>')
 def current_data_csv(zone, score_key, date_key):
@@ -136,7 +136,7 @@ def current_data_geojson(zone, score_key, date_key):
 @app.route('/data/dl/all/<zone>/<date_key>')
 def all_data_csv(zone, date_key):
     scores = Score.by_tag_type_with_date_all(zone, date_key)
-    return send_csv(scores, f"tcep_{zone}_{date_key}_all.csv", ['block_group', 'key', 'score'])
+    return send_csv(scores.to_dict(orient='records'), f"tcep_{zone}_{date_key}_all.csv", scores.columns)
 
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):

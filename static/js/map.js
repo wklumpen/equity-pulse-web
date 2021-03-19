@@ -106,6 +106,8 @@ var cartoLabels = L.tileLayer("https://cartodb-basemaps-{s}.global.ssl.fastly.ne
   pane: 'labels'
 }).addTo(map);
 
+var scaleBar = L.control.scale().addTo(map)
+
 // Define the sidebar control and add it to the map.
 var sidebar = L.control.sidebar({
   autopan: true,       // whether to maintain the centered map point when opening the sidebar
@@ -197,8 +199,6 @@ bgLayer.on('data:loaded', function() {
   setStateFromParams();
 })
 
-// === 
-
 // Load in the map data from the database
 function loadMapData(){
   showMessage("Fetching map data, please wait...")
@@ -272,6 +272,7 @@ function updateMap(){
 
   // Sort, or quantiles will break real good
   score.sort(d3.ascending)
+
   if (state['score']['url'].search("_M_") > 0){
     var is_travel_time = true;
   }

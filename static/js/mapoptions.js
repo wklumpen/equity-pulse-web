@@ -265,7 +265,7 @@ var options = {
     "destName" : "Transit Service",
     "destMeasureLabel": "Daily Trips",
     "destMeasureUnit": "trips",
-    "destMeasure": "Access to transit service is measured by counting the total number of unique transit trips that visit a zone in a week.",
+    "destMeasure": "Access to transit service is measured by counting the total number of unique transit trips that stop in or nera a zone in a given day, weekday or weekend.",
     "measureCode": "trips",
     "params": [
       {
