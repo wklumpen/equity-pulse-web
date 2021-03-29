@@ -5,7 +5,7 @@
 * that allows for sharing of a particular map state.
 */
 // TO BE EXPANDED WITH MORE OPTIONS
-var zoneList = ['all', 'er', 'msa', 'urban', 'equity']
+var zoneList = ['msa', 'er', 'urban', 'equity']
 var measureList = ['A', 'M']
 var AGDestList = ['C000']
 var MDestList = ['snap']
@@ -13,7 +13,7 @@ var periodOptionsList = ['AM', 'PM']
 var AParamList = ['c30', 'c60', 'c45']
 var MParamList = ['time1', 'time3']
 var fareYesNo = ['No', 'Yes']
-var demoList = ['none', 'pop_black', 'pop_white', 'pop_hispanic', 'pop_asiapacific', 'hhld_single_mother', 'workers_essential', 'pop_poverty', 'pop_black']
+var demoList = ['none', 'pop_black', 'pop_white', 'pop_hispanic', 'pop_asiapacific', 'hhld_single_mother', 'workers_essential', 'pop_poverty', 'pop_black', 'hhld_nocar']
 
 // Options related to auto travel time ratio.
 var autoOptions = [
@@ -263,13 +263,13 @@ var options = {
   },
   "los": {
     "destName" : "Transit Service",
-    "destMeasureLabel": "Daily Trips",
+    "destMeasureLabel": "Averate Hourly Trips",
     "destMeasureUnit": "trips",
-    "destMeasure": "Access to transit service is measured by counting the total number of unique transit trips that stop in or nera a zone in a given day, weekday or weekend.",
+    "destMeasure": "Access to transit service is measured by counting average hourly unique transit trips over the measurement day.",
     "measureCode": "trips",
     "params": [
       {
-        "paramName": "Total Trips",
+        "paramName": "Hourly Trips",
         "paramCode": "NA"
       }
     ],
