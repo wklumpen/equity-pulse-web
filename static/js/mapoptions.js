@@ -18,11 +18,11 @@ var demoList = ['none', 'pop_black', 'pop_white', 'pop_hispanic', 'pop_asiapacif
 // Options related to auto travel time ratio.
 var autoOptions = [
   {
-    "autoName": "No auto travel time ratios",
+    "autoName": "No",
     "autoCode": "autoN"
   },
   {
-    "autoName": "Show as ratio to travel times",
+    "autoName": "Yes",
     "autoCode": "autoY"
   }
 ]
@@ -95,9 +95,9 @@ var losPeriodOptions = [
 var options = {
   "C000": {
     "destName" : "Employment, All",
-    "destMeasureLabel": "Jobs accessible",
+    "destMeasureLabel": "Jobs Reachable",
     "destMeasureUnit": "jobs",
-    "destMeasure": "Access to employment is measured by counting the total number of jobs available withing a specified travel time from a zone.",
+    "destMeasure": "Access to jobs counts the total number of jobs that can be reached on transit, from a starting point and within a certain amount of time.",
     "measureCode": "P",
     "params": [
       {
@@ -119,9 +119,9 @@ var options = {
   },
   "CE01": {
     "destName" : "Employment, Low Income",
-    "destMeasureLabel": "Jobs accessible",
+    "destMeasureLabel": "Low-wage jobs reachable",
     "destMeasureUnit": "jobs",
-    "destMeasure": "Access to low income employment is measured by counting the total number of low income jobs available withing a specified travel time from a zone.",
+    "destMeasure": "Access to low-wage jobs counts the total number of jobs with annual wages less than $15,000 that can be reached on transit, from a starting point and within a certain amount of time.",
     "measureCode": "P",
     "params": [
       {
@@ -143,9 +143,9 @@ var options = {
   },
   "snap": {
     "destName" : "Grocery Stores",
-    "destMeasureLabel": "Travel Time to Groceries",
+    "destMeasureLabel": "Travel Time to grocery stores",
     "destMeasureUnit": "min",
-    "destMeasure": "Access to groceries is measured by calculating the minimum travel time to a specified number of stores which are part of the SNAP program.",
+    "destMeasure": "Travel time to grocery stores calculates the travel time by transit to the closest food stores that belong to the Supplemental Nutrition Assistance Program (SNAP).",
     "measureCode": "M",
     "params": [
       {
@@ -163,9 +163,9 @@ var options = {
   },
   "hospitals": {
     "destName" : "Hospitals",
-    "destMeasureLabel": "Travel Time - Hospitals",
+    "destMeasureLabel": "Travel time to hospitals",
     "destMeasureUnit": "min",
-    "destMeasure": "Access to hospitals is measured by calculating the minimum travel time to a specified number of hospitals.",
+    "destMeasure": "Travel time to hospitals calculates the travel time by transit to closest hospitals.",
     "measureCode": "M",
     "params": [
       {
@@ -183,9 +183,9 @@ var options = {
   },
   "urgentcare": {
     "destName" : "Urgent Care Facilities",
-    "destMeasureLabel": "Travel Time - Urgent Care",
+    "destMeasureLabel": "Travel time to urgent care",
     "destMeasureUnit": "min",
-    "destMeasure": "Access to urgent care is measured by calculating the minimum travel time to a specified number of urgent care facilities.",
+    "destMeasure": "Travel time to urgent care calculates the travel time by transit to the closest facilities that provide emergency care, surgery, and recuperative care.",
     "measureCode": "M",
     "params": [
       {
@@ -203,9 +203,9 @@ var options = {
   },
   "pharmacies": {
     "destName" : "Pharmacies",
-    "destMeasureLabel": "Travel Time - Pharmacies",
+    "destMeasureLabel": "Travel time to pharmacies",
     "destMeasureUnit": "min",
-    "destMeasure": "Access to pharmacies is measured by calculating the minimum travel time to a specified number of pharmacies.",
+    "destMeasure": "Travel time to pharmacies calculates the travel time by transit to the closest pharmacies.",
     "measureCode": "M",
     "params": [
       {
@@ -223,9 +223,9 @@ var options = {
   },
   "parks": {
     "destName" : "Parks & Greenspace",
-    "destMeasureLabel": "Access to Park Space",
+    "destMeasureLabel": "Acres reachable",
     "destMeasureUnit": "acres",
-    "destMeasure": "Access to parks and greensapce is measured by calculating the total acerage accessible in a specified travel time.",
+    "destMeasure": "Access to parks counts the total acreage of parks and public greenspace that can be reached on transit, within a certain amount of time.",
     "measureCode": "P",
     "params": [
       {
@@ -243,9 +243,9 @@ var options = {
   },
   "schools": {
     "destName" : "Colleges & Universities",
-    "destMeasureLabel": "Travel Time - Colleges & Universities",
+    "destMeasureLabel": "Travel Time to Post-Secondary Schools",
     "destMeasureUnit": "min",
-    "destMeasure": "Access to colleges and universities is measured by calculating the minimum travel time to a specified number of schools.",
+    "destMeasure": "Travel time to post-secondary schools calculates the travel time by transit to the universities or colleges.",
     "measureCode": "M",
     "params": [
       {
@@ -263,9 +263,9 @@ var options = {
   },
   "los": {
     "destName" : "Transit Service",
-    "destMeasureLabel": "Averate Hourly Trips",
+    "destMeasureLabel": "Average Hourly Trips",
     "destMeasureUnit": "trips",
-    "destMeasure": "Access to transit service is measured by counting average hourly unique transit trips over the measurement day.",
+    "destMeasure": "Transit service counts unique transit trips scheduled to serve an area, on average, per hour. It is a function of density (how many routes serve an area) and frequency (how often).",
     "measureCode": "trips",
     "params": [
       {

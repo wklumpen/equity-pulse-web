@@ -67,22 +67,22 @@
   
           <div class="leaflet-sidebar-pane" id="data">
               <h1 class="leaflet-sidebar-header">
-                Map Settings
+                Customize the Map
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
               </h1>
-              <h5>Data Inputs</h5>
+              <p>Adjust the settings for the map below, then click "Update Map" to explore results. Choose dates from the timeline on the bottom right to see how people have been affected by changes to transit service.</p>
 
               <p class="label">Opportunity to Access</p>
               <div class="dropdown-select">
                 <select class="browser-default" id="destination" name="destination" title="Choose a destination." onchange="optionsUpdate()">
-                  <option value="C000" selected>Employment, All</option>
-                  <option value="CE01" >Employment, Low Income</option>
+                  <option value="C000" selected>Jobs</option>
+                  <option value="CE01" >Low-Wage Jobs</option>
+                  <option value="parks" >Parks</option>
                   <option value="snap" >Grocery Stores</option>
                   <option value="hospitals" >Hospitals</option>
                   <option value="urgentcare" >Urgent Care Facilities</option>
                   <option value="pharmacies" >Pharmacies</option>
-                  <option value="parks" >Parks & Greenspace</option>
-                  <option value="schools" >Colleges & Universities</option>
+                  <option value="schools" >Post-Secondary Schools</option>
                   <option value="los" >Transit Service</option>
                 </select>
               </div>
@@ -95,45 +95,45 @@
                 </select>
               </div>
 
-              <p id="timeDisc">Choose from weekday mornings (7am - 9am), weekday evenings (9pm - 11pm), or weekends (Saturdays, 10am-12pm)</p>
+              <p id="timeDisc">Choose from weekday mornings (7am - 9am), weekday evenings (9pm - 11pm), or weekends (Saturdays, 10am-12pm). For transit service, choose from weekdays or Saturdays</p>
 
-              <p class="label">Measurement Options</p>
+              <p class="label">More Trip Options</p>
               <div class="dropdown-select">
                 <select class="browser-default" id="param" name="param" title="Choose a parameter.">
                 </select>
               </div>
 
-              <p id="parameterDisc">Choose a parameter (opportunity dependent) to measure. See the opportunity description for information on how the measure is calcualted.</p>
+              <p id="parameterDisc">For measures of access, set the cutoff time for the rider. For travel time to destinations, choose from the travel time to the closest destination (1) or the third-closest destination (3).</p>
 
-              <p class="label">Show as Auto Ratio</p>
-              <div class="dropdown-select">
-                <select  class="browser-default" id="auto" name="auto" title="Choose a parameter.">
-                </select>
-              </div>
-
-              <p id="ratioDisc">When applicable, you can choose to show the results as ratio between transit and auto for the same measure. A value of 1.0 indicates an equal score between transit and auto.</p>
-
-              <p class="label">Include Fare Sensitivity</p>
-              <div class="dropdown-select">
-                <select class="browser-default" id="fare" name="fare" title="Choose a parameter.">
-                </select>
-              </div>
-
-              <p id="fareDisc">When applicable, you can choose to cap the total fare for a trip at a pre-determined value (region specific). This will limit the available destinations to ones that are reachable within the specified time, and at or below the fare cap.</p>
-
-              <p class="label">Portion of Region to Include</p>
+              <p class="label">Region</p>
               <div class="dropdown-select">
                 <select class="browser-default" id="zones" name="zones" title="Choose a portion of the region to display on the map.">
-                  <option value="er">Economic Region</option>
                   <option value="msa">Metropolitan Statistical Area</option>
+                  <option value="er">Economic Region</option>
                   <option value="urban">Urban Core</option>
                   <option value="equity">Equity Neighborhoods</option>
                 </select>
               </div>
 
-              <p id="regionDisc">You can choose to limit the zones included in the map (and the map coloration). Ubran Core areas are denser urban areas, while equity neighbourhoods have been identified as key areas of focus. In some metropolitain areas, definitions of various regions overlap.</p>
+              <p id="regionDisc">Metropolitan Statistical Areas are the governmental definition of the region; The economic region is the central city and neighboring counties with high volumes of traffic and economic activity; Urban cores are the central city and surrounding high-density areas with racial and economic diversity; equity neighborhoods are underserved by transportation and should be prioritized for quality transit service..</p>
 
-              <p class="label">Overlay Demogaphics</p>
+              <p class="label">Low-fare Transit Travel Only</p>
+              <div class="dropdown-select">
+                <select class="browser-default" id="fare" name="fare" title="Choose a parameter.">
+                </select>
+              </div>
+
+              <p id="fareDisc">Show access to jobs where one-way fares (including transfers) costs $4 or less (for LA, Chicago, and Philadelphia) or $5 or less (in the Bay area, D.C. Boston, or NYC). </p>
+
+              <p class="label">Show as Transit-Car Ratio</p>
+              <div class="dropdown-select">
+                <select  class="browser-default" id="auto" name="auto" title="Choose a parameter.">
+                </select>
+              </div>
+
+              <p id="ratioDisc">When selected as "Yes", show the ratio of transit access (or travel times) to car access (or travel times). A ratio of 1.0 means that an equal number of opportunities can be reached by transit (for access) or that travel time is the same by transit as by car (for travel time measures). A value of 0.1 for access ratios means that one-tenth of the destinations can be reached by transit compared with car for the same cutoff travel time. A travel time ratio of 2.0 means that travel time by transit is twice that of the car.</p>
+
+              <p class="label">Overlay</p>
               <div class="dropdown-select">
                 <select class="browser-default" id="demo" name="zones" title="Choose a population overlap to add to the map.">
                   <option value='none'>No Overlay</option>
@@ -147,13 +147,9 @@
                   <option value="hhld_nocar">1 dot = 50 no-car households</option>
                 </select>
               </div>
-
               <p id="demoDisc">The overlay shows where different demographics reside in the region. These locations are shown as representative dots.</p>
-
               <button onclick="updateMapClicked()">Update Map</button>
 
-              <h5>Display Options</h5>
-              <!-- Rounded switch -->
               <p class='label'>Show  Transit Lines</p>
               <div class="switch">
                 <label>

@@ -16,7 +16,7 @@
 <div class="container">
     <div class="row">
         <div class="col s12">
-            <h2>Transit Service and the Coronavirus</h2>
+            <h2>The State of Transit Equity</h2>
             <p class='center'><i>Note: This is a Beta version for demonstration and feedback purposes.</i></p>
         </div>
     </div>
@@ -25,10 +25,11 @@
             <h5>Table of Contents</h5>
             <div class="collection">
                 <a href="#introduction" class="collection-item blue-text text-darken-2">Introduction</a>
-                <a href="#theme-access" class="collection-item blue-text text-darken-2">Theme 1: Disparity in access accross the region</a>
-                <a href="#fares" class="collection-item blue-text text-darken-2">Theme 2: The barriers of premium transit</a>
-                <a href="#los" class="collection-item blue-text text-darken-2">Theme 3: Changes in transit service</a>
-                <a href="#car" class="collection-item blue-text text-darken-2">Theme 4: The prioritization of the car</a>
+                <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to destinations on transit</a>
+                <a href="#los" class="collection-item blue-text text-darken-2">Transit service levels</a>
+                <a href="#fares" class="collection-item blue-text text-darken-2">Transit fares and access</a>
+                <a href="#car" class="collection-item blue-text text-darken-2">Travelling by transit vs. car</a>
+                <a href="#reliability" class="collection-item blue-text text-darken-2">Transit reliability</a>
             </div>
         </div>
     </div>
@@ -40,23 +41,9 @@
         <div class='col s12'>
             <a id="introduction"></a>
             <h3>Introduction</h3>
-            <p class='flow-text'>In the US, Black people, Latinx people , people of color, people with low incomes, people with disabilities, and women have faced discrimination, disenfranchisement, and disinvestment from transportation systems. This marginalization prevents them from reaching the destinations they need. In 2020, the Covid-19 crisis has upended transit operations and threatened how essential workers commute to their jobs.</p>
+            <p class='flow-text'>This page demonstrates the extent to which residents of {{view['title']}} have equitable access to opportunity, convenient travel, and reliable transit service. This page presents the state of transit equity starting in February 2020, and how outcomes for riders have changed alongside changes to the systems and service.</p>
 
-            <p class='flow-text'>An equitable transit system recognizes that structural barriers have kept some people from reliable transportation and therefore, from accessing destinations. Reliable, affordable transit service is concentrated specifically to meet the needs of these people — so that everyone has the same access to jobs, healthcare, school, stores, and other opportunities they need to thrive.</p>
-                
-            <p class='flow-text'>This page is divided into five themes, which demonstrate key aspects of transit equity, access to opportunity, and reliable service — and how those outcomes for residents of {{view['title']}} have changed over 2020.</p>
-            
-            <p class='flow-text'>Covid-19 has impacted transit operations and ridership throughout 2020. As a reference, here is a plot of the rolling 7-day average of new cases in {{view['title']}}</p>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12">
-            <div class="col s12">
-                <div class="card-panel">
-                    <div id="corona" class="svg-container"></div>
-                </div>
-            </div>
-            
+            <p class='flow-text'>Covid-19 has impacted transit operators and riders alike starting in 2020; for reference, there is a chart of local Covid-19 cases at the <a href='#coronaChart'>bottom of the page.</a></p>
         </div>
     </div>
     <div class='row'>
@@ -70,45 +57,32 @@
 <div class="container">
     <div class='row'>
         <a id="theme-access"></a>
-        <h3><b>Theme 1:</b> Transit provides different levels of access to destinations for people within the same region.</h3>
+        <h3>Access to destinations on transit</h3>
+        <h5>Ability to access destinations on transit varies for different groups of people.</h5>
     </div>
     <div class='row'>
         <div class='col s12'>
-            <h4><i>We asked: </i>How many jobs can each group of people currently reach in 30 minutes on public transit?</h4>
+            <h4>How many jobs can people reach in 45 minutes on public transit?</h4>
         </div>
     </div>
     <div class='row'>
         <div class="col s12">
             <div class="card-panel">
                 <div id="jobs-access-groups-date" class="svg-container"></div>
-                <p>This figure shows the number of jobs that a transit rider can reach in 30 minutes, as of {{view['max_date'].strftime("%B %d, %Y")}}. Each bar represents the average number of jobs reachable for transit riders of different racial, ethnic, income and socioeconomic groups, and for the average rider using only less-expensive transit options. Larger numbers represent better access to jobs. You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
+                <p>Larger numbers represent better access to jobs. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the {{view['title']}} Urban Core on a map.</a></p>
             </div>
         </div>
     </div>
     <div class='row'>
         <div class='col s12'>
-            <p class='flow-text'>
-                Some groups of people, on average, can reach more jobs in 30 minutes when riding public transit compared to others. An equitable public transit system should convey better access to certain groups of people — including Black people, Latinx people, people of color, low-income people, women, and people with disabilities — who generally have had worse access to destinations because of transportation, housing, education, and land use policies.
-            </p>
-        </div>
-        <div class='col s12'>
-            <p class='flow-text'>
-                <i>Note: Low-income people are defined here as people with household incomes below the poverty line. Essential workers are employed in industries deemed essential during the coronavirus pandemic. In {{view['title']}}, premium-fare transit includes {{view['agencies']}}.
-                </i>
-            </p>
-        </div>
-
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4><i>We asked:</i> How has job access on public transit changed for each group of people?</h4>
+            <h4>How has access to jobs by public transit changed over time?</h4>
         </div>
     </div>
     <div class='row'>
         <div class="col s12">
             <div class="card-panel">
                 <div id="jobs-access-series" class="svg-container"></div>
-                <p>This figure shows how the number of jobs that a transit rider can reach within 30 minutes has changed over time. The lines represent the average number of jobs reachable on public transit for people of different racial and ethnic groups and for people using only less expensive transit options (regardless of race or ethnicity). Larger numbers represent better access to jobs. You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
+                <p>Larger numbers represent better access to jobs. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
             </div>
         </div>
     </div>
@@ -120,6 +94,21 @@
             <p class='flow-text'>
                 <i>Note: In {{view['title']}}, premium-fare transit includes {{view['agencies']}}.</i>
             </p>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col s12'>
+            <h4>How long does it take to travel to the nearest hospital on public transit?</h4>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col s12">
+            <div class="card-panel">
+                <div id="hospital-access-series" class="svg-container"></div>
+                <p>
+                    You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
+                </p>
+            </div>
         </div>
     </div>
     <div class='row'>
@@ -149,7 +138,35 @@
     </div>
 </div>
 </div>
-</div>
+<div class='grey lighten-4 section'>
+    <div class="container">
+        <div class='row'>
+            <a id="los"></a>
+            <h3>Transit Service Levels</h3>
+        </div>
+        <div class='row'>
+            <div class='col s12'>
+                <h4>How has the daily number of transit trips serving people near their homes changed?</h4>
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col s12'>
+                <div class="card-panel">
+                    <div id="los-series" class="svg-container"></div>
+                    <p>Transit service levels are measured as the average hourly weekday trips, and are a function of the number of routes or lines serving an area and their frequency. More transit trips are generally good for riders, but trips also must connect riders to destinations to translate to good access. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on weekly trips in the Urban Core on a map.</a></p>
+                </div>
+                
+            </div>
+        </div>
+        <div class='row'>
+            <div class='col s12'>
+                <p class='flow-text'>While the level of service varies for each group, it has generally decreased for everyone. Transit agencies have cut service widely in reaction to budget and staffing limitations caused by Covid-19. Some groups have lost more service than others or experienced greater fluctuation in the level of service available near home. </p>
+                    
+                <p class='flow-text'><i>Note: Essential workers are employed in industries deemed essential during the coronavirus pandemic.</i></p>
+            </div>
+        </div>
+    </div>
+    </div>
 <div class='white section'>
 <div class="container">
     <div class='row'>
@@ -177,35 +194,7 @@
     </div>
 </div>
 </div>
-<div class='grey lighten-4 section'>
-<div class="container">
-    <div class='row'>
-        <a id="los"></a>
-        <h3><b>Theme 3:</b> Level of transit service has fluctuated widely starting in Spring 2020, due to Covid-19.</h3>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4><i>We asked: </i>How has the level of transit service fluctuated over the past year, for different groups of people?</h4>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <div class="card-panel">
-                <div id="los-series" class="svg-container"></div>
-                <p>This figure shows changes in the level of service - measured as the number of transit vehicles that make service stops per day, within walking distance of one’s home. The lines represent the average level of transit service for members of each group. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on weekly trips in the Urban Core on a map.</a></p>
-            </div>
-            
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <p class='flow-text'>While the level of service varies for each group, it has generally decreased for everyone. Transit agencies have cut service widely in reaction to budget and staffing limitations caused by Covid-19. Some groups have lost more service than others or experienced greater fluctuation in the level of service available near home. </p>
-                
-            <p class='flow-text'><i>Note: Essential workers are employed in industries deemed essential during the coronavirus pandemic.</i></p>
-        </div>
-    </div>
-</div>
-</div>
+
 <div class='white section'>
 <div class="container">
     <div class='row'>
@@ -257,6 +246,16 @@
             <p class='flow-text'>Cars provide quicker access to destinations compared to public transit in almost all circumstances, even though owning a car is too expensive for some.</p>
 
             <p class='flow-text'><i>Note: Low-income people are defined here as people with household incomes below the poverty line.</i></p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col s12" id='coronaChart'>
+            <div class="col s12">
+                <div class="card-panel">
+                    <div id="corona" class="svg-container"></div>
+                </div>
+            </div>
+            
         </div>
     </div>
 </div>
