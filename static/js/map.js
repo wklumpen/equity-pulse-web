@@ -117,7 +117,7 @@ var sidebar = L.control.sidebar({
 }).addTo(map);
 
 // Set initial sidebar tab.
-sidebar.open('home');
+sidebar.open('data');
 
 // Initialize sidebar triggers for sharing the map and downloading
 sidebar.on('content', function(e){

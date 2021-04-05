@@ -30,11 +30,10 @@
       <!-- Nav tabs -->
       <div class="leaflet-sidebar-tabs">
           <ul role="tablist"> <!-- top aligned tabs -->
-              <li><a href="#home" role="tab" ><i class="fa fa-bars"></i></a></li>
-              <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Map settings"></i></a></li>
+              <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Customize the Map"></i></a></li>
               <!-- <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li> -->
-              <li><a href="#share" role="tab"><i class="fa fa-share" title="Share this map"></i></a></li>
-              <li><a href="#download" role="tab"><i class="fa fa-download" title="Download data"></i></a></li>
+              <li><a href="#share" role="tab"><i class="fa fa-share" title="Share the Map"></i></a></li>
+              <li><a href="#download" role="tab"><i class="fa fa-download" title="Download the Data"></i></a></li>
           </ul>
   
           <ul role="tablist"> <!-- bottom aligned tabs -->
@@ -43,28 +42,7 @@
       </div>
   
       <!-- Tab panes -->
-      <div class="leaflet-sidebar-content">
-          <div class="leaflet-sidebar-pane" id="home">
-              <h1 class="leaflet-sidebar-header">
-                  Access and Equity in {{view['title']}}
-                  <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-              </h1>
-              
-              <p>COVID-19 has had a severe impact on the people and economy of the United States. Transit will be a vital part of
-                that recovery, but transit access is not always equitable and accessible accross populated regions. To keep our finger on the
-                pulse of transit equity accross seven metropolitan areas in the United Staes, we've created this analytical dashbaord and mapping 
-                application.
-              </p>
-              <h5>How to use this application</h5>
-              <p>Use the map to explore the data in the region. You can customize the inputs to the map by clicking on the gears icon
-                on the left of this panel. Explore over time by selecting an available date from the timeline below to see how changes
-                in transit access and service have developed throughout the course of the COVID-19 pandemic.
-              </p>
-              <p>
-                You can also see summary charts and a discussion for the region on the <a href="/charts/{{view['name']}}">charts page.</a>
-              </p>
-          </div>
-  
+      <div class="leaflet-sidebar-content"> 
           <div class="leaflet-sidebar-pane" id="data">
               <h1 class="leaflet-sidebar-header">
                 Customize the Map
@@ -165,19 +143,19 @@
 
           <div class="leaflet-sidebar-pane" id="share">
             <h1 class="leaflet-sidebar-header">
-                Share This Map
+                Share the Map
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
             </h1>
-            <p>You can share the map and preserve the current settings by using the following link:</p>
+            <p>Copy the link below to share your customized map with its current settings.</p>
             <pre><code id='share-link'></code></pre>
           </div>
 
           <div class="leaflet-sidebar-pane" id="download">
             <h1 class="leaflet-sidebar-header">
-                Download data
+                Download the Data
                 <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
             </h1>
-            <p>You can download the currently displayed scores <b>for the entire region</b> either tabulated as a CSV file, or as a spatial dataset (GeoJSON format). This data does not include any overlays.</p>
+            <p>Download the data you've selected to display <b>for the entire region</b> either tabulated as a CSV file, or as a spatial dataset (GeoJSON format). This data file does not include any overlays.</p>
             <p><a id='csv-link'>Download CSV</a></p>
             <p><a id='geojson-link'>Download GeoJSON</a></p>
             <p>Visit the <a href='/download'>download center</a> for more datasets.</p>
