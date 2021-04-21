@@ -3,7 +3,7 @@ csvalidate==1.1.1
 Flask==1.1.2
 Flask-CSV==1.2.0
 itsdangerous==1.1.0
-Jinja2==2.11.2
+Jinja2==2.11.3
 MarkupSafe==1.1.1
 marshmallow==3.10.0
 numpy==1.19.1
