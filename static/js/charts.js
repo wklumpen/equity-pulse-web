@@ -1,6 +1,8 @@
 
 var chartData = []
 var coronaData = []
+var reliabilityData = []
+var reliabilityAgencyMode = []
 
 var coronaMargin = {top: 20, right: 60, bottom: 40, left: 30}
 var coronaBoxWidth = d3.select("#corona").node().getBoundingClientRect().width
@@ -10,6 +12,19 @@ var coronaChartHeight = coronaBoxHeight - coronaMargin.top - coronaMargin.bottom
 
 var coronaBox = d3.select("#corona").append('svg').attr('width', coronaBoxWidth).attr('height', coronaBoxHeight)
 var coronaSVG = coronaBox.append('g').attr("transform", "translate(" + coronaMargin.left + "," + coronaMargin.top + ")");
+
+if (view['reliability'] == true){
+    var reliabilityMargin = {top: 20, right: 40, bottom: 80, left: 30}
+    var reliabilityBoxWidth = d3.select("#reliability").node().getBoundingClientRect().width
+    var reliabilityBoxHeight = d3.select("#reliability").node().getBoundingClientRect().height
+    var reliabilityChartWidth = reliabilityBoxWidth - reliabilityMargin.left - reliabilityMargin.right
+    var reliabilityChartHeight = reliabilityBoxHeight - reliabilityMargin.top - reliabilityMargin.bottom
+
+    var reliabilityBox = d3.select("#reliability").append('svg').attr('width', reliabilityBoxWidth).attr('height', reliabilityBoxHeight)
+    var reliabilitySVG = reliabilityBox.append('g').attr("transform", "translate(" + reliabilityMargin.left + "," + reliabilityMargin.top + ")");
+}
+
+
 
 // jobs-access-groups-date chart shows access on a single date
 var jobsAccessGroupsDateMargin = {top: 20, right: 20, bottom: 40, left: 40}
@@ -57,17 +72,17 @@ var carJobsAccessSeriesBoxHeight = d3.select("#car-jobs-access-series").node().g
 var carJobsAccessSeriesChartWidth = carJobsAccessSeriesBoxWidth - carJobsAccessSeriesMargin.left - carJobsAccessSeriesMargin.right
 var carJobsAccessSeriesChartHeight = carJobsAccessSeriesBoxHeight - carJobsAccessSeriesMargin.top - carJobsAccessSeriesMargin.bottom
 
-var carLowWageJobsAccessSeriesMargin = {top: 25, right: 150, bottom: 40, left: 40}
-var carLowWageJobsAccessSeriesBoxWidth = d3.select("#car-low-wage-jobs-access-series").node().getBoundingClientRect().width
-var carLowWageJobsAccessSeriesBoxHeight = d3.select("#car-low-wage-jobs-access-series").node().getBoundingClientRect().height
-var carLowWageJobsAccessSeriesChartWidth = carLowWageJobsAccessSeriesBoxWidth - carLowWageJobsAccessSeriesMargin.left - carLowWageJobsAccessSeriesMargin.right
-var carLowWageJobsAccessSeriesChartHeight = carLowWageJobsAccessSeriesBoxHeight - carLowWageJobsAccessSeriesMargin.top - carLowWageJobsAccessSeriesMargin.bottom
+// var carLowWageJobsAccessSeriesMargin = {top: 25, right: 150, bottom: 40, left: 40}
+// var carLowWageJobsAccessSeriesBoxWidth = d3.select("#car-low-wage-jobs-access-series").node().getBoundingClientRect().width
+// var carLowWageJobsAccessSeriesBoxHeight = d3.select("#car-low-wage-jobs-access-series").node().getBoundingClientRect().height
+// var carLowWageJobsAccessSeriesChartWidth = carLowWageJobsAccessSeriesBoxWidth - carLowWageJobsAccessSeriesMargin.left - carLowWageJobsAccessSeriesMargin.right
+// var carLowWageJobsAccessSeriesChartHeight = carLowWageJobsAccessSeriesBoxHeight - carLowWageJobsAccessSeriesMargin.top - carLowWageJobsAccessSeriesMargin.bottom
 
-var carHospitalTravelSeriesMargin = {top: 25, right: 150, bottom: 40, left: 40}
-var carHospitalTravelSeriesBoxWidth = d3.select("#car-hospital-travel-series").node().getBoundingClientRect().width
-var carHospitalTravelSeriesBoxHeight = d3.select("#car-hospital-travel-series").node().getBoundingClientRect().height
-var carHospitalTravelSeriesChartWidth = carHospitalTravelSeriesBoxWidth - carHospitalTravelSeriesMargin.left - carHospitalTravelSeriesMargin.right
-var carHospitalTravelSeriesChartHeight = carHospitalTravelSeriesBoxHeight - carHospitalTravelSeriesMargin.top - carHospitalTravelSeriesMargin.bottom
+// var carHospitalTravelSeriesMargin = {top: 25, right: 150, bottom: 40, left: 40}
+// var carHospitalTravelSeriesBoxWidth = d3.select("#car-hospital-travel-series").node().getBoundingClientRect().width
+// var carHospitalTravelSeriesBoxHeight = d3.select("#car-hospital-travel-series").node().getBoundingClientRect().height
+// var carHospitalTravelSeriesChartWidth = carHospitalTravelSeriesBoxWidth - carHospitalTravelSeriesMargin.left - carHospitalTravelSeriesMargin.right
+// var carHospitalTravelSeriesChartHeight = carHospitalTravelSeriesBoxHeight - carHospitalTravelSeriesMargin.top - carHospitalTravelSeriesMargin.bottom
 
 // Initialize the map boxes and the SVG elements for the charts
 var jobsAccessGroupsDateBox = d3.select("#jobs-access-groups-date").append('svg').attr('width', jobsAccessGroupsDateBoxWidth).attr('height', jobsAccessGroupsDateBoxHeight)
@@ -84,14 +99,15 @@ var losSeriesBox = d3.select("#los-series").append('svg').attr('width', losSerie
 var losSeriesSVG = losSeriesBox.append('g').attr("transform", "translate(" + losSeriesMargin.left + "," + losSeriesMargin.top + ")");
 var carJobsAccessSeriesBox = d3.select("#car-jobs-access-series").append('svg').attr('width', carJobsAccessSeriesBoxWidth).attr('height', carJobsAccessSeriesBoxHeight)
 var carJobsAccessSeriesSVG = carJobsAccessSeriesBox.append('g').attr("transform", "translate(" + carJobsAccessSeriesMargin.left + "," + carJobsAccessSeriesMargin.top + ")");
-var carLowWageJobsAccessSeriesBox = d3.select("#car-low-wage-jobs-access-series").append('svg').attr('width', carLowWageJobsAccessSeriesBoxWidth).attr('height', carLowWageJobsAccessSeriesBoxHeight)
-var carLowWageJobsAccessSeriesSVG = carLowWageJobsAccessSeriesBox.append('g').attr("transform", "translate(" + carLowWageJobsAccessSeriesMargin.left + "," + carLowWageJobsAccessSeriesMargin.top + ")");
-var carHospitalTravelSeriesBox = d3.select("#car-hospital-travel-series").append('svg').attr('width', carHospitalTravelSeriesBoxWidth).attr('height', carHospitalTravelSeriesBoxHeight)
-var carHospitalTravelSeriesSVG = carHospitalTravelSeriesBox.append('g').attr("transform", "translate(" + carHospitalTravelSeriesMargin.left + "," + carHospitalTravelSeriesMargin.top + ")");
+// var carLowWageJobsAccessSeriesBox = d3.select("#car-low-wage-jobs-access-series").append('svg').attr('width', carLowWageJobsAccessSeriesBoxWidth).attr('height', carLowWageJobsAccessSeriesBoxHeight)
+// var carLowWageJobsAccessSeriesSVG = carLowWageJobsAccessSeriesBox.append('g').attr("transform", "translate(" + carLowWageJobsAccessSeriesMargin.left + "," + carLowWageJobsAccessSeriesMargin.top + ")");
+// var carHospitalTravelSeriesBox = d3.select("#car-hospital-travel-series").append('svg').attr('width', carHospitalTravelSeriesBoxWidth).attr('height', carHospitalTravelSeriesBoxHeight)
+// var carHospitalTravelSeriesSVG = carHospitalTravelSeriesBox.append('g').attr("transform", "translate(" + carHospitalTravelSeriesMargin.left + "," + carHospitalTravelSeriesMargin.top + ")");
 
 d3.select(window).on('resize', handleResize);
 
-loadCoronaData();
+// loadCoronaData();
+// loadReliabilityData();
 handleResize();
 
 function loadCoronaData(){
@@ -134,8 +150,30 @@ function loadCoronaData(){
     })
 }
 
+function loadReliabilityData(){
+    if (view['reliability'] == true){
+        reliabilityData = []
+        reliabilityAgencies = []
+        reliabilityModes = []
+        d3.json("/data/reliability/"+ view['name'], {
+            headers : new Headers({
+                "Content-Type": "application/json",
+                'Accept': 'application/json'
+            }),
+        })
+        .then(function(data){
+            reliabilityData = []
+            data.forEach(function(item, index){
+                reliabilityData.push({'timestamp': moment(item.timestamp).valueOf(), 'agency': item.agency, 'mode': item.mode, 'otp':+item.otp})
+                reliabilityAgencyMode.push(item.agency+'-'+item.mode)
+            })
+            reliabilityAgencyMode = [... new Set(reliabilityAgencyMode)]
+            updateReliabilityChart();
+            
+        });
+    }
+}
 function loadChartData(){
-    console.log("/data/summary/"+ view['name'])
     // "/data/summary/"+ view['name']
     
     d3.json("/data/summary/"+ view['name'], {
@@ -269,6 +307,198 @@ function updateCoronaPlot(){
         });
 }
 
+function updateReliabilityChart(){
+    reliabilityBoxWidth = d3.select("#reliability").node().getBoundingClientRect().width
+    reliabilityBoxHeight = d3.select("#reliability").node().getBoundingClientRect().height
+    reliabilityChartWidth = reliabilityBoxWidth - reliabilityMargin.left - reliabilityMargin.right
+    reliabilityChartHeight = reliabilityBoxHeight - reliabilityMargin.top - reliabilityMargin.bottom
+
+    reliabilityBox
+        .attr('width', reliabilityBoxWidth)
+        .attr('height', reliabilityBoxHeight)
+
+    reliabilitySVG.selectAll("*").remove();
+
+    var x = d3.scaleTime()
+        .domain(d3.extent(reliabilityData, d => d.timestamp))
+        .rangeRound([reliabilityMargin.left, reliabilityChartWidth]);  
+    
+    var y = d3.scaleLinear()
+        .domain([0, 100])
+        .range([reliabilityChartHeight, 0])
+
+    var line = d3.line()
+        .x(d => x(d.timestamp))
+        .y(d => y(d.otp))
+        .curve(d3.curveLinear)
+
+    reliabilityAgencyMode.forEach(function(item){
+        var itemIndex = reliabilityAgencyMode.indexOf(item)
+        var agency = item.split('-')[0]
+        var mode = item.split('-')[1]
+        var toPlot = reliabilityData.filter(d => (d['agency'] == agency) & (d['mode'] == mode));
+        // item = popStyle[key]
+        reliabilitySVG.append('path')
+            .datum(toPlot)
+            .attr('class', 'line')
+            .attr("d", line)
+            .style('fill', 'none')
+            .style('stroke', colorList[itemIndex])
+            .style("stroke-dasharray", function(d){
+                if (mode == 'Rail'){
+                    return ("2, 3")
+                }
+                else{
+                    return null;
+                }
+            }) 
+            .style('stroke-width', 2)
+            .attr('opacity', 0.8)
+
+        reliabilitySVG.append("text")
+            .attr("transform", "rotate(-90)")
+            .attr("y", 0 - reliabilityMargin.left)
+            .attr("x",0 - (reliabilityChartHeight / 2))
+            .attr("dy", "1em")
+            .style("text-anchor", "middle")
+            .text("On-Time Performance (%)");  
+
+        reliabilitySVG.append("g")
+            .attr("transform", "translate(" + reliabilityMargin.left + ", 0)")
+            .call(d3.axisLeft(y).ticks(5));
+
+        
+        if (reliabilityBoxWidth < 600){
+            reliabilitySVG.append("g")
+            .attr("transform", "translate(0," + reliabilityChartHeight + ")")
+            .call(d3.axisBottom(x).ticks(2));
+        }
+        else{
+            reliabilitySVG.append("g")
+            .attr("transform", "translate(0," + reliabilityChartHeight + ")")
+            .call(d3.axisBottom(x));
+        }
+        console.log(itemIndex)
+        console.log(item)
+        //Let's add a label
+        reliabilitySVG.append("text")
+            .attr("x", reliabilityMargin.left + 30)
+            .attr('y', reliabilityChartHeight + reliabilityMargin.top + 25 + itemIndex*15)
+            .attr("dy", "-.75em")
+            .text(agency + " (" + mode + ")")
+            .attr('text-anchor', 'start')
+            .attr("font-size", "0.8em")
+
+        reliabilitySVG.append('line')
+            .attr("x1", reliabilityMargin.left)
+            .attr("x2", reliabilityMargin.left + 18)
+            .attr("y1", reliabilityChartHeight + reliabilityMargin.top + 25 + (itemIndex-1)*15)
+            .attr("y2", reliabilityChartHeight + reliabilityMargin.top + 25 + (itemIndex-1)*15)
+            .style('fill', 'none')
+            .style('stroke', colorList[itemIndex])
+            .style("stroke-dasharray", function(d){
+                if (mode == 'Rail'){
+                    return ("2, 3")
+                }
+                else{
+                    return null;
+                }
+            }) 
+            .style('stroke-width', 2)
+            .attr('opacity', 0.8)
+    });
+
+    // reliabilitySVG.append('path')
+    //     .datum(reliabilityData)
+    //     .attr('class', 'line')
+    //     .attr("d", line)
+    //     .style('fill', 'none')
+    //     .style('stroke', 'blue')
+    //     .style('stroke-width', 2)
+
+    // reliabilitySVG.append("g")
+    //     .attr("transform", "translate(" + reliabilityMargin.left + ", 0)")
+    //     .call(d3.axisLeft(y).ticks(2));
+
+
+    // if (reliabilityBoxWidth < 600){
+    //     reliabilitySVG.append("g")
+    //         .attr("transform", "translate(0," + reliabilityChartHeight + ")")
+    //         .call(d3.axisBottom(x).ticks(2).tickFormat(d3.timeFormat("%b %Y")));
+    // }
+    // else{
+    //     reliabilitySVG.append("g")
+    //         .attr("transform", "translate(0," + reliabilityChartHeight + ")")
+    //         .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %Y")));
+    // }
+    
+    // reliabilitySVG.append("text")
+    //     .attr("x", reliabilityChartWidth)
+    //     .attr('y', reliabilityChartHeight + reliabilityMargin.bottom)
+    //     .attr("dy", "-.75em")
+    //     .text("Source: Johns Hopkins University")
+    //     .attr('text-anchor', 'end')
+    //     .attr("font-size", "0.7em")
+      
+    // Now let's get to the mouse effects
+    // var mouseLine = reliabilitySVG.append('g')
+    //     .attr('class', 'mouse-over-effects')
+    //     .append('path')
+    //     .attr('class', 'mouse-line')
+    //     .style("pointer-events", "none")
+    //     .style('stroke', 'black')
+    //     .style('stroke-width', '1px')
+    //     .style("opacity", "0")
+    //     .style('shape-rendering', 'crispEdges')
+    
+    // var mouseText = reliabilitySVG.append('text')
+
+    // reliabilityBox
+    //     .on("mousemove", function () {
+    //         mouse = d3.mouse(this);
+    //         mouseX = mouse[0] - reliabilityMargin.left
+    //         // console.log(mouse)
+    //         date = moment(x.invert(mouseX)).startOf('day').valueOf();
+
+    //         // Now look up the hovered data
+    //         hoverData = reliabilityData.filter(d => d.timestamp == date)[0];
+
+    //         // Now add some text
+    //         if (typeof(hoverData) !== 'undefined'){
+    //             mouseLine
+    //                 .attr("d", function(){
+    //                 return "M" + (mouseX) + "," + reliabilityChartHeight + " " + (mouseX) + "," + 0;
+    //                 })
+    //                 .attr('display', null)
+    //                 .style("opacity", 1)
+    //                 .transition(30)
+
+    //             mouseText
+    //                 .attr("transform", "translate(" + (mouseX) + "-5)")
+    //                 .attr('display', null)
+    //                 .style("text-anchor", "middle")
+    //                 .text(function (){
+    //                     if (Math.round(hoverData.new) != 1){
+    //                         return Math.round(hoverData.otp) + " new cases"
+    //                     }
+    //                     else{
+    //                         return Math.round(hoverData.otp) + " new case"
+    //                     }
+    //                 }).transition(100)
+    //         }
+
+    //     })
+    //     .on("mouseout", function () {
+    //         mouseText
+    //             .attr('display', 'none')
+    //             .transition(10)
+            
+    //         mouseLine
+    //             .attr('display', 'none')
+    //             .transition(10)
+    //     });
+}
+
 function handleResize(){
     if(chartData.length == 0){
         loadChartData();
@@ -280,6 +510,7 @@ function handleResize(){
 
 function updateAllCharts(){
     loadCoronaData();
+    loadReliabilityData();
 
     var maxDate = d3.max(chartData, d => d['date'])
     // == Get job access and add in fare capped data ==
@@ -348,7 +579,7 @@ function updateAllCharts(){
     )
 
     // == Time series Hosp store access ==
-    scores = chartData.filter(d => (d['score_key'] == 'hospitals_M_t1_AM_autoN_fareN') & (d['zone'] == view['name']+'-urban'))
+    scores = chartData.filter(d => (d['score_key'] == 'hospitals_M_t1_PM_autoN_fareN') & (d['zone'] == view['name']+'-urban'))
     multilinePlot(
         hospitalAccessSeriesBox, 
         hospitalAccessSeriesSVG, 
@@ -358,11 +589,11 @@ function updateAllCharts(){
         hospitalAccessSeriesMargin, 
         allGroups, 
         'Average Travel Time (min)', 
-        'Data for weekdays 7am-9am in the Urban Core of ' + view['title'] + '.'
+        'Data for weekday evenings 10pm-12am in the Urban Core of ' + view['title'] + '.'
     )
 
     // == Time series SNAP store access ==
-    scores = chartData.filter(d => (d['score_key'] == 'snap_M_t3_AM_autoN_fareN') & (d['zone'] == view['name']+'-msa'))
+    scores = chartData.filter(d => (d['score_key'] == 'snap_M_t3_WE_autoN_fareN') & (d['zone'] == view['name']+'-msa'))
     multilinePlot(
         storeAccessSeriesBox, 
         storeAccessSeriesSVG, 
@@ -372,7 +603,7 @@ function updateAllCharts(){
         storeAccessSeriesMargin, 
         econGroups, 
         'Average Travel Time (min)', 
-        'Data for weekdays 7am-9am in the Urban Core of ' + view['title'] + '.'
+        'Data for Saturdays 10am-12pm in the Urban Core of ' + view['title'] + '.'
     )
 
     // == Time series comparison of weekly trips (level of service)  
@@ -393,8 +624,8 @@ function updateAllCharts(){
         '#los-series', 
         losSeriesMargin, 
         allGroups, 
-        'Average hourly trips', 
-        'Data shows the Urban Core of ' + view['title'] + '.'
+        'Average Trips/Hour', 
+        'Data shows a typical weekday for the Urban Core of ' + view['title'] + '.'
     )
 
     // == Time series comparison between fare capped and non-capped
@@ -406,7 +637,7 @@ function updateAllCharts(){
         'pop_total',
         'pop_poverty'
     ]
-    groups.forEach(function(key, index){
+    allGroups.forEach(function(key, index){
         var subset = scores.filter(d => d['description'] == key)
         // Now we get some dates
         var plotDates = []
@@ -416,9 +647,9 @@ function updateAllCharts(){
             }
         })
         plotDates.forEach(function(dateKey, index){
-            var withFare = subset.filter(d => (d['date'] == dateKey) & (d.score_key == 'C000_P_c30_AM_autoN_fareY'))[0].value
-            var withoutFare = subset.filter(d => (d['date'] == dateKey) & (d.score_key == 'C000_P_c30_AM_autoN_fareN'))[0].value
-            var newValue = 100*((withoutFare/withFare) - 1)
+            var withFare = subset.filter(d => (d['date'] == dateKey) & (d.score_key == 'C000_P_c45_AM_autoN_fareY'))[0].value
+            var withoutFare = subset.filter(d => (d['date'] == dateKey) & (d.score_key == 'C000_P_c45_AM_autoN_fareN'))[0].value
+            var newValue = 100*(withFare/withoutFare)
 
             var ratio = subset.filter(d => (d['date'] == dateKey) & (d.score_key == 'C000_P_c30_AM_autoY_fareN'))[0].value
             var newAuto = 100*((1/ratio)-1)
@@ -427,58 +658,43 @@ function updateAllCharts(){
             var newAutoLow = 100*((1/ratio)-1)
 
             fareCompare.push({'date': dateKey, 'description': key, 'score_key':'extra_jobs_premium', 'value': newValue, 'zone': view['name']+'-msa'})
-            autoCompareJobs.push({'date': dateKey, 'description': key, 'score_key':'extra_jobs_auto', 'value': newAuto, 'zone': view['name']+'-msa'})
-            autoCompareLow.push({'date': dateKey, 'description': key, 'score_key':'extra_jobs_auto_low', 'value': newAutoLow, 'zone': view['name']+'-msa'})
+            // autoCompareJobs.push({'date': dateKey, 'description': key, 'score_key':'extra_jobs_auto', 'value': newAuto, 'zone': view['name']+'-msa'})
+            // autoCompareLow.push({'date': dateKey, 'description': key, 'score_key':'extra_jobs_auto_low', 'value': newAutoLow, 'zone': view['name']+'-msa'})
         })
     })
 
+    carGroups = [
+        'snap_M_t3_WE',
+        'pharmacies_M_t3_WE',
+        'urgentcare_M_t1_WE',
+        'hospitals_M_t1_WE',
+        'schools_M_t1_WE'
+    ]
+    var carData = []
+    var scores = chartData.filter(d => (d['zone'] == view['name']+'-msa') & (d['date'] == maxDate) & (d['description'] == 'pop_poverty'))
+    console.log(scores)
+    carGroups.forEach(function(key, index){
+        var carTime = scores.filter(d => d['score_key'] == (key + '_autoY_fareN'))[0].value
+        var busTime = scores.filter(d => d['score_key'] == (key + '_autoN_fareN'))[0].value
+        console.log(carTime)
+        console.log(busTime)
+        carTime = (1/carTime)*busTime
+        
+        carData.push({'description': key, 'score_key': 'car_time', 'value': carTime, 'zone': view['name'] + '-msa'})
+        carData.push({'description': key, 'score_key': 'bus_time', 'value': busTime, 'zone': view['name'] + '-msa'})
+    })
+
     // == Time series comparison between fare capped and non-capped
-    multilinePlot(
+    barChart(
         jobsFaresSereiesBox, 
         jobsFaresSeriesSVG, 
-        fareCompare,
-        maxDate, 
+        fareCompare.filter(d => d['date'] == maxDate),
+        maxDate,
         '#jobs-fares-series', 
         jobsFaresSeriesMargin, 
-        groups, 
-        '% Additional Jobs Reachable Without Fare Cap', 
-        'Weekday morning peak in the MSA as of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
-    )
-    
-    // == Time series comparison of car and auto
-    multilinePlot(
-        carJobsAccessSeriesBox, 
-        carJobsAccessSeriesSVG, 
-        autoCompareJobs,
-        maxDate,
-        '#car-jobs-access-series', 
-        carJobsAccessSeriesMargin, 
-        ['pop_total', 'pop_poverty'], 
-        'Additional Jobs Reachable by Car (%)', 
-        'Weekday morning peak in the MSA as of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
-    )
-    multilinePlot(
-        carLowWageJobsAccessSeriesBox, 
-        carLowWageJobsAccessSeriesSVG, 
-        autoCompareLow,
-        maxDate,
-        '#car-low-wage-jobs-access-series', 
-        carLowWageJobsAccessSeriesMargin, 
-        ['pop_total', 'pop_poverty'], 
-        'Additional Low-Income Jobs Reachable by Car (%)', 
-        'Weekday morning peak in the MSA as of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
-    )
-    var scores = chartData.filter(d => (d['score_key'] == 'hospitals_M_t1_AM_autoY_fareN') & (d['zone'] == view['name']+'-msa'))
-    multilinePlot(
-        carHospitalTravelSeriesBox, 
-        carHospitalTravelSeriesSVG, 
-        scores,
-        maxDate,
-        '#car-hospital-travel-series', 
-        carHospitalTravelSeriesMargin, 
-        ['pop_total', 'pop_poverty'], 
-        'Transit/Auto Travel Time Ratio', 
-        'Weekday morning peak in the MSA as of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.' 
+        allGroups, 
+        '% of Non-Fare-Capped Jobs Reachable',
+        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in ' + view['title'] + ' as of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 }
 

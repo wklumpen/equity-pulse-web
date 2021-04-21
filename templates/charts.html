@@ -16,7 +16,7 @@
 <div class="container">
     <div class="row">
         <div class="col s12">
-            <h2>The State of Transit Equity</h2>
+            <h2>The {{view['title']}} Story</h2>
             <p class='center'><i>Note: This is a Beta version for demonstration and feedback purposes.</i></p>
         </div>
     </div>
@@ -100,40 +100,36 @@
         <div class='col s12'>
             <h4>How long does it take to travel to the nearest hospital on public transit?</h4>
         </div>
+        <p class='flow-text'>Transit’s importance goes far beyond the commute. Transit riders need reliable access to essential services, and one of the most essential is health care. Research has shown a strong connection between unreliable transportation and worse health outcomes, due to missed appointments or inability to access treatment in the first place.</p>
+
+        <p class='flow-text'>This chart shows transit travel time to the nearest hospital, and how that time differs for different groups of people.</p>
     </div>
     <div class='row'>
         <div class="col s12">
             <div class="card-panel">
                 <div id="hospital-access-series" class="svg-container"></div>
                 <p>
-                    You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
+                    You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
                 </p>
             </div>
         </div>
     </div>
     <div class='row'>
         <div class='col s12'>
-            <h4><i>We asked:</i> How long does it take to ride public transit to the three nearest grocery stores?</h4>
+            <h4>How long does it take to ride public transit to the third-nearest grocery store?</h4>
         </div>
     </div>
+    <p class='flow-text'>Transit access to healthy food matters too. This chart shows the average transit travel time to the third-nearest grocery store on Saturday mornings.</p>
+
+    <p class='flow-text'>We show the third-closest store in order to show how effectively transit connects people to a <i>variety</i> of food options. A growing body of research (as well as common sense) shows that people don’t simply travel to the closest food store. They value multiple options that offer different combinations of variety, value, quality, and culturally appropriate food.</p>
     <div class='row'>
         <div class="col s12">
             <div class="card-panel">
                 <div id="store-access-series" class="svg-container"></div>
                 <p>
-                    This figure shows how the average travel time on public transit to the three nearest grocery stores has changed over time. The lines represent the average travel time for members of different racial/ethnic groups, for people living in low-income households, and for riders using only less expensive transit options (regardless of race or ethnicity). You can also <a href="/map/{{view['name']}}?key=snap_M_t3_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
+                    You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
                 </p>
             </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <p class='flow-text'>
-                It takes longer to reach grocery stores on weekends than on weekday mornings for all groups. Average travel time is generally the longest for people using less expensive transit options. People who can't afford higher fares cannot use premium transit routes that provide fast express service around the region.
-            </p>
-            <p class='flow-text'><i>
-                Note: In {{view['title']}}, premium-fare transit includes {{view['agencies']}}. Grocery stores are defined as food stores or supermarkets that belong to the Supplemental Nutrition Assistance Program (SNAP). Low-income people are defined here as people with household incomes below the poverty line.
-            </i></p>
         </div>
     </div>
 </div>
@@ -142,54 +138,52 @@
     <div class="container">
         <div class='row'>
             <a id="los"></a>
-            <h3>Transit Service Levels</h3>
+            <h3>Transit Service Intensity</h3>
+            <p class='flow-text'>Transit agencies regularly adjust schedules, affecting how much transit service people have near home.</p>
         </div>
         <div class='row'>
             <div class='col s12'>
                 <h4>How has the daily number of transit trips serving people near their homes changed?</h4>
+                <p class='flow-text'>In most regions, transit agencies cut service during the pandemic, with service gradually recovering over time. This was not uniform; many agencies maintained or increased service on routes relied upon by essential workers. But overall, most people have access to fewer transit trips than they did in February 2020.</p>
+
+                <p class='flow-text'>This chart shows how transit service intensity has changed over time. The lines show how many transit trips are scheduled to make stops, on average each hour, within walking distance of the average resident (disaggregated by different groups). Transit service is a function of density, or how many routes or lines serve an area, and frequency, or how often they run.</p>
+                    
+                <p class='flow-text'>Many demographic groups with high levels of transit service and short rides to community destinations like grocery stores also have the least ability to access regional destinations via transit (such as major job centers). This paradox points to how land use segregation and scarce rapid transit service concentrated in affluent areas contribute to inequitable access to regional opportunities. It also underscores the importance of rider-focused measures like access to opportunity: Focusing on equity of transit inputs, such as transit service levels, does not evaluate if riders actually experience equitable transit outcomes.</p>
             </div>
         </div>
         <div class='row'>
             <div class='col s12'>
                 <div class="card-panel">
                     <div id="los-series" class="svg-container"></div>
-                    <p>Transit service levels are measured as the average hourly weekday trips, and are a function of the number of routes or lines serving an area and their frequency. More transit trips are generally good for riders, but trips also must connect riders to destinations to translate to good access. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on weekly trips in the Urban Core on a map.</a></p>
+                    <p>You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on weekly trips in the Urban Core on a map.</a></p>
                 </div>
                 
             </div>
         </div>
-        <div class='row'>
-            <div class='col s12'>
-                <p class='flow-text'>While the level of service varies for each group, it has generally decreased for everyone. Transit agencies have cut service widely in reaction to budget and staffing limitations caused by Covid-19. Some groups have lost more service than others or experienced greater fluctuation in the level of service available near home. </p>
-                    
-                <p class='flow-text'><i>Note: Essential workers are employed in industries deemed essential during the coronavirus pandemic.</i></p>
-            </div>
-        </div>
     </div>
-    </div>
+</div>
 <div class='white section'>
 <div class="container">
     <div class='row'>
         <a id="fares"></a>
-        <h3><b>Theme 2:</b> Premium-fare transit systems lead to inequitable access to destinations.</h3>
+        <h3>Fares</h3>
     </div>
     <div class='row'>
         <div class='col s12'>
-            <h4><i>We asked: </i>How many more jobs can people access in 30 minutes if they can afford to pay for premium transit service? </h4>
+            <h4>How many fewer jobs can people reach in 45 minutes on transit, if they have limited money to spend on fares?</h4>
+            <p class='flow-text'>Many regions have a kind of two-tiered transit system, where expensive, often rapid, regional transit is layered on top of a local transit network that is affordable but slow. In these regions, people with low incomes are “priced out” of parts of the transit network, and don’t have as much access as other riders.</p>
+
+            <p class='flow-text'>This chart shows how access shrinks for people who can’t afford high-cost modes. It compares the number of jobs accessible taking only low-cost transit trips, compared to traveling on the entire transit network, including expensive “premium” service.</p> 
+                
+            <p class='flow-text'>A value of 100% indicates that someone taking only low-cost transit trips has the same access to jobs as riders who can pay more for fares. A value of 50% indicates that someone taking only low-cost trips can access half as many jobs as someone with an unlimited budget for fares.</p>
         </div>
     </div>
     <div class='row'>
         <div class='col s12'>
             <div class="card-panel">
                 <div id="jobs-fares-series" class="svg-container"></div>
-                <p>This figure shows changes, over time, in the greater access to jobs on all transit, including more expensive “premium” transit options, compared to the number of jobs that can be reached using only less expensive transit options. The lines represent the average share of additional jobs reachable when using all transit modes for everyone and for low-income people, for whom premium fares are less affordable. You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoN_fareN&zone=msa&demo=none">view the most recent data on access to jobs via low-cost transit in the MSA on a map.</a></p>
+                <p> You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoN_fareN&zone=msa&demo=none">view the most recent data on access to jobs via low-cost transit in the MSA on a map.</a></p>
             </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <p class='flow-text'>Premium-fare transit (e.g. commuter rail, express bus) charges higher fares and provides faster service with greater reliability than local routes, which are slower but also cheaper (e.g local bus, subway). Premium-fare transit is unaffordable for some transit riders.</p>
-            <p class='flow-text'><i>Note: in {{view['title']}}, premium-fare transit includes {{view['agencies']}}. Low-income people are defined here as people with household incomes below the poverty line.</i></p>
         </div>
     </div>
 </div>
@@ -199,57 +193,41 @@
 <div class="container">
     <div class='row'>
         <a id="car"></a>
-        <h3><b>Theme 4:</b> Access to destinations by car outpaces access to destinations by public transit.</h3>
+        <h3>Car Access</h3>
+        <p class='flow-text'>The car is a faster mode of travel than public transit, leading many people to choose to buy cars despite the financial costs.</p>
     </div>
     <div class='row'>
         <div class='col s12'>
-            <h4><i>We asked:</i> How does access to jobs differ when taking a car instead of riding public transit?</h4>
+            <h4>How long are trips to essential destinations, when travelling by transit vs. by car?</h4>
+            <p class='flow-text'>Public transit doesn’t need to be faster than the automobile to attract riders. Many people choose transit because it’s more convenient or offers better value. However, few people will choose transit when it is <i>substantially</i> slower than a car trip. And if people are consistently unable to access their needs through the public transit system, they are more likely to buy private vehicles.</p>
+
+            <p class='flow-text'>This chart compares car and transit travel time for people living in poverty to the third-nearest grocery store, the third-nearest pharmacy, and to the closest hospital, urgent care facility, and college or university.</p>
         </div>
     </div>
     <div class='row'>
         <div class='col s12'>
             <div class="card-panel">
                 <div id="car-jobs-access-series" class="svg-container"></div>
-                <p>This figure shows changes, over time, in the greater access to jobs reachable by car in 30 minutes as a percentage of jobs reachable by public transit in 30 minutes. The lines represent the average share of additional jobs reachable by car for everyone and for low-income people, for whom having a car is even less affordable. You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoY_fareN&zone=msa&demo=none">view the most recent data on relative access to jobs in the MSA on a map.</a></p>
+                <p>You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoY_fareN&zone=msa&demo=none">view the most recent data on relative access to jobs in the MSA on a map.</a></p>
             </div>
         </div>
     </div>
     <div class='row'>
         <div class='col s12'>
-            <h4><i>We asked:</i> How many more low-income jobs are accessible by car compared to transit?</h4>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
+            <h4>Reliability</h4>
+            {% if view['reliability'] %}
             <div class="card-panel">
-                <div id="car-low-wage-jobs-access-series" class="svg-container"></div>
-                <p>This figure shows changes, over time, in the additional number of low-wage jobs reachable by car in 30 minutes as a percentage of low-wage jobs reachable by public transit in 30 minutes. The lines represent the average share of additional low-wage jobs reachable by car for everyone and for low-income people, many of whom hold low-wage jobs and for whom having a car is even less affordable. You can also <a href="/map/{{view['name']}}?key=CE01_P_c30_AM_autoY_fareN&zone=msa&demo=none">view the most recent data on relative access to low-income jobs in the MSA on a map.</a></p>
+                <div id="reliability" class="svg-container"></div>
+                <p>Test</p>
             </div>
-        </div>
-        <div class='col s12'>
-            <p class='flow-text'>Many low-wage jobs are not located near transit service, so cars provide access to more low-wage jobs than public transit does in almost all circumstances — even though owning a car is too expensive for many workers in low-wage jobs. 
-            </p>
-            <p class='flow-text'><i>Note: Low-income people are defined here as people with household incomes below the poverty line. Low-wage jobs are those paying less than $1,250 per month, or $15,000 per year.</i></p>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4><i>We asked: </i>How do travel times to hospitals differ when taking a car instead of riding public transit?</h4>
-            <div class="card-panel">
-                <div id="car-hospital-travel-series" class="svg-container"></div>
-                <p>This figure shows changes, over time, in the average travel time to reach the nearest hospital by transit divided by the time to reach it by car. For example, a value of 2 indicates that it takes twice as long to reach the nearest hospital by transit as by car. <i>Higher</i> values indicate that traveling by transit is much longer than by car. You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_AM_autoY_fareN&zone=msa&demo=none">view the most recent data on relative access to low-income jobs in the MSA on a map.</a></p>
-            </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <p class='flow-text'>Cars provide quicker access to destinations compared to public transit in almost all circumstances, even though owning a car is too expensive for some.</p>
-
-            <p class='flow-text'><i>Note: Low-income people are defined here as people with household incomes below the poverty line.</i></p>
+            {% else %}
+            <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{view['title']}}</p>
+            {% endif %}
         </div>
     </div>
     <div class="row">
         <div class="col s12" id='coronaChart'>
+            <h4>Coronavirus Cases</h4>
             <div class="col s12">
                 <div class="card-panel">
                     <div id="corona" class="svg-container"></div>

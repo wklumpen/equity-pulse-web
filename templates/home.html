@@ -28,6 +28,8 @@
     </div>
 
     <div class="row">
+    <h2>Regional Tiles</h2>
+    <p class='flow-text'>For each region, you can explore geographic patterns of transit access by clicking on "Map", and you can view trends and disparities in access for different groups of people by selecting "Story". You can download the underlying data to conduct your own analysis via "Download" link.</p>
     {% for region in regions %}
       {% if loop.index0 % 2 == 0 %}
           </div><div class="row">
@@ -42,7 +44,7 @@
             <p>{{region.description}}</p>
           </div>
           <div class="card-action tile-link">
-              <a href="/map/{{region.tag}}">View Map</a><a href="/charts/{{region.tag}}">View Charts</a><a href="/download/{{region.tag}}">View Downloads</a>
+              <a href="/map/{{region.tag}}"></i>Map</i></a><a href="/charts/{{region.tag}}">Story</a><a href="/download/{{region.tag}}">Downloads</a>
             </div>
         </div>
       </div>

@@ -115,7 +115,7 @@ var options = {
     ],
     "periods": periodOptions,
     "autos": autoOptions,
-    "fares": fareTemp
+    "fares": fareOptions
   },
   "CE01": {
     "destName" : "Employment, Low Income",
@@ -139,7 +139,7 @@ var options = {
     ],
     "periods": periodOptions,
     "autos": autoOptions,
-    "fares": fareTemp
+    "fares": fareOptions
   },
   "snap": {
     "destName" : "Grocery Stores",

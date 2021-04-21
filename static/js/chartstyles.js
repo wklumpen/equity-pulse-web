@@ -41,6 +41,8 @@ var popStyle = {
     }
 }
 
+var colorList = ['#1F77B4', '#FF7F0E', '#D62728', '#9467BD', '#8C564B']
+
 // Shorthands for collections
 var ethnicGroups = ['pop_total', 'pop_asiapacific', 'pop_black', 'pop_hispanic', 'pop_white']
 var econGroups = ['pop_total', 'pop_poverty', 'hhld_single_mother', 'workers_essential']

@@ -10,19 +10,33 @@
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <div class="container">
     <div class="row">
-        <div class="col s12 l8">
+        <div class="col s12">
             <h2>Download Center for {{title}}</h2>
-            <p>Below are a list of static files and a comprehensive list of dates for which scores are available in {{title}}. For a given date, all available scores are downloaded as a CSV file. <b>Please note that this file will be quite large and may take some time to package.</b> If you would like specific scores for specific dates in the region, please select them on the <a href="/map/{{tag}}">map</a> page, and use the download link in the sidebar for that specific score.</p>
+            <p class='flow-text'>If you would like to create your own visualizations or conduct your own analysis, you can download bulk datasets for {{title}} using the links tabulated below. Data is provided without any warranty. For a given date, individual result calculations by block group are downloadable as a CSV file. Static spatial overlay files are downloadable in GeoJSON format. Population weighted summaries used to populate the <a href="/charts/{{tag}}">charts page</a> are also provided for download.
+        </div>
+    </div>
+    <div class="row">
+		<div class="col s12">
+			<div class="card-panel orange lighten-4">
+			<span class="black-text">
+				<p class='flow-text'><b>Note:</b> Result set and summary data files are quite large, and may take some time to package (up to a minute or more). Please be patient once you select a file to download. If you would like specific scores for specific dates in the region, please select them on the <a href="/map/{{tag}}">map</a> page, and use the download link in the sidebar for that specific score.</p>
+			</span>
+			</div>
+		</div>
+	</div>
+    <div class='row'>
+        <div class='col s12'>
+            <p class='flow-text'>If you would like population weighted summaries of various sub-regions of {{title}} accross different access measures and different socioeconomic groups <a href="/data/dl/summary/{{tag}}">click here.</a></p>
         </div>
     </div>
     <div class='row'>
         <div class='col s12 l6'>
-            <h3>Static Files</h3>
-            <p>These files contain spatial data on block groups, transit layers, and demographics. You can use these as base layers for maps and analysis. <b>All static files are in GeoJSON format.</b></p>
+            <h3>Static Geospatial Files</h3>
+            <p class='flow-text'>These files contain spatial data on block groups, transit layers, and demographics. You can use these as base layers for maps and analysis. <b>All geospatial files are in GeoJSON format.</b></p>
         </div>
         <div class='col s12 l6'>
-            <h3>Individual Result Sets</h3>
-            <p>These files contain all of the scores for individual block groups in each region for a given date. <b>All run files are in CSV format.</b></p>
+            <h3>Access and Transit Scores</h3>
+            <p class='flow-text'>These files contain all of the access and transit service scores for individual block groups in each region for a given date. You can also download sociodemographic population weighted summaries accross various sub-regions. <b>All score files are in CSV format.</b></p>
         </div>
     </div>
     <div class='row'>
@@ -49,6 +63,183 @@
                     </a>
                 {% endfor %}
             </div>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col s12'>
+            <h3>Data Definitons</h3>
+            <h4>Acccess and Transit Scores</h4>
+            <p class='flow-text'>Access and transit scores will have a column (<code>block_group</code>) for the GEOID of each block group in the region, and a series of columns for individual measures. For all scores except for transit service, column names are in the form:</p>
+            <p class='flow-text'><code>[opportunity]_[parameter]_[period]_[autoFlag]_[fareFlag]</code></p>
+            <p class='flow-text'>Where <code>period</code> is one of <code>AM</code> (weekday morning peak), <code>PM</code> (weekday evening), or <code>WE</code> (weekend). Transit service column names are in the form <code>los_trips_[period]</code>, where <code>period</code> is one of <code>WKD</code> for a weekday measure and <code>SAT</code> for a Saturday measure. The table below provides a reference for the other various options in the score keys. You can refer to <a href="/documentation">the documentation page</a> for more detail on the scores.</p>
+        </div>
+    </div>
+    <div class='row'>
+        <div class='col s12'>
+            <table class='highlight'>
+                <thead>
+                  <tr>
+                    <th rowspan="2">Opportunity</th>
+                    <th rowspan="2">Measure Type</th>
+                    <th rowspan="2">Unit</th>
+                    <th rowspan="2">Code</th>
+                    <th colspan="2">Parameter 1</th>
+                    <th colspan="2">Parameter 2</th>
+                    <th colspan="2">Parameter 3</th>
+                    <th colspan="2">Auto Ratio</th>
+                    <th colspan="2">Fare Capped</th>
+                  </tr>
+                  <tr>
+                    <td><i>Description</i></td>
+                    <td><i>Code</i></td>
+                    <td><i>Description</i></td>
+                    <td><i>Code</i></td>
+                    <td><i>Description</i></td>
+                    <td><i>Code</i></td>
+                    <td><i>Yes</i></td>
+                    <td><i>No</i></td>
+                    <td><i>Yes</i></td>
+                    <td><i>No</i></td>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Jobs</td>
+                    <td>Cumulative</td>
+                    <td>Jobs</td>
+                    <td><code>C000_P</code></td>
+                    <td>30 min</td>
+                    <td><code>c30</code></td>
+                    <td>45 minutes</td>
+                    <td><code>c45</code></td>
+                    <td>60 minutes</td>
+                    <td><code>c60</code></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td><code>fareY</code></td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Low-Income Jobs</td>
+                    <td>Cumulative</td>
+                    <td>Jobs</td>
+                    <td><code>CE01_P</code></td>
+                    <td>30 min</td>
+                    <td><code>c30</code></td>
+                    <td>45 minutes</td>
+                    <td><code>c45</code></td>
+                    <td>60 minutes</td>
+                    <td><code>c60</code></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td><code>fareY</code></td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Groceries</td>
+                    <td>Travel Time</td>
+                    <td>Minutes</td>
+                    <td><code>snap_M</code></td>
+                    <td>Closest</td>
+                    <td><code>t1</code></td>
+                    <td>3rd Closest</td>
+                    <td><code>t3</code></td>
+                    <td>-</td>
+                    <td></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td>-</td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Hospitals</td>
+                    <td>Travel Time</td>
+                    <td>Minutes</td>
+                    <td><code>hospitals_M</code></td>
+                    <td>Closest</td>
+                    <td><code>t1</code></td>
+                    <td>3rd Closest</td>
+                    <td><code>t3</code></td>
+                    <td>-</td>
+                    <td></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td>-</td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Urgent Care</td>
+                    <td>Travel Time</td>
+                    <td>Minutes</td>
+                    <td><code>urgentcare_M</code></td>
+                    <td>Closest</td>
+                    <td><code>t1</code></td>
+                    <td>3rd Closest</td>
+                    <td><code>t3</code></td>
+                    <td>-</td>
+                    <td></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td>-</td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Pharmacies</td>
+                    <td>Travel Time</td>
+                    <td>Minutes</td>
+                    <td><code>pharmacies_M</code></td>
+                    <td>Closest</td>
+                    <td><code>t1</code></td>
+                    <td>3rd Closest</td>
+                    <td><code>t3</code></td>
+                    <td>-</td>
+                    <td></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td>-</td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Parks</td>
+                    <td>Cumulative</td>
+                    <td>Acres</td>
+                    <td><code>parks_P</code></td>
+                    <td>15 minutes</td>
+                    <td><code>c15</code></td>
+                    <td>30 minutes</td>
+                    <td><code>c30</code></td>
+                    <td>-</td>
+                    <td></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td><code>fareY</code></td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Post-Secondary Institutions</td>
+                    <td>Travel Time</td>
+                    <td>Minutes</td>
+                    <td><code>schools_M</code></td>
+                    <td>Closest</td>
+                    <td><code>t1</code></td>
+                    <td>3rd Closest</td>
+                    <td><code>t3</code></td>
+                    <td>-</td>
+                    <td></td>
+                    <td><code>autoY</code></td>
+                    <td><code>autoN</code></td>
+                    <td>-</td>
+                    <td><code>fareN</code></td>
+                  </tr>
+                  <tr>
+                    <td>Transit Service Intensity</td>
+                    <td>Trips Per Day</td>
+                    <td>Trips</td>
+                    <td>los_trips</td>
+                    <td colspan="10">Options are WKD for weekday service, SAT for Saturday service.</td>
+                  </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

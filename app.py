@@ -20,7 +20,7 @@ import csv
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Tag, Region, Summary, Run
+from db import Score, Population, BlockGroup, Tag, Region, Summary, Run, Realtime
 from dbconfig import database
 
 app = Flask(__name__)
@@ -81,7 +81,12 @@ def charts(region):
     try:
         r = Region.get(Region.tag == region)
         maxDate = Summary.max_date(f"{region}-msa")
-        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'state': r.state, 'county': r.county, 'agencies': r.agencies, 'max_date': maxDate}
+        reliability = False
+        if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
+            reliability = True
+        view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
+        'state': r.state, 'county': r.county, 'agencies': r.agencies, 
+        'max_date': maxDate, 'reliability': reliability}
         return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')
@@ -138,6 +143,16 @@ def all_data_csv(zone, date_key):
     scores = Score.by_tag_type_with_date_all(zone, date_key)
     return send_csv(scores.to_dict(orient='records'), f"tcep_{zone}_{date_key}_all.csv", scores.columns)
 
+@app.route('/data/dl/summary/<zone>')
+def summary_data(zone):
+    summary = Summary.select(Summary.zone, Summary.date, Summary.description, Summary.score_key, Summary.value).where(Summary.zone.contains(zone))
+    summary_d = [model_to_dict(s) for s in summary]
+    columns = ['zone', 'date', 'description', 'score_key', 'value']
+    # Get rid of the ID column
+    for item in summary_d:
+        del(item['id'])
+    return send_csv(summary_d, f"tcep_summary_{zone}.csv", columns)
+
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):
     pop = Population.by_tag_type(zone, pop_key)
@@ -170,12 +185,30 @@ def zone_dates(zone):
     dates = Tag.get_tag_dates(zone)
     return jsonify([model_to_dict(d)['date'] for d in dates])
 
+@app.route('/data/reliability/<zone>')
+def reliability(zone):
+    # A patch for bad spelling
+    if zone == 'philadelphia':
+        zone = 'philiadelphia'
+    if zone == 'sf':
+        data = data = Realtime.select(Realtime.agency, Realtime.mode, Realtime.otp, Realtime.timestamp).where(Realtime.region == zone, Realtime.otp > 0, Realtime.agency.in_(['AC TRANSIT', 'Bay Area Rapid Transit', 'San Francisco Municipal Transportation Agency']))
+        data = [model_to_dict(r) for r in data]
+    else:    
+        data = Realtime.select(Realtime.agency, Realtime.mode, Realtime.otp, Realtime.timestamp).where(Realtime.region == zone, Realtime.otp > 0)
+        data = [model_to_dict(r) for r in data]
+    for entry in data:
+        del(entry['region'])
+        del(entry['delay_abs'])
+        del(entry['delay_late'])
+        del(entry['delay_early'])
+        del(entry['fraction'])
+        del(entry['id'])
+    return jsonify(data)
+
 @app.route('/data/dot/<zone>/<pop_key>')
 def data_dot(zone, pop_key):
     dots = Dot.by_tag_type(zone, pop_key)
     return jsonify([model_to_dict(d) for d in dots])
-
-
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')
