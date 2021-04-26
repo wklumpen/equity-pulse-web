@@ -20,7 +20,7 @@ import csv
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Tag, Region, Summary, Run, Realtime
+from db import Score, Population, BlockGroup, Tag, Region, Summary, Run, Realtime, SiteStatus
 from dbconfig import database
 
 app = Flask(__name__)
@@ -41,7 +41,9 @@ def _db_close(exc):
 
 @app.route('/')
 def home():
-    return render_template('home.html', regions=Region.select().where(Region.live == True))
+    status = SiteStatus.get_main_status()
+    print(status)
+    return render_template('home.html', regions=Region.select().where(Region.live == True), status=status)
 
 @app.route('/documentation')
 def documentation():
