@@ -41,6 +41,19 @@ var popStyle = {
     }
 }
 
+var carLabels = {
+    'snap_M_t3_WE': '3rd Grocery Store',
+    'pharmacies_M_t3_WE': '3rd Pharmacy',
+    'urgentcare_M_t1_WE': '1st Urgent Care',
+    'hospitals_M_t1_WE': '1st Hospital',
+    'schools_M_t1_WE': '1st College/University'
+}
+
+var subgroupLabels ={
+    'car_time': 'by Car',
+    'bus_time': 'by Transit'
+}
+
 var colorList = ['#1F77B4', '#FF7F0E', '#D62728', '#9467BD', '#8C564B']
 
 // Shorthands for collections

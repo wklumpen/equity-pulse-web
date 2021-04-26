@@ -1,5 +1,5 @@
 {% extends 'base.html' %}
-{% block title %}Transit Scorecard{% endblock %}
+{% block title %}The {{view['title']}} Story{% endblock %}
 {% block head %}
 <link rel="stylesheet" href="{{ url_for('static', filename='css/scorecard.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/charts.css') }}">
@@ -208,7 +208,7 @@
         <div class='col s12'>
             <div class="card-panel">
                 <div id="car-jobs-access-series" class="svg-container"></div>
-                <p>You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoY_fareN&zone=msa&demo=none">view the most recent data on relative access to jobs in the MSA on a map.</a></p>
+                <p>You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoY_fareN&zone=msa&demo=none">view the most recent data on relative access to jobs in the Metropolitain Statistical Area on a map.</a></p>
             </div>
         </div>
     </div>
@@ -221,19 +221,40 @@
                 <p>Test</p>
             </div>
             {% else %}
-            <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{view['title']}}</p>
+            <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{view['title']}}.</p>
             {% endif %}
         </div>
     </div>
     <div class="row">
         <div class="col s12" id='coronaChart'>
-            <h4>Coronavirus Cases</h4>
+            <h4>COVID-19</h4>
+            <p class='flow-text'>During the Covid-19 pandemic, transit agencies have at times reduced service due to budgetary or staffing constraints, or expanded service to provide more space for riders. The pandemic has also shifted people’s decisions of when, where, or if to ride transit. The number of new Covid-19 cases in the central areas of the region are shown here to provide context for the trends above.</p>
             <div class="col s12">
                 <div class="card-panel">
                     <div id="corona" class="svg-container"></div>
                 </div>
             </div>
-            
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col s12">
+            <h4>Definitions</h4>
+            <ul class='browser-default'>
+                <li class='flow-text'><p><b>Regional Transit Network:</b> The following agencies provide service in the {{view['title']}} region study area and were included in the analysis: {{view['agencies']}}.</p></li>
+                <li class='flow-text'><p><b>Low-Cost Transit:</b> In {{view['title']}}, we defined a low-cost transit trip as a one-way trip with total fares less than ${{view['fare']}}. If the fastest trip to access a job is more than ${{view['fare']}}, then the analysis automatically removes all high-fare, “premium” transit service to see if the job could be accessed in 45 minutes, for less than ${{view['fare']}} taking inexpensive transit modes.</p></li>
+                <li class='flow-text'><p><b>Premium Transit Service:</b> In {{view['title']}}, premium transit service includes XYZ.</p></li>
+                <li class='flow-text'><p><b>Single mothers</b> are female householders with children at home and no spouse or partner present, according to the 2018 five-year U.S. Census American Community Survey.</p></li>
+                <li class='flow-text'><p><b>Essential workers</b> are employed in essential industries that operated throughout the Covid-19 pandemic. Transit outcomes for essential workers were estimated based on where workers live, using 2017 Longitudinal Employer-Household Dynamics data.
+                </p></li>
+                <li class='flow-text'><p><b>People living in poverty</b> are people whose household incomes are below the federal poverty line, according to the 2018 five-year U.S. Census American Community Survey.
+                </p></li>
+                <li class='flow-text'><p><b>Grocery stores</b> are defined as food retailers who belong to the Supplemental Nutrition Assistance Program (SNAP, also known as Food Stamps), according to the USDA.
+                </p></li>
+                <li class='flow-text'><p><b>Urgent care facilities</b> provide walk-in emergency medical care, surgery, or recuperative care outside of a hospital or emergency room setting.</p></li>
+                <li class='flow-text'><p><b>Colleges or universities</b> include campuses of educational institutions that offer classes and degree programs, from the associate to the doctoral level.
+                </p></li>
+                <li class='flow-text'><p>Jobs with <b>low wages</b> pay no more than $12,500 in annual wages, according to 2017 U.S. Census Longitudinal Employer-Household Dynamics data.</p></li>
+            </ul>
         </div>
     </div>
 </div>

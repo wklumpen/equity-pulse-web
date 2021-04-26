@@ -84,9 +84,14 @@ def charts(region):
         reliability = False
         if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
             reliability = True
+
+        if region in ['boston', 'nyc', 'sf', 'dc']:
+            fare = '5'
+        else:
+            fare = '4'
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
         'state': r.state, 'county': r.county, 'agencies': r.agencies, 
-        'max_date': maxDate, 'reliability': reliability}
+        'max_date': maxDate, 'reliability': reliability, 'fare': fare}
         return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')
