@@ -14,9 +14,9 @@
 // ==== 1. INITIALIZATIONS ====
 
 // Bottom chart dimensions and margins
-var timeSelectMargin = {top: 2, right: 20, bottom: 10, left: 40}
+var timeSelectMargin = {top: 20, right: 20, bottom: 0, left: 60}
 var timeSelectBoxWidth = 800
-var timeSelectBoxHeight = 60
+var timeSelectBoxHeight = 90
 var timeSelectWidth = timeSelectBoxWidth - timeSelectMargin.left - timeSelectMargin.right
 var timeSelectHeight = timeSelectBoxHeight - timeSelectMargin.top - timeSelectMargin.bottom
 
@@ -331,7 +331,7 @@ function updateMap(){
 * Creates a time series plot in the bottom chart panel
 * @param {Array} data Array of values to chart
 */
-function updateTimeSeries(data, xlabel, ylabel){
+function updateTimeSeries(unused, xlabel, ylabel){
   timeSVG.selectAll("*").remove();
 
   data = state['time']['data']
@@ -348,9 +348,13 @@ function updateTimeSeries(data, xlabel, ylabel){
     .attr('y1', 10)
     .attr('y2', 10)
     .style('stroke', 'black')
+  
+  timeSVG.append("text")
+    .text("Data for the Week Of:")
+    .attr("transform", "translate(-10, -2)")
 
   // Add labels
-  timeSVG.selectAll("text")
+  timeSVG.append('g').selectAll("text")
     .data(data)
     .enter()
     .append("text")
@@ -360,10 +364,9 @@ function updateTimeSeries(data, xlabel, ylabel){
     .attr('text-anchor', 'right')
     // .attr("dy", ".35em")
     .attr("transform", d =>{
-      return 'translate(' + (x(d)-30) + ',' + (55) + ')rotate(-45)';}
+      return 'translate(' + (x(d)-30) + ',' + (58) + ')rotate(-45)';}
     )
     .attr("font-size", "0.8em")
-
   // Add circles! to make things clearer
   var nodes = timeSVG.append('g')
     .selectAll("dot")

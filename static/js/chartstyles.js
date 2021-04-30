@@ -37,7 +37,7 @@ var popStyle = {
     },
     'everyone_weeknights': {
         'label': 'Weeknights',
-        'color': '#8c564b'
+        'color': '#17becf'
     }
 }
 

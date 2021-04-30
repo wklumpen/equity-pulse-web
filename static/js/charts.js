@@ -27,7 +27,7 @@ if (view['reliability'] == true){
 
 
 // jobs-access-groups-date chart shows access on a single date
-var jobsAccessGroupsDateMargin = {top: 20, right: 20, bottom: 40, left: 40}
+var jobsAccessGroupsDateMargin = {top: 50, right: 20, bottom: 40, left: 20}
 var jobsAccessGroupsDateBoxWidth = d3.select("#jobs-access-groups-date").node().getBoundingClientRect().width
 var jobsAccessGroupsDateBoxHeight = d3.select("#jobs-access-groups-date").node().getBoundingClientRect().height
 var jobsAccessGroupsDateChartWidth = jobsAccessGroupsDateBoxWidth - jobsAccessGroupsDateMargin.left - jobsAccessGroupsDateMargin.right
@@ -54,7 +54,7 @@ var storeAccessSeriesBoxHeight = d3.select("#store-access-series").node().getBou
 var storeAccessSeriesChartWidth = storeAccessSeriesBoxWidth - storeAccessSeriesMargin.left - storeAccessSeriesMargin.right
 var storeAccessSeriesChartHeight = storeAccessSeriesBoxHeight - storeAccessSeriesMargin.top - storeAccessSeriesMargin.bottom
 
-var jobsFaresSeriesMargin = {top: 25, right: 150, bottom: 40, left: 40}
+var jobsFaresSeriesMargin = {top: 50, right: 20, bottom: 40, left: 20}
 var jobsFaresSeriesBoxWidth = d3.select("#jobs-fares-series").node().getBoundingClientRect().width
 var jobsFaresSeriesBoxHeight = d3.select("#jobs-fares-series").node().getBoundingClientRect().height
 var jobsFaresSeriesChartWidth = jobsFaresSeriesBoxWidth - jobsFaresSeriesMargin.left - jobsFaresSeriesMargin.right
@@ -467,8 +467,8 @@ function updateAllCharts(){
         '#jobs-access-groups-date', 
         jobsAccessGroupsDateMargin, 
         groups, 
-        'Jobs Accessible in 45 min',
-        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in the Urban Core of ' + view['title'] + ' as of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Jobs Accessible in 45 min by Transit',
+        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in the Urban Core of ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 
     // == Time series job access ==
@@ -507,7 +507,7 @@ function updateAllCharts(){
         maxDate, 
         '#store-access-series', 
         storeAccessSeriesMargin, 
-        econGroups, 
+        allGroups, 
         'Average Travel Time (min)', 
         'Data for Saturdays 10am-12pm in the Urban Core of ' + view['title'] + '.'
     )
@@ -603,8 +603,8 @@ function updateAllCharts(){
         '#jobs-fares-series', 
         jobsFaresSeriesMargin, 
         allGroups, 
-        '% of Non-Fare-Capped Jobs Reachable',
-        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in ' + view['title'] + ' as of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Percent of Non-Fare-Capped Jobs Reachable',
+        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 }
 
@@ -689,7 +689,7 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr('x', chartWidth + 10)
         .attr('y', margin.top)
         .attr("dy", "-1.55em")
-        .text("Breakdown for " + moment(barDate).format('MMM D, YYYY'))
+        .text("Week of " + moment(barDate).format('MMM D, YYYY'))
         .attr('text-anchor', 'start')
         .attr("font-size", "0.8em")
 
@@ -711,7 +711,22 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .attr("d", line)
             .style('fill', 'none')
             .style('stroke', item.color)
-            .style('stroke-width', 3)
+            .style('stroke-width', function(){
+                if (key == 'pop_total'){
+                    return 4;
+                }
+                else{
+                    return 2;
+                }
+            })
+            .style('opacity', function(){
+                if (key == 'pop_total'){
+                    return 1.0;
+                }
+                else{
+                    return 0.7;
+                }
+            })
 
         svg.append("text")
             .attr("transform", "rotate(-90)")
@@ -756,7 +771,14 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr("x", d => chartWidth + 10)
         .attr("height", barY.bandwidth())
         .attr("width", d => barX(d.value))
-        .style("opacity", 0.5)
+        .style("opacity", function(d){
+            if (d.description == 'pop_total'){
+                return 0.7;
+            }
+            else{
+                return 0.5;
+            }
+        })
         .attr("fill", d => popStyle[d.description].color)
     
     var barLabels = svg.selectAll("barlabel")
@@ -887,7 +909,21 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .attr("width", x.bandwidth())
         .attr("height", d => chartHeight - y(d.value))
         .attr("fill", d => popStyle[d.description].color)
-        .attr('opacity', 0.7)
+        .attr('opacity', function(d){
+            if (d.description == 'pop_total'){
+                return 0.9;
+            }
+            else{
+                return 0.7;
+            }
+        })
+
+    svg.append('text')
+        .attr("x", margin.left)
+        .attr('y', 20 - margin.top)
+        .text(ylabel)
+        .attr('text-anchor', 'start')
+        .attr('font-weight', 'bold')
 
     // svg.append("text")
     //     .attr("transform", "rotate(-90)")
@@ -963,7 +999,7 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .enter()
         .append("text")
         .attr("x", d => x(carLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth()/2)
-        .attr('y', d => y(d.value) - 10)
+        .attr('y', d => y(d.value) - 6)
         .text(d => d.value.toFixed(0) + " min")
         .attr('text-anchor', 'middle')
         .attr("font-size", "0.8em")

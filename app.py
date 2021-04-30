@@ -20,7 +20,7 @@ import csv
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Tag, Region, Summary, Run, Realtime, SiteStatus
+from db import Score, Population, BlockGroup, Tag, Region, Summary, Run, Realtime, SiteStatus, Agency
 from dbconfig import database
 
 app = Flask(__name__)
@@ -72,16 +72,19 @@ def map(region):
     try:
         r = Region.get(Region.tag == region)
         # Get the maximum date
-        start_date = Run.max_run_date(region.lower()).strftime("%Y-%m-%d")
+        start_date = Summary.max_date(f"{region}-msa")
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'max_date': start_date}
         return render_template('map.html', region=r.tag, zoom=r.zoom, view=view)
     except DoesNotExist:
         return redirect('/')
 
 @app.route('/charts/<region>')
+@app.route('/story/<region>')
 def charts(region):
     try:
         r = Region.get(Region.tag == region)
+        agencies = [model_to_dict(b) for b in Agency.agency_list(region)]
+        print(agencies)
         maxDate = Summary.max_date(f"{region}-msa")
         reliability = False
         if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
@@ -93,7 +96,7 @@ def charts(region):
             fare = '4'
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
         'state': r.state, 'county': r.county, 'agencies': r.agencies, 
-        'max_date': maxDate, 'reliability': reliability, 'fare': fare}
+        'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies}
         return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')

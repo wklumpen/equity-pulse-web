@@ -7,11 +7,12 @@
 
 <!-- CSS -->
 <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/'-awesome/4.7.0/css/font-awesome.min.css"> -->
-<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
+
 <link rel="stylesheet" href="{{ url_for('static', filename='css/prettydropdown.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/leaflet-sidebar.css') }}">
 <link rel="stylesheet" href="{{ url_for('static', filename='css/fa-all.css') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/map.css') }}">
 
 {% endblock%}
 
@@ -34,9 +35,6 @@
               <!-- <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li> -->
               <li><a href="#share" role="tab"><i class="fa fa-share" title="Share the Map"></i></a></li>
               <li><a href="#download" role="tab"><i class="fa fa-download" title="Download the Data"></i></a></li>
-          </ul>
-  
-          <ul role="tablist"> <!-- bottom aligned tabs -->
               <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
           </ul>
       </div>
@@ -170,7 +168,7 @@
               <a href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
               SF2 Enterprises, and <a href="https://www.klumpentown.com/">Klumpentown Consulting</a>.
             </p>
-            
+            <p>See the <a href='/about'>About page</a> for more information on the project and team, or <a href="/methodology">view the methodology</a> page for more information on the analysis.</p>
           </div>
       </div>
     </div>

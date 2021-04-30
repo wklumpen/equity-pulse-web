@@ -427,7 +427,7 @@ function setStateFromParams(){
       zone = mapParams.get('zone')
     }
     else{
-      zone = zoneList[0];
+      zone = 'urban';
     }
 
     if ((s_key[0] == 'los_trips') & (s_key.length > 3)){
@@ -452,6 +452,9 @@ function setStateFromParams(){
     if (zone == 'msa'){
         state['tag'] = view['name'] + "-msa"
     }
+    if (zone == 'er'){
+      state['tag'] = view['name'] + "-er"
+    }
     else if (zone == 'urban'){
       state['tag'] = view['name'] + "-urban"
     }
@@ -471,8 +474,6 @@ function setStateFromParams(){
       updateScore = true;
       state['score']['url'] = "/data/score/" + state['tag'] + "/" + key + "/" + date 
     }
-
-    
 
     // Update the time series URL
     var updateTime = false;

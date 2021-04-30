@@ -98,7 +98,7 @@ body{
 
 #message{
   font-weight: bold;
-  font-family: Raleway, GillSans, Calibri, Trebuchet, sans-serif;
+  font-family: 'MarkWebPro-Book W01 Regular', Raleway, GillSans, Calibri, Trebuchet, sans-serif;
   background-color: rgb(238, 220, 118);
   border-radius: 5px;
   font-size: 1.2em;
@@ -116,7 +116,7 @@ body{
 
 #timebox {
   width: 800px;
-  height: 60px;
+  height: 90px;
   line-height: 18px;
   background-color: #fff;
   border-radius: 5px;
@@ -238,11 +238,15 @@ svg .rect {
 
 .leaflet-sidebar p{
   font-size: 1.1em;
-  font-family: Mark, Raleway, Arial, sans-serif;
+  font-family: 'MarkWebPro-Book W01 Regular', Raleway, Arial, sans-serif;
+}
+
+.leaflet-container {
+  font-family: 'MarkWebPro-Book W01 Regular', Raleway, Arial, sans-serif;
 }
 
 .label {
-  font-family: Mark, Raleway, Arial, sans-serif;
+  font-family: 'MarkWebPro-Book W01 Regular', Raleway, Arial, sans-serif;
   font-weight: bold;
   font-size: 1.2em;
   margin: 10px 0px 5px 0px
@@ -261,7 +265,7 @@ select {
   appearance: none;
   background: url(/static/img/drop-down-arrow.png) 96% / 15% no-repeat #eee;
   background-size: 16px;
-  font-family: Mark, Raleway, Arial, sans-serif;
+  font-family: 'MarkWebPro-Book W01 Regular', Raleway, Arial, sans-serif;
 
 }
 
@@ -294,7 +298,7 @@ button {
   color: white;
   font-weight: bold;
   background-size: 16px;
-  font-family: Mark, Raleway, Arial, sans-serif;
+  font-family: 'MarkWebPro-Book W01 Regular', Raleway, Arial, sans-serif;
   transition-duration: 0.2s;
 }
 

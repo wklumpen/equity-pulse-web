@@ -44,10 +44,7 @@
             <p class='flow-text'>This page demonstrates the extent to which residents of {{view['title']}} have equitable access to opportunity, convenient travel, and reliable transit service. This page presents the state of transit equity starting in February 2020, and how outcomes for riders have changed alongside changes to the systems and service.</p>
 
             <p class='flow-text'>Covid-19 has impacted transit operators and riders alike starting in 2020; for reference, there is a chart of local Covid-19 cases at the <a href='#coronaChart'>bottom of the page.</a></p>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
+
             <p class='flow-text'>Transit agencies have at times limited service during the pandemic in reaction to budgetary or staffing constraints caused by coronavirus, and expanded service to provide more space for social distance. The rate of coronavirus spread also impacts rider behavior, influencing how often people leave their homes to travel for work, run errands, access health care, and access other opportunities and amenities.</p>
         </div>
     </div>
@@ -117,11 +114,11 @@
     <div class='row'>
         <div class='col s12'>
             <h4>How long does it take to ride public transit to the third-nearest grocery store?</h4>
+            <p class='flow-text'>Transit access to healthy food matters too. This chart shows the average transit travel time to the third-nearest grocery store on Saturday mornings.</p>
+
+            <p class='flow-text'>We show the third-closest store in order to show how effectively transit connects people to a <i>variety</i> of food options. A growing body of research (as well as common sense) shows that people don’t simply travel to the closest food store. They value multiple options that offer different combinations of variety, value, quality, and culturally appropriate food.</p>
         </div>
     </div>
-    <p class='flow-text'>Transit access to healthy food matters too. This chart shows the average transit travel time to the third-nearest grocery store on Saturday mornings.</p>
-
-    <p class='flow-text'>We show the third-closest store in order to show how effectively transit connects people to a <i>variety</i> of food options. A growing body of research (as well as common sense) shows that people don’t simply travel to the closest food store. They value multiple options that offer different combinations of variety, value, quality, and culturally appropriate food.</p>
     <div class='row'>
         <div class="col s12">
             <div class="card-panel">
@@ -239,10 +236,29 @@
     <div class='row'>
         <div class="col s12">
             <h4>Definitions</h4>
+            <h5 class='left-align'><b>Regional Transit Network</b></h5>
+            <p class='flow-text'>The following agencies provide service in the {{view['title']}} region study area and were included in the analysis. Premium routes used for fare-capped calculation are shown in the second column.</p>
+            <table>
+                <thead>
+                    <th>Agency</th>
+                    <th>Premium Routes</th>
+                </thead>
+                <tbody>
+                    {% for agency in view['premium'] %}
+                        <tr>
+                            <td>{{agency.agency}}</td>
+                            <td>{{agency.premium}}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <div class='row'>
+        <div class="col s12">
+            <h5 class='left-align'><b>Other Definitions</b></h5>
             <ul class='browser-default'>
-                <li class='flow-text'><p><b>Regional Transit Network:</b> The following agencies provide service in the {{view['title']}} region study area and were included in the analysis: {{view['agencies']}}.</p></li>
                 <li class='flow-text'><p><b>Low-Cost Transit:</b> In {{view['title']}}, we defined a low-cost transit trip as a one-way trip with total fares less than ${{view['fare']}}. If the fastest trip to access a job is more than ${{view['fare']}}, then the analysis automatically removes all high-fare, “premium” transit service to see if the job could be accessed in 45 minutes, for less than ${{view['fare']}} taking inexpensive transit modes.</p></li>
-                <li class='flow-text'><p><b>Premium Transit Service:</b> In {{view['title']}}, premium transit service includes XYZ.</p></li>
                 <li class='flow-text'><p><b>Single mothers</b> are female householders with children at home and no spouse or partner present, according to the 2018 five-year U.S. Census American Community Survey.</p></li>
                 <li class='flow-text'><p><b>Essential workers</b> are employed in essential industries that operated throughout the Covid-19 pandemic. Transit outcomes for essential workers were estimated based on where workers live, using 2017 Longitudinal Employer-Household Dynamics data.
                 </p></li>
