@@ -165,6 +165,7 @@ function loadReliabilityData(){
                 reliabilityAgencyMode.push(item.agency+'-'+item.mode)
             })
             reliabilityAgencyMode = [... new Set(reliabilityAgencyMode)]
+            reliabilityData.sort((a,b) => d3.ascending(a.timestamp, b.timestamp))
             updateReliabilityChart();
             
         });
@@ -334,7 +335,7 @@ function updateReliabilityChart(){
         var agency = item.split('-')[0]
         var mode = item.split('-')[1]
         var toPlot = reliabilityData.filter(d => (d['agency'] == agency) & (d['mode'] == mode));
-        // item = popStyle[key]
+        var defined = function (d) { return d[1] !== null; };
         reliabilitySVG.append('path')
             .datum(toPlot)
             .attr('class', 'line')
@@ -358,7 +359,7 @@ function updateReliabilityChart(){
             .attr("x",0 - (reliabilityChartHeight / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("On-Time Performance (%)");  
+            .text("Daily Average On-Time Performance (%)");  
 
         reliabilitySVG.append("g")
             .attr("transform", "translate(" + reliabilityMargin.left + ", 0)")
@@ -570,9 +571,7 @@ function updateAllCharts(){
     ]
     var carData = []
     var scores = chartData.filter(d => (d['zone'] == view['name']+'-msa') & (d['date'] == maxDate) & (d['description'] == 'pop_poverty'))
-    console.log(scores)
     carGroups.forEach(function(key, index){
-        console.log(key + '_autoY_fareN');
         var carTime = scores.filter(d => d['score_key'] == (key + '_autoY_fareN'))[0].value
         var busTime = scores.filter(d => d['score_key'] == (key + '_autoN_fareN'))[0].value
         carTime = (1/carTime)*busTime
@@ -580,7 +579,6 @@ function updateAllCharts(){
         carData.push({'description': key, 'subgroup': 'car_time', 'value': carTime, 'zone': view['name'] + '-msa'})
         carData.push({'description': key, 'subgroup':'bus_time', 'value': busTime, 'zone': view['name'] + '-msa'})
     })
-    console.log(carData)
 
     groupedBarChart(
         carJobsAccessSeriesBox,
@@ -643,7 +641,7 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             dateList.push(key.date)
         }
     })
-    svg.selectAll("stick")
+    var sticks = svg.selectAll("stick")
         .data(dateList)
         .enter()
         .append("line")
@@ -660,7 +658,9 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
                 return "#F1F1F1"
             }
         })
-        .style('stroke-width', '5px')
+        .attr('opacity', 0.7)
+        .style('cursor', 'pointer')
+        .style('stroke-width', '10px')
     
     var stickTexts = svg.selectAll("stickLabel")
         .data(dateList)
@@ -773,7 +773,7 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr("width", d => barX(d.value))
         .style("opacity", function(d){
             if (d.description == 'pop_total'){
-                return 0.7;
+                return 1.0;
             }
             else{
                 return 0.5;
@@ -792,11 +792,23 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr('text-anchor', 'left')
         .attr("dy", ".35em")
         .attr("font-size", "0.8em")
+        .style('font-weight', function(d){
+            if (d.description == 'pop_total'){
+                return 'bold';
+            }
+            else{
+                return 'normal';
+            }
+        })
     
 
     // Now some mouse effects
 
     stickTexts.on('click', function (d){
+        updateBars(d)
+    })
+
+    sticks.on('click', function (d){
         updateBars(d)
     })
 
@@ -820,7 +832,14 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .attr("x", d => chartWidth + 10)
             .attr("height", barY.bandwidth())
             .attr("width", d => barX(d.value))
-            .style("opacity", 0.5)
+            .style("opacity", function(d){
+                if (d.description == 'pop_total'){
+                    return 1.0;
+                }
+                else{
+                    return 0.5;
+                }
+            })
             .attr("fill", d => popStyle[d.description].color)
             
 
@@ -837,6 +856,14 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .attr('text-anchor', 'left')
             .attr("dy", ".35em")
             .attr("font-size", "0.8em")
+            .style('font-weight', function(d){
+                if (d.description == 'pop_total'){
+                    return 'bold';
+                }
+                else{
+                    return 'normal';
+                }
+            })
         
         svg.selectAll(".stickText")
         .transition()
@@ -909,12 +936,20 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .attr("width", x.bandwidth())
         .attr("height", d => chartHeight - y(d.value))
         .attr("fill", d => popStyle[d.description].color)
-        .attr('opacity', function(d){
+        .attr('stroke', function(d){
             if (d.description == 'pop_total'){
-                return 0.9;
+                return '5px solid black';
             }
             else{
-                return 0.7;
+                return 'none';
+            }
+        })
+        .attr('opacity', function(d){
+            if (d.description == 'pop_total'){
+                return 1.0;
+            }
+            else{
+                return 0.5;
             }
         })
 
@@ -940,6 +975,14 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .attr("x", d => x(popStyle[d.description].label) + x.bandwidth()/2)
         .attr('y', d => y(d.value) - 10)
         .text(d => styleNumbers(d.value))
+        .style('font-weight', function(d){
+            if (d.description == 'pop_total'){
+                return 'bold';
+            }
+            else{
+                return 'normal';
+            }
+        })
         .attr('text-anchor', 'middle')
         .attr("dy", ".35em")
         .attr("font-size", "0.8em")
@@ -1095,3 +1138,54 @@ function startDateChanged(){
         }
     }
 }
+
+/**
+ * Helper function to compute the contiguous segments of the data
+ * 
+ * Derived from https://github.com/pbeshai/d3-line-chunked/blob/master/src/lineChunked.js
+ * 
+ * @param {Array} lineData the line data
+ * @param {Function} defined function that takes a data point and returns true if
+ *    it is defined, false otherwise
+ * @param {Function} isNext function that takes the previous data point and the
+ *    current one and returns true if the current point is the expected one to
+ *    follow the previous, false otherwise.
+ * @return {Array} An array of segments (subarrays) of the line data
+ */
+ function computeSegments(lineData, defined, isNext) {
+    defined = defined || function (d) { return true; };
+    isNext = isNext || function (prev, curr) { return true; };
+    var startNewSegment = true;
+  
+    // split into segments of continuous data
+    var segments = lineData.reduce(function (segments, d) {
+      // skip if this point has no data
+      if (!defined(d)) {
+        startNewSegment = true;
+        return segments;
+      }
+  
+      // if we are starting a new segment, start it with this point
+      if (startNewSegment) {
+        segments.push([d]);
+        startNewSegment = false;
+  
+      // otherwise see if we are adding to the last segment
+      } else {
+        var lastSegment = segments[segments.length - 1];
+        var lastDatum = lastSegment[lastSegment.length - 1];
+        // if we expect this point to come next, add it to the segment
+        if (isNext(lastDatum, d)) {
+          lastSegment.push(d);
+  
+        // otherwise create a new segment
+        } else {
+          segments.push([d]);
+        }
+      }
+  
+      return segments;
+    }, []);
+  
+    return segments;
+  }

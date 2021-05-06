@@ -11,7 +11,7 @@ sys.path.append('../equity-pulse-db')
 from flask import Flask, render_template, jsonify, redirect, Response
 from flask_csv import send_csv
 from playhouse.shortcuts import model_to_dict
-from peewee import DoesNotExist
+from peewee import DoesNotExist, fn
 import pandas as pd
 from io import StringIO
 import csv
@@ -59,10 +59,12 @@ def download_region(region):
         r = Region.get(Region.tag == region)
         dates = Run.select(Run.date, Run.note).where(Run.region == region).where(Run.live == True).order_by(Run.date.desc())
         datelist = []
+        reliability = False
+        if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
+            reliability = True
         for d in dates:
             datelist.append([d.date, d.note])
-        print(datelist)
-        return render_template('download.html', tag=r.tag, title=r.name, dates=datelist)
+        return render_template('download.html', tag=r.tag, title=r.name, dates=datelist, reliability=reliability)
     except DoesNotExist:
         return redirect('/')
     
@@ -84,7 +86,6 @@ def charts(region):
     try:
         r = Region.get(Region.tag == region)
         agencies = [model_to_dict(b) for b in Agency.agency_list(region)]
-        print(agencies)
         maxDate = Summary.max_date(f"{region}-msa")
         reliability = False
         if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
@@ -163,6 +164,29 @@ def summary_data(zone):
         del(item['id'])
     return send_csv(summary_d, f"tcep_summary_{zone}.csv", columns)
 
+@app.route('/data/dl/reliability/<zone>')
+def reliability_data(zone):
+    # A patch for bad spelling
+    if zone == 'philadelphia':
+        zone = 'philiadelphia'
+    data = Realtime.select(
+            Realtime.timestamp,
+            Realtime.agency, Realtime.mode, 
+            Realtime.otp, Realtime.delay_abs,
+            Realtime.delay_late,
+            Realtime.delay_early,
+            Realtime.fraction
+        ).where(
+            Realtime.region == zone, 
+            Realtime.otp > 0
+        )
+    data = [model_to_dict(r) for r in data]
+    for entry in data:
+        del(entry['id'])
+        del(entry['region'])
+    columns = ['timestamp', 'agency', 'mode', 'otp', 'delay_abs', 'delay_late', 'delay_early', 'fraction']
+    return send_csv(data, f"tcep_reliability_{zone}.csv", columns)
+
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):
     pop = Population.by_tag_type(zone, pop_key)
@@ -201,10 +225,23 @@ def reliability(zone):
     if zone == 'philadelphia':
         zone = 'philiadelphia'
     if zone == 'sf':
-        data = data = Realtime.select(Realtime.agency, Realtime.mode, Realtime.otp, Realtime.timestamp).where(Realtime.region == zone, Realtime.otp > 0, Realtime.agency.in_(['AC TRANSIT', 'Bay Area Rapid Transit', 'San Francisco Municipal Transportation Agency']))
+        data = data = Realtime.select(
+            Realtime.agency, Realtime.mode, 
+            fn.AVG(Realtime.otp).alias('otp'), fn.DATE(Realtime.timestamp).alias('timestamp')
+        ).where(
+            Realtime.region == zone, 
+            Realtime.otp > 0, 
+            Realtime.agency.in_(['AC TRANSIT', 'Bay Area Rapid Transit', 'San Francisco Municipal Transportation Agency'])
+        ).group_by(Realtime.agency, Realtime.mode, fn.DATE(Realtime.timestamp))
         data = [model_to_dict(r) for r in data]
     else:    
-        data = Realtime.select(Realtime.agency, Realtime.mode, Realtime.otp, Realtime.timestamp).where(Realtime.region == zone, Realtime.otp > 0)
+        data = Realtime.select(
+                Realtime.agency, Realtime.mode, 
+                fn.AVG(Realtime.otp).alias('otp'), fn.DATE(Realtime.timestamp).alias('timestamp')
+            ).where(
+                Realtime.region == zone, 
+                Realtime.otp > 0
+            ).group_by(Realtime.agency, Realtime.mode, fn.DATE(Realtime.timestamp))
         data = [model_to_dict(r) for r in data]
     for entry in data:
         del(entry['region'])
@@ -215,10 +252,10 @@ def reliability(zone):
         del(entry['id'])
     return jsonify(data)
 
-@app.route('/data/dot/<zone>/<pop_key>')
-def data_dot(zone, pop_key):
-    dots = Dot.by_tag_type(zone, pop_key)
-    return jsonify([model_to_dict(d) for d in dots])
+# @app.route('/data/dot/<zone>/<pop_key>')
+# def data_dot(zone, pop_key):
+#     dots = Dot.by_tag_type(zone, pop_key)
+#     return jsonify([model_to_dict(d) for d in dots])
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0')

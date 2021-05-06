@@ -450,9 +450,9 @@ function setStateFromParams(){
 
     // Start with the zone update
     if (zone == 'msa'){
-        state['tag'] = view['name'] + "-msa"
+      state['tag'] = view['name'] + "-msa"
     }
-    if (zone == 'er'){
+    else if (zone == 'er'){
       state['tag'] = view['name'] + "-er"
     }
     else if (zone == 'urban'){
@@ -462,7 +462,7 @@ function setStateFromParams(){
       state['tag'] = view['name'] + "-equity"
     }
     else{
-        state['tag'] = view['name']
+      state['tag'] = view['name']
     }
 
     // TODO: Check if date is valid

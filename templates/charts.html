@@ -12,26 +12,24 @@
 <script>
     var view = JSON.parse('{{ view | tojson}}');
 </script>
-<div class='wrapper white' id='jobs-access-theme'>
-<div class="container">
+<!-- <div class='wrapper white banner' style="background-image: url('/static/img/{{view['name']}}.jpg');"> -->
+<div class='wrapper white'>
+  <div class="container" style='padding-top:20px;'>
     <div class="row">
-        <div class="col s12">
-            <h2>The {{view['title']}} Story</h2>
-            <p class='center'><i>Note: This is a Beta version for demonstration and feedback purposes.</i></p>
+      <div class="col s12">
+        <h1>The {{view['title']}} Story</h1>
+      </div>
+    </div>
+    <div class="row valign-wrapper">
+        <div class='col s12 m5'>
+          <img src="{{ url_for('static', filename='img/'+view['name']+'.jpg') }}" class='responsive-img'>
+        </div>
+        <div class="col s12 m7">
+            <p class='flow-text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit ut tortor pretium viverra. Et magnis dis parturient montes nascetur ridiculus mus mauris. Condimentum mattis pellentesque id nibh tortor id aliquet. Cras ornare arcu dui vivamus arcu. Tortor at auctor urna nunc id cursus metus aliquam eleifend. Facilisis sed odio morbi quis commodo odio aenean. Quam nulla porttitor massa id.</p>
         </div>
     </div>
-    <div class='row'>
-        <div class='col s12 l6 offset-l3'>
-            <h5>Table of Contents</h5>
-            <div class="collection">
-                <a href="#introduction" class="collection-item blue-text text-darken-2">Introduction</a>
-                <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to destinations on transit</a>
-                <a href="#los" class="collection-item blue-text text-darken-2">Transit service levels</a>
-                <a href="#fares" class="collection-item blue-text text-darken-2">Transit fares and access</a>
-                <a href="#car" class="collection-item blue-text text-darken-2">Travelling by transit vs. car</a>
-                <a href="#reliability" class="collection-item blue-text text-darken-2">Transit reliability</a>
-            </div>
-        </div>
+    <div class="row">
+      <div class='divider'></div>
     </div>
 </div>
 </div>
@@ -48,15 +46,37 @@
             <p class='flow-text'>Transit agencies have at times limited service during the pandemic in reaction to budgetary or staffing constraints caused by coronavirus, and expanded service to provide more space for social distance. The rate of coronavirus spread also impacts rider behavior, influencing how often people leave their homes to travel for work, run errands, access health care, and access other opportunities and amenities.</p>
         </div>
     </div>
+    <div class='row'>
+      <div class='row'>
+        <div class='col s12 l6'>
+            <h5 class='left-align'>Table of Contents</h5>
+            <div class="collection">
+                <a href="#introduction" class="collection-item blue-text text-darken-2">Introduction</a>
+                <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to destinations on transit</a>
+                <a href="#los" class="collection-item blue-text text-darken-2">Transit service levels</a>
+                <a href="#fares" class="collection-item blue-text text-darken-2">Transit fares and access</a>
+                <a href="#car" class="collection-item blue-text text-darken-2">Travelling by transit vs. car</a>
+                <a href="#reliability" class="collection-item blue-text text-darken-2">Transit reliability</a>
+            </div>
+        </div>
+    </div>
+    </div>
 </div>
+</div>
+<div class='wrapper white banner valign-wrapper' style="background-image: url('/static/img/transit.jpg');">
+  <div class="container">
+    <div class='row'>
+      <div class="col s12">
+        <a id="theme-access"></a>
+        <h2>Access to Destinations on Transit</h2>
+        <h5>Ability to access destinations on transit varies for different groups of people.</h5>
+      </div>
+    </div>
+  </div>
 </div>
 <div class='grey lighten-4 section'>
 <div class="container">
-    <div class='row'>
-        <a id="theme-access"></a>
-        <h3>Access to destinations on transit</h3>
-        <h5>Ability to access destinations on transit varies for different groups of people.</h5>
-    </div>
+    
     <div class='row'>
         <div class='col s12'>
             <h4>How many jobs can people reach in 45 minutes on public transit?</h4>
@@ -79,7 +99,7 @@
         <div class="col s12">
             <div class="card-panel">
                 <div id="jobs-access-series" class="svg-container"></div>
-                <p>Larger numbers represent better access to jobs. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
+                <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
             </div>
         </div>
     </div>
@@ -87,9 +107,6 @@
         <div class='col s12'>
             <p class='flow-text'>
                 The greatest number of jobs are accessible when riding transit during the morning peak. Accessibility is generally lower at night than during morning peak. This indicates that people who commute during peak hours generally have better access to their jobs than people who commute outside those times. The number of accessible jobs is generally lowest for people who only use less expensive transit options, as they cannot afford certain premium transit routes that grant access around the region.
-            </p>
-            <p class='flow-text'>
-                <i>Note: In {{view['title']}}, premium-fare transit includes {{view['agencies']}}.</i>
             </p>
         </div>
     </div>
@@ -105,8 +122,7 @@
         <div class="col s12">
             <div class="card-panel">
                 <div id="hospital-access-series" class="svg-container"></div>
-                <p>
-                    You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
+                <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
                 </p>
             </div>
         </div>
@@ -123,8 +139,7 @@
         <div class="col s12">
             <div class="card-panel">
                 <div id="store-access-series" class="svg-container"></div>
-                <p>
-                    You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
+                <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
                 </p>
             </div>
         </div>
@@ -152,7 +167,7 @@
             <div class='col s12'>
                 <div class="card-panel">
                     <div id="los-series" class="svg-container"></div>
-                    <p>You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on weekly trips in the Urban Core on a map.</a></p>
+                    <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on average daily trips in the Urban Core on a map.</a></p>
                 </div>
                 
             </div>
@@ -205,7 +220,6 @@
         <div class='col s12'>
             <div class="card-panel">
                 <div id="car-jobs-access-series" class="svg-container"></div>
-                <p>You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoY_fareN&zone=msa&demo=none">view the most recent data on relative access to jobs in the Metropolitain Statistical Area on a map.</a></p>
             </div>
         </div>
     </div>
@@ -215,7 +229,6 @@
             {% if view['reliability'] %}
             <div class="card-panel">
                 <div id="reliability" class="svg-container"></div>
-                <p>Test</p>
             </div>
             {% else %}
             <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{view['title']}}.</p>
@@ -229,6 +242,7 @@
             <div class="col s12">
                 <div class="card-panel">
                     <div id="corona" class="svg-container"></div>
+                    <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Hover over different times to see the prevalence of Covid-19 in {{view['title']}} at a given time. 
                 </div>
             </div>
         </div>
@@ -275,6 +289,7 @@
     </div>
 </div>
 <script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
+<script src="{{ url_for('static', filename='js/d3-array.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/moment.js') }}"></script>
 <script src="{{ url_for('static', filename='js/chartstyles.js') }}"></script>

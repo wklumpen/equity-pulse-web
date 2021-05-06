@@ -1,11 +1,11 @@
 var popStyle = {
     'pop_total' : {
         'label': 'Everyone',
-        'color': "#1F77B4"
+        'color': "#FF7F0E"
     },
     'pop_asiapacific' : {
         'label': "Asian",
-        'color': "#FF7F0E"
+        'color': "#1F77B4"
     },
     'pop_black': {
         'label': "Black",
