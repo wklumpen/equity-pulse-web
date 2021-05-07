@@ -13,176 +13,164 @@
     var view = JSON.parse('{{ view | tojson}}');
 </script>
 <!-- <div class='wrapper white banner' style="background-image: url('/static/img/{{view['name']}}.jpg');"> -->
-<div class='wrapper white'>
-  <div class="container" style='padding-top:20px;'>
-    <div class="row">
-      <div class="col s12">
-        <h1>The {{view['title']}} Story</h1>
-      </div>
-    </div>
-    <div class="row valign-wrapper">
-        <div class='col s12 m5'>
-          <img src="{{ url_for('static', filename='img/'+view['name']+'.jpg') }}" class='responsive-img'>
-        </div>
-        <div class="col s12 m7">
-            <p class='flow-text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit ut tortor pretium viverra. Et magnis dis parturient montes nascetur ridiculus mus mauris. Condimentum mattis pellentesque id nibh tortor id aliquet. Cras ornare arcu dui vivamus arcu. Tortor at auctor urna nunc id cursus metus aliquam eleifend. Facilisis sed odio morbi quis commodo odio aenean. Quam nulla porttitor massa id.</p>
-        </div>
-    </div>
-    <div class="row">
-      <div class='divider'></div>
-    </div>
+<div class="grey lighten-4">
+<div class="row container">
+  <div class="col s12 m10 offset-m1 l8 offset-l2">
+    <h1><b>The {{view['title']}} Story</b></h1>
+    <p class='flow-text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit ut tortor pretium viverra. Et magnis dis parturient montes nascetur ridiculus mus mauris. Condimentum mattis pellentesque id nibh tortor id aliquet. Cras ornare arcu dui vivamus arcu. Tortor at auctor urna nunc id cursus metus aliquam eleifend. Facilisis sed odio morbi quis commodo odio aenean. Quam nulla porttitor massa id.</p>
+  </div>
 </div>
+<div>
+  <img class='banner' src="/static/img/chicago/banner-1.jpg">
 </div>
-<div class='white'>
-<div class="container">
-    <div class="row">
-        <div class='col s12'>
-            <a id="introduction"></a>
-            <h3>Introduction</h3>
-            <p class='flow-text'>This page demonstrates the extent to which residents of {{view['title']}} have equitable access to opportunity, convenient travel, and reliable transit service. This page presents the state of transit equity starting in February 2020, and how outcomes for riders have changed alongside changes to the systems and service.</p>
+<div class='section container'>
+  <div class="row">
+    <div class='col s12'>
+      <a id="introduction"></a>
+      <h2>Introduction</h2>
+    </div>
+  </div>
+  <div class="row">
+    <div class='col s12 m7 l9'>
+        <p class='flow-text'>This page demonstrates the extent to which residents of {{view['title']}} have equitable access to opportunity, convenient travel, and reliable transit service. This page presents the state of transit equity starting in February 2020, and how outcomes for riders have changed alongside changes to the systems and service.</p>
 
-            <p class='flow-text'>Covid-19 has impacted transit operators and riders alike starting in 2020; for reference, there is a chart of local Covid-19 cases at the <a href='#coronaChart'>bottom of the page.</a></p>
+        <p class='flow-text'>Covid-19 has impacted transit operators and riders alike starting in 2020; for reference, there is a chart of local Covid-19 cases at the <a href='#coronaChart'>bottom of the page.</a></p>
 
-            <p class='flow-text'>Transit agencies have at times limited service during the pandemic in reaction to budgetary or staffing constraints caused by coronavirus, and expanded service to provide more space for social distance. The rate of coronavirus spread also impacts rider behavior, influencing how often people leave their homes to travel for work, run errands, access health care, and access other opportunities and amenities.</p>
-        </div>
+        <p class='flow-text'>Transit agencies have at times limited service during the pandemic in reaction to budgetary or staffing constraints caused by coronavirus, and expanded service to provide more space for social distance. The rate of coronavirus spread also impacts rider behavior, influencing how often people leave their homes to travel for work, run errands, access health care, and access other opportunities and amenities.</p>
     </div>
-    <div class='row'>
-      <div class='row'>
-        <div class='col s12 l6'>
-            <h5 class='left-align'>Table of Contents</h5>
-            <div class="collection">
-                <a href="#introduction" class="collection-item blue-text text-darken-2">Introduction</a>
-                <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to destinations on transit</a>
-                <a href="#los" class="collection-item blue-text text-darken-2">Transit service levels</a>
-                <a href="#fares" class="collection-item blue-text text-darken-2">Transit fares and access</a>
-                <a href="#car" class="collection-item blue-text text-darken-2">Travelling by transit vs. car</a>
-                <a href="#reliability" class="collection-item blue-text text-darken-2">Transit reliability</a>
-            </div>
-        </div>
-    </div>
-    </div>
-</div>
-</div>
-<div class='wrapper white banner valign-wrapper' style="background-image: url('/static/img/transit.jpg');">
-  <div class="container">
-    <div class='row'>
-      <div class="col s12">
-        <a id="theme-access"></a>
-        <h2>Access to Destinations on Transit</h2>
-        <h5>Ability to access destinations on transit varies for different groups of people.</h5>
+    <div class='col s12 m5 l3'>
+      <h5>Jump to a Section</h5>
+      <div class="collection grey lighten-5">
+          <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to destinations on transit</a>
+          <a href="#los" class="collection-item blue-text text-darken-2">Transit service levels</a>
+          <a href="#fares" class="collection-item blue-text text-darken-2">Transit fares and access</a>
+          <a href="#car" class="collection-item blue-text text-darken-2">Travelling by transit vs. car</a>
+          <a href="#reliability" class="collection-item blue-text text-darken-2">Transit reliability</a>
       </div>
     </div>
   </div>
 </div>
-<div class='grey lighten-4 section'>
-<div class="container">
-    
-    <div class='row'>
-        <div class='col s12'>
-            <h4>How many jobs can people reach in 45 minutes on public transit?</h4>
-        </div>
-    </div>
-    <div class='row'>
-        <div class="col s12">
-            <div class="card-panel">
-                <div id="jobs-access-groups-date" class="svg-container"></div>
-                <p>Larger numbers represent better access to jobs. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the {{view['title']}} Urban Core on a map.</a></p>
-            </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4>How has access to jobs by public transit changed over time?</h4>
-        </div>
-    </div>
-    <div class='row'>
-        <div class="col s12">
-            <div class="card-panel">
-                <div id="jobs-access-series" class="svg-container"></div>
-                <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
-            </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <p class='flow-text'>
-                The greatest number of jobs are accessible when riding transit during the morning peak. Accessibility is generally lower at night than during morning peak. This indicates that people who commute during peak hours generally have better access to their jobs than people who commute outside those times. The number of accessible jobs is generally lowest for people who only use less expensive transit options, as they cannot afford certain premium transit routes that grant access around the region.
-            </p>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4>How long does it take to travel to the nearest hospital on public transit?</h4>
-        </div>
-        <p class='flow-text'>Transit’s importance goes far beyond the commute. Transit riders need reliable access to essential services, and one of the most essential is health care. Research has shown a strong connection between unreliable transportation and worse health outcomes, due to missed appointments or inability to access treatment in the first place.</p>
-
-        <p class='flow-text'>This chart shows transit travel time to the nearest hospital, and how that time differs for different groups of people.</p>
-    </div>
-    <div class='row'>
-        <div class="col s12">
-            <div class="card-panel">
-                <div id="hospital-access-series" class="svg-container"></div>
-                <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
-                </p>
-            </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4>How long does it take to ride public transit to the third-nearest grocery store?</h4>
-            <p class='flow-text'>Transit access to healthy food matters too. This chart shows the average transit travel time to the third-nearest grocery store on Saturday mornings.</p>
-
-            <p class='flow-text'>We show the third-closest store in order to show how effectively transit connects people to a <i>variety</i> of food options. A growing body of research (as well as common sense) shows that people don’t simply travel to the closest food store. They value multiple options that offer different combinations of variety, value, quality, and culturally appropriate food.</p>
-        </div>
-    </div>
-    <div class='row'>
-        <div class="col s12">
-            <div class="card-panel">
-                <div id="store-access-series" class="svg-container"></div>
-                <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
-                </p>
-            </div>
-        </div>
-    </div>
+<div>
+  <img class='banner' src="/static/img/chicago/banner-2.jpg">
 </div>
-</div>
-<div class='grey lighten-4 section'>
-    <div class="container">
-        <div class='row'>
-            <a id="los"></a>
-            <h3>Transit Service Intensity</h3>
-            <p class='flow-text'>Transit agencies regularly adjust schedules, affecting how much transit service people have near home.</p>
-        </div>
-        <div class='row'>
-            <div class='col s12'>
-                <h4>How has the daily number of transit trips serving people near their homes changed?</h4>
-                <p class='flow-text'>In most regions, transit agencies cut service during the pandemic, with service gradually recovering over time. This was not uniform; many agencies maintained or increased service on routes relied upon by essential workers. But overall, most people have access to fewer transit trips than they did in February 2020.</p>
-
-                <p class='flow-text'>This chart shows how transit service intensity has changed over time. The lines show how many transit trips are scheduled to make stops, on average each hour, within walking distance of the average resident (disaggregated by different groups). Transit service is a function of density, or how many routes or lines serve an area, and frequency, or how often they run.</p>
-                    
-                <p class='flow-text'>Many demographic groups with high levels of transit service and short rides to community destinations like grocery stores also have the least ability to access regional destinations via transit (such as major job centers). This paradox points to how land use segregation and scarce rapid transit service concentrated in affluent areas contribute to inequitable access to regional opportunities. It also underscores the importance of rider-focused measures like access to opportunity: Focusing on equity of transit inputs, such as transit service levels, does not evaluate if riders actually experience equitable transit outcomes.</p>
-            </div>
-        </div>
-        <div class='row'>
-            <div class='col s12'>
-                <div class="card-panel">
-                    <div id="los-series" class="svg-container"></div>
-                    <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on average daily trips in the Urban Core on a map.</a></p>
-                </div>
-                
-            </div>
-        </div>
+<div class='section container'>
+  <div class='row'>
+    <div class="col s12">
+      <a id="theme-access"></a>
+      <h2>Access to Destinations on Transit</h2>
+      <h5>Ability to access destinations on transit varies for different groups of people.</h5>
     </div>
+  </div>
+  <div class='row'>
+    <div class='col s12 left-align'>
+        <h3 class='left-align'>How many jobs can people reach in 45 minutes on public transit?</h3>
+        <p class='flow-text'>One of the most important ways to assess public transit is to measure the access it provides. How many destinations can a person reach on transit in a reasonable amount of time?
+        </p>
+    </div>
+  </div>
+  <div class='row'>
+      <div class="col s12">
+          <div class="card-panel">
+              <div id="jobs-access-groups-date" class="svg-container"></div>
+              <p>Larger numbers represent better access to jobs. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the {{view['title']}} Urban Core on a map.</a></p>
+          </div>
+      </div>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+        <h3 class='left-align'>How has access to jobs by public transit changed over time?</h3>
+      </div>
+  </div>
+  <div class='row'>
+      <div class="col s12">
+          <div class="card-panel">
+              <div id="jobs-access-series" class="svg-container"></div>
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
+          </div>
+      </div>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+          <p class='flow-text'>
+              The greatest number of jobs are accessible when riding transit during the morning peak. Accessibility is generally lower at night than during morning peak. This indicates that people who commute during peak hours generally have better access to their jobs than people who commute outside those times. The number of accessible jobs is generally lowest for people who only use less expensive transit options, as they cannot afford certain premium transit routes that grant access around the region.
+          </p>
+      </div>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+          <h3>How long does it take to travel to the nearest hospital on public transit?</h3>
+      </div>
+      <p class='flow-text'>Transit’s importance goes far beyond the commute. Transit riders need reliable access to essential services, and one of the most essential is health care. Research has shown a strong connection between unreliable transportation and worse health outcomes, due to missed appointments or inability to access treatment in the first place.</p>
+
+      <p class='flow-text'>This chart shows transit travel time to the nearest hospital, and how that time differs for different groups of people.</p>
+  </div>
+  <div class='row'>
+      <div class="col s12">
+          <div class="card-panel">
+              <div id="hospital-access-series" class="svg-container"></div>
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
+              </p>
+          </div>
+      </div>
+  </div>
+  <div class='row'>
+    <div class='col s12'>
+        <h3>How long does it take to ride public transit to the third-nearest grocery store?</h3>
+        <p class='flow-text'>Transit access to healthy food matters too. This chart shows the average transit travel time to the third-nearest grocery store on Saturday mornings.</p>
+
+        <p class='flow-text'>We show the third-closest store in order to show how effectively transit connects people to a <i>variety</i> of food options. A growing body of research (as well as common sense) shows that people don’t simply travel to the closest food store. They value multiple options that offer different combinations of variety, value, quality, and culturally appropriate food.</p>
+    </div>
+  </div>
+  <div class='row'>
+      <div class="col s12">
+          <div class="card-panel">
+              <div id="store-access-series" class="svg-container"></div>
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
+              </p>
+          </div>
+      </div>
+  </div>
 </div>
-<div class='white section'>
-<div class="container">
+<div>
+  <img class='banner' src="/static/img/chicago/banner-3.jpg">
+</div>
+<div class='section container'>
+  <div class='row'>
+      <a id="los"></a>
+      <h2>Transit Service Intensity</h2>
+      <p class='flow-text'>Transit agencies regularly adjust schedules, affecting how much transit service people have near home.</p>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+          <h3 class='left-align'>How has the daily number of transit trips serving people near their homes changed?</h3>
+          <p class='flow-text'>In most regions, transit agencies cut service during the pandemic, with service gradually recovering over time. This was not uniform; many agencies maintained or increased service on routes relied upon by essential workers. But overall, most people have access to fewer transit trips than they did in February 2020.</p>
+
+          <p class='flow-text'>This chart shows how transit service intensity has changed over time. The lines show how many transit trips are scheduled to make stops, on average each hour, within walking distance of the average resident (disaggregated by different groups). Transit service is a function of density, or how many routes or lines serve an area, and frequency, or how often they run.</p>
+              
+          <p class='flow-text'>Many demographic groups with high levels of transit service and short rides to community destinations like grocery stores also have the least ability to access regional destinations via transit (such as major job centers). This paradox points to how land use segregation and scarce rapid transit service concentrated in affluent areas contribute to inequitable access to regional opportunities. It also underscores the importance of rider-focused measures like access to opportunity: Focusing on equity of transit inputs, such as transit service levels, does not evaluate if riders actually experience equitable transit outcomes.</p>
+      </div>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+          <div class="card-panel">
+              <div id="los-series" class="svg-container"></div>
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on average daily trips in the Urban Core on a map.</a></p>
+          </div>
+          
+      </div>
+  </div>
+</div>
+<div>
+  <img class='banner' src="/static/img/chicago/banner-4.jpg">
+</div>
+<div class="section container">
     <div class='row'>
         <a id="fares"></a>
-        <h3>Fares</h3>
+        <h2>Fares</h2>
     </div>
     <div class='row'>
         <div class='col s12'>
-            <h4>How many fewer jobs can people reach in 45 minutes on transit, if they have limited money to spend on fares?</h4>
+            <h3 class='left-align'>How many fewer jobs can people reach in 45 minutes on transit, if they have limited money to spend on fares?</h3>
             <p class='flow-text'>Many regions have a kind of two-tiered transit system, where expensive, often rapid, regional transit is layered on top of a local transit network that is affordable but slow. In these regions, people with low incomes are “priced out” of parts of the transit network, and don’t have as much access as other riders.</p>
 
             <p class='flow-text'>This chart shows how access shrinks for people who can’t afford high-cost modes. It compares the number of jobs accessible taking only low-cost transit trips, compared to traveling on the entire transit network, including expensive “premium” service.</p> 
@@ -199,75 +187,85 @@
         </div>
     </div>
 </div>
+<div>
+  <img class='banner' src="/static/img/chicago/banner-5.jpg">
 </div>
+<div class="section container">
+  <div class='row'>
+      <a id="car"></a>
+      <h2>Car Access</h2>
+      <p class='flow-text'>The car is a faster mode of travel than public transit, leading many people to choose to buy cars despite the financial costs.</p>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+          <h3 class='left-align'>How long are trips to essential destinations, when travelling by transit vs. by car?</h3>
+          <p class='flow-text'>Public transit doesn’t need to be faster than the automobile to attract riders. Many people choose transit because it’s more convenient or offers better value. However, few people will choose transit when it is <i>substantially</i> slower than a car trip. And if people are consistently unable to access their needs through the public transit system, they are more likely to buy private vehicles.</p>
 
-<div class='white section'>
-<div class="container">
-    <div class='row'>
-        <a id="car"></a>
-        <h3>Car Access</h3>
-        <p class='flow-text'>The car is a faster mode of travel than public transit, leading many people to choose to buy cars despite the financial costs.</p>
+          <p class='flow-text'>This chart compares car and transit travel time for people living in poverty to the third-nearest grocery store, the third-nearest pharmacy, and to the closest hospital, urgent care facility, and college or university.</p>
+      </div>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+          <div class="card-panel">
+              <div id="car-jobs-access-series" class="svg-container"></div>
+          </div>
+      </div>
+  </div>
+</div>
+<div>
+  <img class='banner' src="/static/img/chicago/banner-5.jpg">
+</div>
+<div class='section container'>
+  <div class='row'>
+      <div class='col s12'>
+          <h2>Reliability</h2>
+          {% if view['reliability'] %}
+          <div class="card-panel">
+              <div id="reliability" class="svg-container"></div>
+          </div>
+          {% else %}
+          <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{view['title']}}.</p>
+          {% endif %}
+      </div>
+  </div>
+</div>
+<div>
+  <img class='banner' src="/static/img/corona-transit.jpg">
+</div>
+<div class='section container'>
+  <div class="row">
+    <div class="col s12" id='coronaChart'>
+      <h2>COVID-19</h2>
+      <p class='flow-text'>During the Covid-19 pandemic, transit agencies have at times reduced service due to budgetary or staffing constraints, or expanded service to provide more space for riders. The pandemic has also shifted people’s decisions of when, where, or if to ride transit. The number of new Covid-19 cases in the central areas of the region are shown here to provide context for the trends above.</p>
+      <div class="col s12">
+          <div class="card-panel">
+              <div id="corona" class="svg-container"></div>
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Hover over different times to see the prevalence of Covid-19 in {{view['title']}} at a given time. 
+          </div>
+      </div>
     </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4>How long are trips to essential destinations, when travelling by transit vs. by car?</h4>
-            <p class='flow-text'>Public transit doesn’t need to be faster than the automobile to attract riders. Many people choose transit because it’s more convenient or offers better value. However, few people will choose transit when it is <i>substantially</i> slower than a car trip. And if people are consistently unable to access their needs through the public transit system, they are more likely to buy private vehicles.</p>
-
-            <p class='flow-text'>This chart compares car and transit travel time for people living in poverty to the third-nearest grocery store, the third-nearest pharmacy, and to the closest hospital, urgent care facility, and college or university.</p>
-        </div>
+  </div>
+  <div class='row'>
+    <div class="col s12">
+        <h2>Definitions</h2>
+        <h5 class='left-align'><b>Regional Transit Network</b></h5>
+        <p class='flow-text'>The following agencies provide service in the {{view['title']}} region study area and were included in the analysis. Premium routes used for fare-capped calculation are shown in the second column.</p>
+        <table>
+            <thead>
+                <th>Agency</th>
+                <th>Premium Routes</th>
+            </thead>
+            <tbody>
+                {% for agency in view['premium'] %}
+                    <tr>
+                        <td>{{agency.agency}}</td>
+                        <td>{{agency.premium}}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
-    <div class='row'>
-        <div class='col s12'>
-            <div class="card-panel">
-                <div id="car-jobs-access-series" class="svg-container"></div>
-            </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class='col s12'>
-            <h4>Reliability</h4>
-            {% if view['reliability'] %}
-            <div class="card-panel">
-                <div id="reliability" class="svg-container"></div>
-            </div>
-            {% else %}
-            <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{view['title']}}.</p>
-            {% endif %}
-        </div>
-    </div>
-    <div class="row">
-        <div class="col s12" id='coronaChart'>
-            <h4>COVID-19</h4>
-            <p class='flow-text'>During the Covid-19 pandemic, transit agencies have at times reduced service due to budgetary or staffing constraints, or expanded service to provide more space for riders. The pandemic has also shifted people’s decisions of when, where, or if to ride transit. The number of new Covid-19 cases in the central areas of the region are shown here to provide context for the trends above.</p>
-            <div class="col s12">
-                <div class="card-panel">
-                    <div id="corona" class="svg-container"></div>
-                    <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Hover over different times to see the prevalence of Covid-19 in {{view['title']}} at a given time. 
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class='row'>
-        <div class="col s12">
-            <h4>Definitions</h4>
-            <h5 class='left-align'><b>Regional Transit Network</b></h5>
-            <p class='flow-text'>The following agencies provide service in the {{view['title']}} region study area and were included in the analysis. Premium routes used for fare-capped calculation are shown in the second column.</p>
-            <table>
-                <thead>
-                    <th>Agency</th>
-                    <th>Premium Routes</th>
-                </thead>
-                <tbody>
-                    {% for agency in view['premium'] %}
-                        <tr>
-                            <td>{{agency.agency}}</td>
-                            <td>{{agency.premium}}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-    </div>
+</div>
     <div class='row'>
         <div class="col s12">
             <h5 class='left-align'><b>Other Definitions</b></h5>

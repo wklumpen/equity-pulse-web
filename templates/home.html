@@ -8,10 +8,21 @@
 
 <!-- Primary Page Layout
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
-<div class="container">
+
+<div class='grey lighten-4'>
+  <img class='banner' src="{{ url_for('static', filename='img/transit2-banner.jpg') }}">
+</div>
+<div class='section grey lighten-4'>
+  <div class='row container center-align'>
+    <div class='col s12 m10 offset-m1 l8 offset-l2'>
+      <h1><b>Transit Equity in US Cities</b></h1>
+      <p class='flow-text'>We've crunched the numbers on transit equity in seven major urban areas in the United States. Here's what we found.</p>
+        <a href='#readmore' class="waves-effect waves-light btn-large center-align purple darken-3">Read More</a>
+    </div>
+  </div>
     {% if status.status != 'normal' %}
-      <div class="row">
-        <div class="col s12">
+      <div class="row container">
+        <div class="col s12 m8 offset-m2 l6 offset-m3">
           {% if status.status == 'maintenance' %}
             <div class="card-panel red lighten-3">
           {% else %}
@@ -23,48 +34,83 @@
         </div>
       </div>
     {% endif %}
-    <div class="row">
-        <div class="col s12">
-            <h1>Tracking Transit Equity in US Cities</h1>
-            <p class='flow-text'>Transit agencies adjust service to match shifting demand from riders or realities of operations. (Covid-19 upended both, forcing agencies to modify service often.)</p>
-
-            <p class='flow-text'>An equitable system provides the highest quality service to people with the greatest need for it. Attaining one must be a goal of transit planning, and requires knowing: 1) to what degree is the existing transit system equitable and 2) if changes to the system make it more or less equitable.</p>
-              
-            <p class='flow-text'>The Equity Dashboard answers these questions by evaluating how transit networks contribute to people’s access, by transporting them to places they need to thrive. For points in time starting in February 2020, you'll find transit measures like how many jobs are accessible given limited time or money, travel times to hospitals and grocery stores, service frequency, and service reliability.</p>
-              
-            <p class='flow-text'>Pervasive racism and discrimination have created transportation networks that neglect the needs of certain groups. An equitable transit system fixes disparities by serving these people best. The Dashboard tracks equity by measuring transit outcomes for some of these groups, including Black people, other people of color, people of low incomes, and single mothers.*</p>
-              
-            <p class='flow-text'>You can explore geographic patterns of transit access using the Map, and you can view trends and disparities in access for different groups of people on the Charts page. You can download the underlying data to conduct your own analysis via the Download center.</p>
-              
-            <p class='flow-text'>Transit agencies must recognize all groups disenfranchised by transportation and understand how to serve them better. For example, we could not calculate measures for people with disabilities, because public data does not capture disinvestments that limit how they can ride (such as non-ADA stations or gaps in sidewalks near transit stops).</p>
-
-        </div>
-    </div>
 
     <div class="row">
-    <h2>Regional Tiles</h2>
-    <p class='flow-text'>For each region, you can explore geographic patterns of transit access by clicking on "Map", and you can view trends and disparities in access for different groups of people by selecting "Story". You can download the underlying data to conduct your own analysis via "Download" link.</p>
     {% for region in regions %}
-      {% if loop.index0 % 2 == 0 %}
-          </div><div class="row">
-      {% endif %}
-      <div class="col s12 m12 l6">
+      <div class="col s12 m6 l3">
         <div class="card">
           <div class="card-image">
             <img src="{{ url_for('static', filename='img/'+region.tag+'.jpg') }}">
           </div>
           <div class='card-content'>
             <span class="card-title">{{region.name}}</span>
+            <p><a href="/story/{{region.tag}}" class="info tooltipped" data-position="bottom" data-tooltip="Summary data and story for {{region.name}}"><i class="material-icons" >book</i> Story</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <a href="/map/{{region.tag}}" class="info tooltipped" data-position="bottom" data-tooltip="Geographical differences in {{region.name}}"><i class="material-icons">map</i> Map</a>&nbsp;&nbsp;&nbsp;&nbsp;
+              <a href="/download/{{region.tag}}" class="info tooltipped" data-position="bottom" data-tooltip="Data downloads for {{region.name}}"><i class="material-icons">cloud_download</i> Data</a>
+            </p>
+            <!-- <a href="/story/{{region.tag}}" class="waves-effect waves-light blue btn"><i class="material-icons left">insert_chart</i>Story</a>
             <a href="/map/{{region.tag}}" class="waves-effect waves-light blue btn"><i class="material-icons left">map</i>Map</a>
-            <a href="/charts/{{region.tag}}" class="waves-effect waves-light blue btn"><i class="material-icons left">insert_chart</i>Story</a>
-            <a href="/download/{{region.tag}}" class="waves-effect waves-light blue btn"><i class="material-icons left">cloud_download</i>Downloads</a>
+            <a href="/download/{{region.tag}}" class="waves-effect waves-light blue btn"><i class="material-icons left">cloud_download</i>Data</a> -->
           </div>
         </div>
       </div>
     {% endfor %}
     </div>
+  </div>
+</div>
+<div class='grey lighten-4'>
+  <img class='banner' src="{{ url_for('static', filename='img/transit3-banner.jpg') }}">
+</div>
+<div class='section grey lighten-4'>
+  <div id='readmore'></div>
+  <div class='row container'>
+    <div class='col s12'>
+      <h2>An Equitable Transit System</h2>
+      <p class='flow-text'>Public transportation can offer a "ladder of opportunity", providing affordable and convenient connections to jobs, goods and services, medical care, and other essentials of daily life. But pervasive racism and discrimination in land use, transportation, and transit planning have resulted in wide gaps in transit access across race, income, and other characteristics, exacerbating social inequity.</p>
+            
+      <p class='flow-text'>An equitable transit system attempts to correct these disparities by providing the highest quality service and the best access to opportunity to people who have been marginalized by prior planning decisions. But just how wide are gaps in access, and how do they manifest for different groups of transit riders? Until recently, generating such information had been computationally difficult -- beyond the means of a transit agency. Furthermore, federal equity evaluations do not require this level of scrutiny. But data advances have made quantifying this information feasible. We built this tool to propagate this newly-possible best practice, demonstrate the nuance that access-to-opportunity analysis brings to equity evaluations and to shed light on large gaps in access facing U.S. transit riders.
+      </p>
+        
+      <p class='flow-text'>This dashboard measures how well transit networks in seven U.S. cities connect people who’ve been marginalized within those metro areas to the jobs, services, and amenities they need to thrive. Using February 2020 as a baseline, the dashboard looks at metrics like the number of jobs people can reach within a limited timeframe or budget, travel times to hospitals and grocery stores, and service frequency, and tracks how these measures have changed in seven transit-rich regions. </p>
+        
+      <p class='flow-text'>The dashboard illuminates existing disparities and tracks progress toward equity by measuring transit outcomes for Black people, other people of color, people living in poverty, and single mothers.</p>
+        
+      <p class='flow-text'><i>Note: The dashboard is intended as a template for measuring transit access disparities, and does not include data for all communities of people who have been marginalized in the transportation system.</i></p>
+    </div>
+  </div>
+</div>
+<div class='grey lighten-4'>
+  <img class='banner' src="{{ url_for('static', filename='img/transit4-banner.jpg') }}">
 </div>
 
+<div class='section grey lighten-4'>
+  <div id='readmore'></div>
+  <div class='row container'>
+    <div class='col s12'>
+      <h2>Who should use this tool?</h2>
+      <p class='flow-text'>This dashboard aims to help transit practitioners, policymakers, and advocates make more informed and equitable decisions by providing clear metrics about disparities in transit access and demonstrating how changes to transit networks affect those gaps. With the introduction of this tool, we hope to demonstrate that this type of data is attainable, and should be used to inform decisions by transit agencies as well as external advocacy initiatives. </p>
+    </div>
+  </div>
+</div>
+<footer class="page-footer blue transit" style='padding-top:0px;'>
+  <div class="footer-copyright">
+    <div class="container">
+    © 2021 <a class='white-text' href="https://transitcenter.org/">TransitCenter</a>.  Proudly built by
+    <a class='white-text' href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
+    SF2 Enterprises, and <a href="https://www.klumpentown.com/" class='white-text'>Klumpentown Consulting</a>.
+    </div>
+  </div>
+</footer>
 <script src="https://d3js.org/d3.v5.js"></script>
 <script src="{{ url_for('static', filename='js/scorecard_boston.js') }}"></script>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+  var elems = document.querySelectorAll('.tooltipped');
+  var instances = M.Tooltip.init(elems, {'position': 'bottom'});
+  });
+// document.addEventListener('DOMContentLoaded', function() {
+//   var elems = document.querySelectorAll('.parallax');
+//   var instances = M.Parallax.init(elems, {'responsiveThreshold':0});
+// });
+</script>
 {% endblock %}

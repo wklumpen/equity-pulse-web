@@ -60,6 +60,17 @@ ul.topnav a.title-text {
   background-color: #2D74ED !important;
 }
 
+.info > i{
+  vertical-align:middle;
+}
+
+.parallax-container {
+  height: 400px;
+}
+
+.banner {
+  width: 100%;
+}
 
 @font-face{
   font-family:"MarkWebPro-Bold W01 Regular";
@@ -85,3 +96,4 @@ ul.topnav a.title-text {
   url("fonts/1466032/c825e1c2-ff60-4843-b360-2a84a2436e85.woff") format("woff"),
   url("fonts/1466032/617f9efc-7295-4a05-85ce-41497de28777.ttf") format("truetype");
 }
+
