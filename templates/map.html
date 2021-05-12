@@ -33,6 +33,7 @@
           <ul role="tablist"> <!-- top aligned tabs -->
               <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Customize the Map"></i></a></li>
               <!-- <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li> -->
+              <li><a href="#story" role="tab"><i class="fa fa-book" title="Understand the Story"></i></a></li>
               <li><a href="#share" role="tab"><i class="fa fa-share" title="Share the Map"></i></a></li>
               <li><a href="#download" role="tab"><i class="fa fa-download" title="Download the Data"></i></a></li>
               <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
@@ -139,6 +140,14 @@
               <p id="transitDisc">Toggle the location of major transit lines in the region.</p>
           </div>
 
+          <div class="leaflet-sidebar-pane" id="story">
+            <h1 class="leaflet-sidebar-header">
+                Understand the Story
+                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+            </h1>
+            <p>Explore access to opportunity for different groups of people and see how transit equity has trended over time on the <a href="/charts/{{view['name']}}">story page</a>.</p>
+          </div>
+
           <div class="leaflet-sidebar-pane" id="share">
             <h1 class="leaflet-sidebar-header">
                 Share the Map
@@ -156,7 +165,7 @@
             <p>Download the data you've selected to display <b>for the entire region</b> either tabulated as a CSV file, or as a spatial dataset (GeoJSON format). This data file does not include any overlays.</p>
             <p><a id='csv-link'>Download CSV</a></p>
             <p><a id='geojson-link'>Download GeoJSON</a></p>
-            <p>Visit the <a href='/download'>download center</a> for more datasets.</p>
+            <p>Visit the <a href="/download/{{view['name']}}">download center</a> for more datasets.</p>
           </div>
 
           <div class="leaflet-sidebar-pane" id="info">

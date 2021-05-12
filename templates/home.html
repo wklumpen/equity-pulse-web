@@ -17,7 +17,7 @@
     <div class='col s12 m10 offset-m1 l8 offset-l2'>
       <h1><b>Transit Equity in US Cities</b></h1>
       <p class='flow-text'>We've crunched the numbers on transit equity in seven major urban areas in the United States. Here's what we found.</p>
-        <a href='#readmore' class="waves-effect waves-light btn-large center-align purple darken-3">Read More</a>
+        <a href='#readmore' class="waves-effect waves-light btn-large center-align blue transit">Read More</a>
     </div>
   </div>
     {% if status.status != 'normal' %}
@@ -58,11 +58,10 @@
     </div>
   </div>
 </div>
-<div class='grey lighten-4'>
+<div class='grey lighten-4' id='readmore'>
   <img class='banner' src="{{ url_for('static', filename='img/transit3-banner.jpg') }}">
 </div>
 <div class='section grey lighten-4'>
-  <div id='readmore'></div>
   <div class='row container'>
     <div class='col s12'>
       <h2>An Equitable Transit System</h2>

@@ -27,7 +27,6 @@ function setLegendBins(bins, title){
     .text(d => d.label)
     .attr('text-anchor', 'left')
     .style('alignment-baseline', 'middle')
-    .style('font-family', "Raleway, Helvetica, san-serif")
   
   legendSvg.append('text')
     .attr('x', legendMargin.left)
@@ -37,5 +36,4 @@ function setLegendBins(bins, title){
     .style('font-size', '1.2em')
     .style('font-weight', 'bold')
     .style('padding-top', '5px')
-    .style('font-family', "Raleway, Helvetica, san-serif")
 }

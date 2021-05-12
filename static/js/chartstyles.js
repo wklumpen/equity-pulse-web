@@ -1,7 +1,7 @@
 var popStyle = {
     'pop_total' : {
         'label': 'Everyone',
-        'color': "#FF7F0E"
+        'color': "#7F7F7F"
     },
     'pop_asiapacific' : {
         'label': "Asian",
@@ -29,7 +29,7 @@ var popStyle = {
     },
     'workers_essential': {
         'label': 'Essential Worker',
-        'color': '#7F7F7F'
+        'color': '#FF7F0E'
     },
     'everyone_fares': {
         'label': 'Limited Fares',

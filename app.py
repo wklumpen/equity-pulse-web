@@ -43,7 +43,7 @@ def _db_close(exc):
 def home():
     status = SiteStatus.get_main_status()
     print(status)
-    return render_template('home.html', regions=Region.select().where(Region.live == True), status=status)
+    return render_template('home.html', regions=Region.select().where(Region.live == True).order_by(Region.name.asc()), status=status)
 
 @app.route('/documentation')
 def documentation():
