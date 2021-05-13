@@ -47,6 +47,8 @@ var fareOptions = [
   }
 ]
 
+var travelTimeParam = "Choose whether to measure travel time to the closest or 3rd closest opportunity."
+var accessParam = "Count opportunities that can be reached within the selected travel time."
 // Used when fare-sensitive information isn't applicable.
 var fareNA = [
   {
@@ -99,6 +101,7 @@ var options = {
     "destMeasureUnit": "jobs",
     "destMeasure": "Access to jobs counts the total number of jobs that can be reached on transit, from a starting point and within a certain amount of time.",
     "measureCode": "P",
+    "paramDesc": accessParam,
     "params": [
       {
         "paramName": "30 minutes",
@@ -123,6 +126,7 @@ var options = {
     "destMeasureUnit": "jobs",
     "destMeasure": "Access to low-wage jobs counts the total number of jobs with annual wages less than $15,000 that can be reached on transit, from a starting point and within a certain amount of time.",
     "measureCode": "P",
+    "paramDesc": accessParam,
     "params": [
       {
         "paramName": "30 minutes",
@@ -147,13 +151,14 @@ var options = {
     "destMeasureUnit": "min",
     "destMeasure": "Travel time to grocery stores calculates the travel time by transit to the closest food stores that belong to the Supplemental Nutrition Assistance Program (SNAP).",
     "measureCode": "M",
+    "paramDesc": travelTimeParam,
     "params": [
       {
-        "paramName": "1 SNAP store",
+        "paramName": "Closest store",
         "paramCode": "t1"
       },
       {
-        "paramName": "3 SNAP stores",
+        "paramName": "3rd Closest store",
         "paramCode": "t3"
       },
     ],
@@ -167,13 +172,14 @@ var options = {
     "destMeasureUnit": "min",
     "destMeasure": "Travel time to hospitals calculates the travel time by transit to closest hospitals.",
     "measureCode": "M",
+    "paramDesc": travelTimeParam,
     "params": [
       {
-        "paramName": "1 hospital",
+        "paramName": "Closest hospital",
         "paramCode": "t1"
       },
       {
-        "paramName": "3 hospitals",
+        "paramName": "3rd closest hospital",
         "paramCode": "t3"
       },
     ],
@@ -187,13 +193,14 @@ var options = {
     "destMeasureUnit": "min",
     "destMeasure": "Travel time to urgent care calculates the travel time by transit to the closest facilities that provide emergency care, surgery, and recuperative care.",
     "measureCode": "M",
+    "paramDesc": travelTimeParam,
     "params": [
       {
-        "paramName": "1 facility",
+        "paramName": "Closest facility",
         "paramCode": "t1"
       },
       {
-        "paramName": "3 facilities",
+        "paramName": "3rd closest facility",
         "paramCode": "t3"
       },
     ],
@@ -207,13 +214,14 @@ var options = {
     "destMeasureUnit": "min",
     "destMeasure": "Travel time to pharmacies calculates the travel time by transit to the closest pharmacies.",
     "measureCode": "M",
+    "paramDesc": travelTimeParam,
     "params": [
       {
-        "paramName": "1 pharmacy",
+        "paramName": "Closest pharmacy",
         "paramCode": "t1"
       },
       {
-        "paramName": "3 pharmacies",
+        "paramName": "3rd closest pharmacy",
         "paramCode": "t3"
       },
     ],
@@ -227,6 +235,7 @@ var options = {
     "destMeasureUnit": "acres",
     "destMeasure": "Access to parks counts the total acreage of parks and public greenspace that can be reached on transit, within a certain amount of time.",
     "measureCode": "P",
+    "paramDesc": accessParam,
     "params": [
       {
         "paramName": "15 minutes",
@@ -247,13 +256,14 @@ var options = {
     "destMeasureUnit": "min",
     "destMeasure": "Travel time to post-secondary schools calculates the travel time by transit to the universities or colleges.",
     "measureCode": "M",
+    "paramDesc": travelTimeParam,
     "params": [
       {
-        "paramName": "1 school",
+        "paramName": "Closest school",
         "paramCode": "t1"
       },
       {
-        "paramName": "3 schools",
+        "paramName": "3rd closest school",
         "paramCode": "t3"
       },
     ],
@@ -262,14 +272,15 @@ var options = {
     "fares": fareNA
   },
   "los": {
-    "destName" : "Transit Service",
+    "destName" : "Transit Service Intensity",
     "destMeasureLabel": "Average Hourly Trips",
     "destMeasureUnit": "trips",
-    "destMeasure": "Transit service counts unique transit trips scheduled to serve an area, on average, per hour. It is a function of density (how many routes serve an area) and frequency (how often).",
+    "destMeasure": "Transit service intensity measures the average hourly unique scheduled trips serving an area throughout the course of a day. It is a function of density (how many routes serve an area) and frequency (how often).",
     "measureCode": "trips",
+    "paramDesc": "",
     "params": [
       {
-        "paramName": "Hourly Trips",
+        "paramName": "--Options Not Applicable--",
         "paramCode": "NA"
       }
     ],
@@ -302,6 +313,8 @@ function optionsUpdate(){
     var measureText = document.getElementById('measurement')
     measureText.innerHTML = options[destination]['destMeasure']
 
+    var paramText = document.getElementById('parameterDesc')
+    paramText.innerHTML = options[destination]['paramDesc']
     // Now we populate the parameters
     var params = options[destination]['params']
 

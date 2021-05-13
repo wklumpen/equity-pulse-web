@@ -469,7 +469,7 @@ function updateAllCharts(){
         jobsAccessGroupsDateMargin, 
         groups, 
         'Jobs Accessible in 45 min by Transit',
-        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in the Urban Core of ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Data for weekdays 7am-9am or 10pm-12am (weeknights) in the Urban Core of ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 
     // == Time series job access ==
@@ -482,7 +482,7 @@ function updateAllCharts(){
         jobsAccessSeriesMargin, 
         groups, 
         'Jobs Accessible in 45 min', 
-        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in the Urban Core of ' + view['title'] + '.'
+        'Data for weekdays 7am-9am or 10pm-12am (weeknights) in the Urban Core of ' + view['title'] + '.'
     )
 
     // == Time series Hosp store access ==
@@ -602,7 +602,7 @@ function updateAllCharts(){
         jobsFaresSeriesMargin, 
         allGroups, 
         'Percent of Non-Fare-Capped Jobs Reachable',
-        'Data for weekdays 7am-9am or 9pm-11pm (weeknights) in ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Data for weekdays 7am-9am or 10pm-12am (weeknights) in ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 }
 
@@ -792,24 +792,58 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr('text-anchor', 'left')
         .attr("dy", ".35em")
         .attr("font-size", "0.8em")
-        .style('font-weight', function(d){
+        .style('fill', function(d){
             if (d.description == 'pop_total'){
-                return 'bold';
+                return 'white';
             }
             else{
-                return 'normal';
+                return 'black';
             }
         })
     
-
     // Now some mouse effects
-
     stickTexts.on('click', function (d){
         updateBars(d)
     })
 
     sticks.on('click', function (d){
         updateBars(d)
+    })
+
+    stickTexts.on('mouseover', function (d) {
+        d3.select(this)
+        .transition()
+        .style('fill', '#2D74ED')
+        .style('font-weight', 'bold')
+        // Highlight the connections
+    })
+    .on('mouseout', function (d) {
+        if (d == barDate){
+            d3.select(this).transition().style('font-weight', 'bold').style('fill', 'black')
+        }
+        else{
+            d3.select(this).transition().style('font-weight', 'normal').style('fill', 'black')
+        }
+        
+    })
+
+    sticks.on('mouseover', function (d) {
+        console.log("Moused over stick", d)
+        d3.select(this)
+        .transition()
+        .attr('stroke', '#2D74ED')
+        .attr('opacity', 0.5)
+        // Highlight the connections
+    })
+    .on('mouseout', function (d) {
+        if (d == barDate){
+            console.log("MaxDate")
+            d3.select(this).transition().attr('stroke', '#BEBEBE')
+        }
+        else{
+            d3.select(this).transition().attr('stroke', '#F1F1F1')
+        }
+        
     })
 
     function updateBars(upDate){
@@ -856,12 +890,20 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .attr('text-anchor', 'left')
             .attr("dy", ".35em")
             .attr("font-size", "0.8em")
-            .style('font-weight', function(d){
+            // .style('font-weight', function(d){
+            //     if (d.description == 'pop_total'){
+            //         return 'bold';
+            //     }
+            //     else{
+            //         return 'normal';
+            //     }
+            // })
+            .style('fill', function(d){
                 if (d.description == 'pop_total'){
-                    return 'bold';
+                    return 'white';
                 }
                 else{
-                    return 'normal';
+                    return 'black';
                 }
             })
         

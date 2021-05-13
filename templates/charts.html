@@ -41,11 +41,11 @@
     <div class='col s12 m6 offset-m3'>
       <h5>Jump to a Section</h5>
       <div class="collection grey lighten-5">
-          <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to destinations on transit</a>
-          <a href="#los" class="collection-item blue-text text-darken-2">Transit service levels</a>
-          <a href="#fares" class="collection-item blue-text text-darken-2">Transit fares and access</a>
-          <a href="#car" class="collection-item blue-text text-darken-2">Travelling by transit vs. car</a>
-          <a href="#reliabilitySection" class="collection-item blue-text text-darken-2">Transit reliability</a>
+          <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to Destinations on Transit</a>
+          <a href="#los" class="collection-item blue-text text-darken-2">Transit Service Intensity</a>
+          <a href="#fares" class="collection-item blue-text text-darken-2">Fares</a>
+          <a href="#car" class="collection-item blue-text text-darken-2">Car Access</a>
+          <a href="#reliabilitySection" class="collection-item blue-text text-darken-2">Reliability</a>
       </div>
     </div>
   </div>
@@ -85,7 +85,7 @@
       <div class="col s12">
           <div class="card-panel">
               <div id="jobs-access-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
           </div>
       </div>
   </div>
@@ -108,7 +108,7 @@
       <div class="col s12">
           <div class="card-panel">
               <div id="hospital-access-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
               </p>
           </div>
       </div>
@@ -125,7 +125,7 @@
       <div class="col s12">
           <div class="card-panel">
               <div id="store-access-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
               </p>
           </div>
       </div>
@@ -154,7 +154,7 @@
       <div class='col s12'>
           <div class="card-panel">
               <div id="los-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Select different dates to see the distribution among gropus for the week of that date. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on average daily trips in the Urban Core on a map.</a></p>
+              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on average daily trips in the Urban Core on a map.</a></p>
           </div>
           
       </div>
@@ -286,6 +286,7 @@
         </div>
     </div>
 </div>
+{% include 'footer.html' %}
 <script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
 <script src="{{ url_for('static', filename='js/d3-array.min.js') }}"></script>
 <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>

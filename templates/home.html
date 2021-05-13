@@ -40,7 +40,7 @@
       <div class="col s12 m6 l3">
         <div class="card">
           <div class="card-image">
-            <img src="{{ url_for('static', filename='img/'+region.tag+'.jpg') }}">
+            <a href="/story/{{region.tag}}"><img src="{{ url_for('static', filename='img/'+region.tag+'.jpg') }}"></a>
           </div>
           <div class='card-content'>
             <span class="card-title">{{region.name}}</span>
@@ -91,15 +91,7 @@
     </div>
   </div>
 </div>
-<footer class="page-footer blue transit" style='padding-top:0px;'>
-  <div class="footer-copyright">
-    <div class="container">
-    © 2021 <a class='white-text' href="https://transitcenter.org/">TransitCenter</a>.  Proudly built by
-    <a class='white-text' href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
-    SF2 Enterprises, and <a href="https://www.klumpentown.com/" class='white-text'>Klumpentown Consulting</a>.
-    </div>
-  </div>
-</footer>
+{% include 'footer.html' %}
 <script src="https://d3js.org/d3.v5.js"></script>
 <script src="{{ url_for('static', filename='js/scorecard_boston.js') }}"></script>
 <script>
