@@ -96,7 +96,7 @@ def charts(region):
         else:
             fare = '4'
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
-        'state': r.state, 'county': r.county, 'agencies': r.agencies, 
+        'state': r.state, 'county': r.county, 'agencies': r.agencies, 'population': r.population,
         'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies}
         return render_template('charts.html', view=view)
     except DoesNotExist:

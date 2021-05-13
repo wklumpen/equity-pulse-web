@@ -4,7 +4,7 @@ var coronaData = []
 var reliabilityData = []
 var reliabilityAgencyMode = []
 
-var coronaMargin = {top: 20, right: 60, bottom: 40, left: 30}
+var coronaMargin = {top: 50, right: 60, bottom: 40, left: 30}
 var coronaBoxWidth = d3.select("#corona").node().getBoundingClientRect().width
 var coronaBoxHeight = d3.select("#corona").node().getBoundingClientRect().height
 var coronaChartWidth = coronaBoxWidth - coronaMargin.left - coronaMargin.right
@@ -127,7 +127,7 @@ function loadCoronaData(){
         $.each(d[0], function(key, val){
             if (moment(key, "M/D/YY", true).isValid()){
                 if (val > 1){
-                    coronaData.push({"date":moment(key, "MM/DD/YY").valueOf(), "cases": +val})
+                    coronaData.push({"date":moment(key, "MM/DD/YY").valueOf(), "cases": +val/(view['population']/100000)})
                 }
             }
         });
@@ -224,13 +224,13 @@ function updateCoronaPlot(){
 
     coronaSVG.append("g")
         .attr("transform", "translate(" + coronaMargin.left + ", 0)")
-        .call(d3.axisLeft(y).ticks(2));
+        .call(d3.axisLeft(y).ticks(4));
 
 
     if (coronaBoxWidth < 600){
         coronaSVG.append("g")
             .attr("transform", "translate(0," + coronaChartHeight + ")")
-            .call(d3.axisBottom(x).ticks(2).tickFormat(d3.timeFormat("%b %Y")));
+            .call(d3.axisBottom(x).ticks(4).tickFormat(d3.timeFormat("%b %Y")));
     }
     else{
         coronaSVG.append("g")
@@ -245,6 +245,13 @@ function updateCoronaPlot(){
         .text("Source: Johns Hopkins University")
         .attr('text-anchor', 'end')
         .attr("font-size", "0.7em")
+
+    coronaSVG.append('text')
+        .attr("x", coronaMargin.left)
+        .attr('y', 20 - coronaMargin.top)
+        .text("New Cases per 100,000 people, 7-day rolling average")
+        .attr('text-anchor', 'start')
+        .attr('font-weight', 'bold')
       
     // Now let's get to the mouse effects
     var mouseLine = coronaSVG.append('g')
@@ -285,10 +292,10 @@ function updateCoronaPlot(){
                     .style("text-anchor", "middle")
                     .text(function (){
                         if (Math.round(hoverData.new) != 1){
-                            return Math.round(hoverData.new) + " new cases"
+                            return Math.round(hoverData.new) + " new cases/100k people"
                         }
                         else{
-                            return Math.round(hoverData.new) + " new case"
+                            return Math.round(hoverData.new) + " new cases/100k people"
                         }
                     }).transition(100)
             }
