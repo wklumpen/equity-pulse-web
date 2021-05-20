@@ -60,6 +60,14 @@ ul.topnav a.title-text {
   background-color: #2D74ED !important;
 }
 
+.purple.transit {
+  background-color: #481f89 !important;
+}
+
+.text-purple.transit {
+  color: #481f89 !important;
+}
+
 .info > i{
   vertical-align:middle;
 }

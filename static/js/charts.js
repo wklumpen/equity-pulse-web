@@ -118,6 +118,9 @@ function loadCoronaData(){
             counties = ['New York', 'Kings', 'Queens', 'Bronx', 'Richmond']
             d = data.filter(d => (counties.includes(d['Admin2']) & d['Province_State'] == view['state']));
         }
+        else if (view['name'] == 'dc'){
+            d = data.filter(d => (d['Admin2'] == 'District of Columbia' & d['Province_State'] == "District of Columbia"));
+        }
         else{
             d = data.filter(d => (d['Admin2'] == view['county'] & d['Province_State'] == view['state']));
         }
@@ -381,7 +384,7 @@ function updateReliabilityChart(){
         else{
             reliabilitySVG.append("g")
             .attr("transform", "translate(0," + reliabilityChartHeight + ")")
-            .call(d3.axisBottom(x));
+            .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %d %Y")));
         }
         //Let's add a label
         reliabilitySVG.append("text")
@@ -609,7 +612,7 @@ function updateAllCharts(){
         jobsFaresSeriesMargin, 
         allGroups, 
         'Percent of Non-Fare-Capped Jobs Reachable',
-        'Data for weekdays 7am-9am or 10pm-12am (weeknights) in ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Data for weekdays 7am-9am in ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 }
 

@@ -20,7 +20,7 @@ var popStyle = {
         'color': "#9467BD"
     },
     'pop_poverty': {
-        'label': "Low Income",
+        'label': "In Poverty",
         'color': '#8C564B'
     },
     'hhld_single_mother': {
@@ -73,6 +73,6 @@ function styleNumbers(val){
       return val.toFixed(0)
     }
     else{
-      return val.toFixed(2)
+      return val.toFixed(0)
     }
   }

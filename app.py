@@ -45,9 +45,11 @@ def home():
     print(status)
     return render_template('home.html', regions=Region.select().where(Region.live == True).order_by(Region.name.asc()), status=status)
 
-@app.route('/documentation')
+@app.route('/methodology')
 def documentation():
-    return render_template('documentation.html')
+    agencies = Agency.select()
+    regions = Region.select()
+    return render_template('methodology.html', agencies=agencies, regions=regions)
 
 @app.route('/download')
 def download():
@@ -97,7 +99,7 @@ def charts(region):
             fare = '4'
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
         'state': r.state, 'county': r.county, 'agencies': r.agencies, 'population': r.population,
-        'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies}
+        'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies, 'abstract': r.abstract}
         return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')

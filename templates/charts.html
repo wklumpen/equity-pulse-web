@@ -17,7 +17,7 @@
 <div class="row container">
   <div class="col s12 m10 offset-m1 l8 offset-l2">
     <h1><b>The {{view['title']}} Story</b></h1>
-    <p class='flow-text'>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Velit ut tortor pretium viverra. Et magnis dis parturient montes nascetur ridiculus mus mauris. Condimentum mattis pellentesque id nibh tortor id aliquet. Cras ornare arcu dui vivamus arcu. Tortor at auctor urna nunc id cursus metus aliquam eleifend. Facilisis sed odio morbi quis commodo odio aenean. Quam nulla porttitor massa id.</p>
+    <p class='flow-text'>{{view['abstract']}}.</p>
   </div>
 </div>
 <div>
@@ -173,7 +173,7 @@
             <h3 class='left-align'>How many fewer jobs can people reach in 45 minutes on transit, if they have limited money to spend on fares?</h3>
             <p class='flow-text'>Many regions have a kind of two-tiered transit system, where expensive, often rapid, regional transit is layered on top of a local transit network that is affordable but slow. In these regions, people with low incomes are “priced out” of parts of the transit network, and don’t have as much access as other riders.</p>
 
-            <p class='flow-text'>This chart shows how access shrinks for people who can’t afford high-cost modes. It compares the number of jobs accessible taking only low-cost transit trips, compared to traveling on the entire transit network, including expensive “premium” service.</p> 
+            <p class='flow-text'>This chart shows how access shrinks for people who can’t afford high-cost trips. It compares the number of jobs accessible taking only low-cost transit trips, compared to traveling on the entire transit network, including more expensive trips.</p> 
                 
             <p class='flow-text'>A value of 100% indicates that someone taking only low-cost transit trips has the same access to jobs as riders who can pay more for fares. A value of 50% indicates that someone taking only low-cost trips can access half as many jobs as someone with an unlimited budget for fares.</p>
         </div>
@@ -182,7 +182,7 @@
         <div class='col s12'>
             <div class="card-panel">
                 <div id="jobs-fares-series" class="svg-container"></div>
-                <p> You can also <a href="/map/{{view['name']}}?key=C000_P_c30_AM_autoN_fareN&zone=msa&demo=none">view the most recent data on access to jobs via low-cost transit in the MSA on a map.</a></p>
+                <p> You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=msa&demo=none">view the most recent data on access to jobs via low-cost transit in the MSA on a map.</a></p>
             </div>
         </div>
     </div>

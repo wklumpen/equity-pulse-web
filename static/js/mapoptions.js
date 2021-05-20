@@ -293,7 +293,7 @@ var options = {
 var defaultMeasure = "C000"
 var defaultKey = defaultMeasure + "_" 
                     + options[defaultMeasure]["measureCode"] + "_" 
-                    + options[defaultMeasure]['params'][0]['paramCode'] + "_"
+                    + options[defaultMeasure]['params'][1]['paramCode'] + "_"
                     + options[defaultMeasure]['periods'][0]['periodCode'] + "_"
                     + options[defaultMeasure]['autos'][0]['autoCode'] + "_"
                     + options[defaultMeasure]['fares'][0]['fareCode']
