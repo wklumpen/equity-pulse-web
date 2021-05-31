@@ -48,7 +48,7 @@ var fareOptions = [
 ]
 
 var travelTimeParam = "Choose whether to measure travel time to the closest or 3rd closest opportunity."
-var accessParam = "Count opportunities that can be reached within the selected travel time."
+var accessParam = "Choose the time the rider has available to travel."
 // Used when fare-sensitive information isn't applicable.
 var fareNA = [
   {
@@ -68,15 +68,15 @@ var fareTemp = [
 // Options for time-of-day filtering of data (all except level-of-service)
 var periodOptions = [
   {
-    "periodName": "Weekday Morning",
+    "periodName": "Weekday Morning (7am-9am)",
     "periodCode": "AM"
   },
   {
-    "periodName": "Weekday Evening",
+    "periodName": "Weekday Evening (10pm-12am)",
     "periodCode": "PM"
   },
   {
-    "periodName": "Weekend",
+    "periodName": "Saturday Morning (10am-12pm)",
     "periodCode": "WE"
   }
 ]
@@ -84,11 +84,11 @@ var periodOptions = [
 // Options for the time-of-day filtering for the level-of-service measure only
 var losPeriodOptions = [
   {
-    "periodName": "Weekday",
+    "periodName": " Weekday (all day average)",
     "periodCode": "WKD"
   },
   {
-    "periodName": "Saturday",
+    "periodName": "Saturday (all day average)",
     "periodCode": "SAT"
   },
 ]
@@ -99,7 +99,7 @@ var options = {
     "destName" : "Employment, All",
     "destMeasureLabel": "Jobs Reachable",
     "destMeasureUnit": "jobs",
-    "destMeasure": "Access to jobs counts the total number of jobs that can be reached on transit, from a starting point and within a certain amount of time.",
+    "destMeasure": "Number of jobs reachable on transit within a certain amount of time.",
     "measureCode": "P",
     "paramDesc": accessParam,
     "params": [
@@ -124,7 +124,7 @@ var options = {
     "destName" : "Employment, Low Income",
     "destMeasureLabel": "Low-wage jobs reachable",
     "destMeasureUnit": "jobs",
-    "destMeasure": "Access to low-wage jobs counts the total number of jobs with annual wages less than $15,000 that can be reached on transit, from a starting point and within a certain amount of time.",
+    "destMeasure": "Number of jobs with annual wages below $15,000 reachable on transit within a certain amount of time.",
     "measureCode": "P",
     "paramDesc": accessParam,
     "params": [
@@ -149,7 +149,7 @@ var options = {
     "destName" : "Grocery Stores",
     "destMeasureLabel": "Travel Time to grocery stores",
     "destMeasureUnit": "min",
-    "destMeasure": "Travel time to grocery stores calculates the travel time by transit to the closest food stores that belong to the Supplemental Nutrition Assistance Program (SNAP).",
+    "destMeasure": "Transit travel time to the closest food stores that accept benefits from the Supplemental Nutrition Assistance Program (SNAP).",
     "measureCode": "M",
     "paramDesc": travelTimeParam,
     "params": [
@@ -170,7 +170,7 @@ var options = {
     "destName" : "Hospitals",
     "destMeasureLabel": "Travel time to hospitals",
     "destMeasureUnit": "min",
-    "destMeasure": "Travel time to hospitals calculates the travel time by transit to closest hospitals.",
+    "destMeasure": "Transit travel time to the closest hospitals.",
     "measureCode": "M",
     "paramDesc": travelTimeParam,
     "params": [
@@ -191,7 +191,7 @@ var options = {
     "destName" : "Urgent Care Facilities",
     "destMeasureLabel": "Travel time to urgent care",
     "destMeasureUnit": "min",
-    "destMeasure": "Travel time to urgent care calculates the travel time by transit to the closest facilities that provide emergency care, surgery, and recuperative care.",
+    "destMeasure": "Transit travel time to the closest facilities that provide emergency care, surgery, and recuperative care.",
     "measureCode": "M",
     "paramDesc": travelTimeParam,
     "params": [
@@ -212,7 +212,7 @@ var options = {
     "destName" : "Pharmacies",
     "destMeasureLabel": "Travel time to pharmacies",
     "destMeasureUnit": "min",
-    "destMeasure": "Travel time to pharmacies calculates the travel time by transit to the closest pharmacies.",
+    "destMeasure": "Transit travel time to the closest pharmacies.",
     "measureCode": "M",
     "paramDesc": travelTimeParam,
     "params": [
@@ -233,7 +233,7 @@ var options = {
     "destName" : "Parks & Greenspace",
     "destMeasureLabel": "Acres reachable",
     "destMeasureUnit": "acres",
-    "destMeasure": "Access to parks counts the total acreage of parks and public greenspace that can be reached on transit, within a certain amount of time.",
+    "destMeasure": "Total acreage of parks and public greenspace reachable on transit within a certain amount of time",
     "measureCode": "P",
     "paramDesc": accessParam,
     "params": [
@@ -254,7 +254,7 @@ var options = {
     "destName" : "Colleges & Universities",
     "destMeasureLabel": "Travel Time to Post-Secondary Schools",
     "destMeasureUnit": "min",
-    "destMeasure": "Travel time to post-secondary schools calculates the travel time by transit to the universities or colleges.",
+    "destMeasure": "Transit travel time to the closest college or university.",
     "measureCode": "M",
     "paramDesc": travelTimeParam,
     "params": [
@@ -275,7 +275,7 @@ var options = {
     "destName" : "Transit Service Intensity",
     "destMeasureLabel": "Average Hourly Trips",
     "destMeasureUnit": "trips",
-    "destMeasure": "Transit service intensity measures the average hourly unique scheduled trips serving an area throughout the course of a day. It is a function of density (how many routes serve an area) and frequency (how often).",
+    "destMeasure": "The number of transit trips scheduled to serve a location, on average, per hour. It is a function of how many routes serve a location and how often those routes run.",
     "measureCode": "trips",
     "paramDesc": "",
     "params": [
@@ -440,7 +440,7 @@ function setStateFromParams(){
       zone = mapParams.get('zone')
     }
     else{
-      zone = 'urban';
+      zone = 'msa';
     }
 
     if ((s_key[0] == 'los_trips') & (s_key.length > 3)){

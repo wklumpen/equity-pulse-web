@@ -479,7 +479,7 @@ function updateAllCharts(){
         jobsAccessGroupsDateMargin, 
         groups, 
         'Jobs Accessible in 45 min by Transit',
-        'Data for weekdays 7am-9am or 10pm-12am (weeknights) in the Urban Core of ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Data for travel in the Urban Core of ' + view['title'] + ' on weekdays from 7am-9am (except if noted weeknights 10pm-12am) as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 
     // == Time series job access ==
@@ -492,7 +492,7 @@ function updateAllCharts(){
         jobsAccessSeriesMargin, 
         groups, 
         'Jobs Accessible in 45 min', 
-        'Data for weekdays 7am-9am or 10pm-12am (weeknights) in the Urban Core of ' + view['title'] + '.'
+        'Data for weekdays 7am-9am (except if noted weeknights 10pm-12am) in the Urban Core of ' + view['title'] + '.'
     )
 
     // == Time series Hosp store access ==
@@ -506,7 +506,7 @@ function updateAllCharts(){
         hospitalAccessSeriesMargin, 
         allGroups, 
         'Average Travel Time (min)', 
-        'Data for weekday evenings 10pm-12am in the Urban Core of ' + view['title'] + '.'
+        'Data for weeknights 10pm-12am in the Urban Core of ' + view['title'] + '.'
     )
 
     // == Time series SNAP store access ==
@@ -599,7 +599,7 @@ function updateAllCharts(){
         carGroups,
         ['car_time', 'bus_time'],
         'Travel Time to Destinations',
-        'Data for Weekends from 10am-12pm'
+        'Data for Saturdays from 10am-12pm in the ' + view['title'] + ' MSA, as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 
     // == Time series comparison between fare capped and non-capped
@@ -611,8 +611,8 @@ function updateAllCharts(){
         '#jobs-fares-series', 
         jobsFaresSeriesMargin, 
         allGroups, 
-        'Percent of Non-Fare-Capped Jobs Reachable',
-        'Data for weekdays 7am-9am in ' + view['title'] + ' as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Jobs accessible by low-cost transit trips as percent of all accessible jobs',
+        'Data for weekdays 7am-9am in ' + view['title'] + ' MSA as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 }
 
@@ -964,9 +964,17 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .range([margin.left, chartWidth])
         .padding(0.2);  
 
-    var y = d3.scaleLinear()
+    if (id == '#jobs-fare-series'){
+        var y = d3.scaleLinear()
+        .domain([0, 100])
+        .range([chartHeight, 0])
+    }
+    else{
+        var y = d3.scaleLinear()
         .domain([0, d3.max(toPlot, d => d.value)])
         .range([chartHeight, 0])
+    }
+    
 
     svg.append("g")
         .attr("transform", "translate(0," + chartHeight + ")")

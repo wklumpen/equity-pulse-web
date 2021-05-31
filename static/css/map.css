@@ -112,15 +112,17 @@ body{
     background-color: #fff;
     border-radius: 5px;
     opacity: 0.9;
+    font-size: 1.2em;
 }
 
 #timebox {
   width: 800px;
-  height: 90px;
+  height: 100px;
   line-height: 18px;
   background-color: #fff;
   border-radius: 5px;
   opacity: 0.9;
+  font-size: 1.2em;
 }
 
 #plot{
@@ -237,7 +239,7 @@ svg .rect {
 }
 
 .leaflet-sidebar p{
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-family: 'MarkWebPro-Book W01 Regular', Raleway, Arial, sans-serif;
 }
 

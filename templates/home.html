@@ -15,8 +15,8 @@
 <div class='section grey lighten-4'>
   <div class='row container center-align'>
     <div class='col s12 m10 offset-m1 l8 offset-l2'>
-      <h1><b>Transit Equity in US Cities</b></h1>
-      <p class='flow-text'>We've crunched the numbers on transit equity in seven major urban areas in the United States. Here's what we found.</p>
+      <h1><b>Tracking Transit Equity in US Cities</b></h1>
+      <p class='flow-text'>We crunched the numbers on transit equity in seven major urban areas in the United States. Here's what we found.</p>
         <a href='#readmore' class="waves-effect waves-light btn-large center-align blue transit">Read More</a>
     </div>
   </div>
@@ -40,7 +40,7 @@
       <div class="col s12 m6 l3">
         <div class="card">
           <div class="card-image">
-            <a href="/story/{{region.tag}}"><img src="{{ url_for('static', filename='img/'+region.tag+'.jpg') }}"></a>
+            <a href="/story/{{region.tag}}"><img src="{{ url_for('static', filename='img/'+region.tag+'/tile.jpg') }}"></a>
           </div>
           <div class='card-content'>
             <span class="card-title">{{region.name}}</span>
@@ -64,20 +64,20 @@
 <div class='section grey lighten-4'>
   <div class='row container'>
     <div class='col s12'>
-      <h2>An Equitable Transit System</h2>
-      <p class='flow-text'>Public transportation can offer a "ladder of opportunity", providing affordable and convenient connections to jobs, goods and services, medical care, and other essentials of daily life. But pervasive racism and discrimination in land use, transportation, and transit planning have resulted in wide gaps in transit access across race, income, and other characteristics, exacerbating social inequity.</p>
+      <h2>The State of Transit Equity</h2>
+      <p class='flow-text'>Public transportation can offer a "ladder of opportunity", providing affordable and convenient connections to jobs, goods and services, medical care, and other essentials of daily life. But pervasive racism and discrimination in land use, transportation, and transit planning have created wide gaps in transit access across race, income, and other characteristics, exacerbating social inequity.</p>
             
-      <p class='flow-text'>An equitable transit system attempts to correct these disparities by providing the highest quality service and the best access to opportunity to people who have been marginalized by prior planning decisions. But just how wide are gaps in access, and how do they manifest for different groups of transit riders? Until recently, generating such information had been computationally difficult -- beyond the means of a transit agency. Furthermore, federal equity evaluations do not require this level of scrutiny. But data advances have made quantifying this information feasible. We built this tool to propagate this newly-possible best practice, demonstrate the nuance that access-to-opportunity analysis brings to equity evaluations and to shed light on large gaps in access facing U.S. transit riders.
-      </p>
+      <p class='flow-text'>An equitable transit system attempts to correct these disparities by providing the highest quality service and the best access to opportunity to people who have been marginalized by prior planning decisions. But just how wide are gaps in access, and how do they manifest for different groups of transit riders? Until recently, generating such information had been computationally difficult -- beyond the means of a transit agency. Furthermore, federal equity evaluations do not require this level of scrutiny. But data advances have made quantifying this information feasible. We built this tool to promote this newly-possible best practice, demonstrate the nuance that access-to-opportunity analysis brings to equity evaluations, and to shed light on large gaps in access facing U.S. transit riders.</p>
         
-      <p class='flow-text'>This dashboard measures how well transit networks in seven U.S. cities connect people who’ve been marginalized within those metro areas to the jobs, services, and amenities they need to thrive. Using February 2020 as a baseline, the dashboard looks at metrics like the number of jobs people can reach within a limited timeframe or budget, travel times to hospitals and grocery stores, and service frequency, and tracks how these measures have changed in seven transit-rich regions. </p>
+      <p class='flow-text'>This dashboard measures how well transit networks in seven U.S. cities connect people who’ve been marginalized within those metro areas to the jobs, services, and amenities they need to thrive. Using February 2020 as a baseline, the dashboard looks at metrics like the number of jobs people can reach within a limited timeframe or budget, travel times to hospitals and grocery stores, and service frequency, and tracks how these measures have changed in each region.</p>
         
       <p class='flow-text'>The dashboard illuminates existing disparities and tracks progress toward equity by measuring transit outcomes for Black people, other people of color, people living in poverty, and single mothers.</p>
         
-      <p class='flow-text'><i>Note: The dashboard is intended as a template for measuring transit access disparities, and does not include data for all communities of people who have been marginalized in the transportation system.</i></p>
+      <p class='flow-text'><i>Note: The dashboard is intended as a template for measuring transit access disparities, and does not include data for all communities of people who have been marginalized in the transportation system. It does not measure every aspect of equity — for example, how safe the transit system is for different groups of people or whether marginalized people are represented in decision making. Other <a href="https://transitcenter.org/publications/">TransitCenter research</a> examines these and other elements of equitable transit.</i></p>
     </div>
   </div>
 </div>
+
 <div class='grey lighten-4'>
   <img class='banner' src="{{ url_for('static', filename='img/transit4-banner.jpg') }}">
 </div>
@@ -87,7 +87,17 @@
   <div class='row container'>
     <div class='col s12'>
       <h2>Who should use this tool?</h2>
-      <p class='flow-text'>This dashboard aims to help transit practitioners, policymakers, and advocates make more informed and equitable decisions by providing clear metrics about disparities in transit access and demonstrating how changes to transit networks affect those gaps. With the introduction of this tool, we hope to demonstrate that this type of data is attainable, and should be used to inform decisions by transit agencies as well as external advocacy initiatives. </p>
+      <p class='flow-text'>This dashboard aims to help transit practitioners, policymakers, and advocates make more informed and equitable decisions by providing clear metrics about disparities in transit access and demonstrating how changes to transit networks affect those gaps. With the introduction of this tool, we hope to demonstrate that this type of data is attainable, and should be used to inform decisions by transit agencies as well as external advocacy initiatives.</p>
+
+      <h3>Using this Tool</h3>
+      <p class='flow-text'>The Dashboard presents transit equity data in different formats:
+        <ul class='browser-default'>
+          <li class='flow-text'>The Story pages narrate the state of transit equity in each region, explaining how access to opportunity differs for groups of people and tracking changes in transit equity over time.</li>
+          <li>The Map pages can be queried to identify spatial patterns of transit access and access-to-opportunity trends in each region.</li>
+          <li>The Download Center provides the underlying data to conduct your own analysis. </li>
+        </ul>
+      </p>
+      <p class='flow-text'>Have questions or comments about the Transit Equity Dashboard? Get in touch with us at dashboard@transitcenter.org.</p>
     </div>
   </div>
 </div>

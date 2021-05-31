@@ -364,7 +364,7 @@ function updateTimeSeries(unused, xlabel, ylabel){
     .attr('text-anchor', 'right')
     // .attr("dy", ".35em")
     .attr("transform", d =>{
-      return 'translate(' + (x(d)-30) + ',' + (58) + ')rotate(-45)';}
+      return 'translate(' + (x(d)-35) + ',' + (65) + ')rotate(-45)';}
     )
     .attr("font-size", "0.8em")
   // Add circles! to make things clearer

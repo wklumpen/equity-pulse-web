@@ -12,7 +12,6 @@ from flask import Flask, render_template, jsonify, redirect, Response
 from flask_csv import send_csv
 from playhouse.shortcuts import model_to_dict
 from peewee import DoesNotExist, fn
-import pandas as pd
 from io import StringIO
 import csv
 
@@ -89,6 +88,8 @@ def charts(region):
         r = Region.get(Region.tag == region)
         agencies = [model_to_dict(b) for b in Agency.agency_list(region)]
         maxDate = Summary.max_date(f"{region}-msa")
+        print(type(maxDate))
+        auto = Summary.auto_access(region, maxDate)
         reliability = False
         if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
             reliability = True
@@ -99,7 +100,7 @@ def charts(region):
             fare = '4'
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
         'state': r.state, 'county': r.county, 'agencies': r.agencies, 'population': r.population,
-        'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies, 'abstract': r.abstract}
+        'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies, 'abstract': r.abstract, 'car_access': auto}
         return render_template('charts.html', view=view)
     except DoesNotExist:
         return redirect('/')
@@ -156,6 +157,11 @@ def all_data_csv(zone, date_key):
     scores = Score.by_tag_type_with_date_all(zone, date_key)
     return send_csv(scores.to_dict(orient='records'), f"tcep_{zone}_{date_key}_all.csv", scores.columns)
 
+@app.route('/data/dl/primal/<zone>/<date_key>')
+def primal_download(zone, date_key):
+    scores = Score.by_tag_type_with_date_primal(zone, date_key)
+    return send_csv(scores.to_dict(orient='records'), f"tcep_{zone}_{date_key}_cumulative.csv", scores.columns)
+
 @app.route('/data/dl/summary/<zone>')
 def summary_data(zone):
     summary = Summary.select(Summary.zone, Summary.date, Summary.description, Summary.score_key, Summary.value).where(Summary.zone.contains(zone))
@@ -188,6 +194,11 @@ def reliability_data(zone):
         del(entry['region'])
     columns = ['timestamp', 'agency', 'mode', 'otp', 'delay_abs', 'delay_late', 'delay_early', 'fraction']
     return send_csv(data, f"tcep_reliability_{zone}.csv", columns)
+
+@app.route('/data/dl/pop/<zone>')
+def pop_download(zone):
+    scores = Population.for_export(zone)
+    return send_csv(scores.to_dict(orient='records'), f"tcep_population_{zone}_all.csv", scores.columns)
 
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):

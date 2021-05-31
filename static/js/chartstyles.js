@@ -32,7 +32,7 @@ var popStyle = {
         'color': '#FF7F0E'
     },
     'everyone_fares': {
-        'label': 'Limited Fares',
+        'label': 'Low-Cost Fares',
         'color': '#bcbd22'
     },
     'everyone_weeknights': {
