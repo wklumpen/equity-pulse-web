@@ -99,7 +99,7 @@ def charts(region):
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
         'state': r.state, 'county': r.county, 'agencies': r.agencies, 'population': r.population,
         'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies, 'car_access': auto}
-        return render_template('charts.html', view=view, asbtract=r.abstract)
+        return render_template('charts.html', view=view, abstract=r.abstract)
     except DoesNotExist:
         return redirect('/')
 
