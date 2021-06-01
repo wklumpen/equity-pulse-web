@@ -173,8 +173,6 @@ def summary_data(zone):
 @app.route('/data/dl/reliability/<zone>')
 def reliability_data(zone):
     # A patch for bad spelling
-    if zone == 'philadelphia':
-        zone = 'philiadelphia'
     data = Realtime.select(
             Realtime.timestamp,
             Realtime.agency, Realtime.mode, 
@@ -232,9 +230,6 @@ def zone_dates(zone):
 
 @app.route('/data/reliability/<zone>')
 def reliability(zone):
-    # A patch for bad spelling
-    if zone == 'philadelphia':
-        zone = 'philiadelphia'
     if zone == 'sf':
         data = data = Realtime.select(
             Realtime.agency, Realtime.mode, 
