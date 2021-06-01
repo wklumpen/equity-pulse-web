@@ -41,7 +41,6 @@ def _db_close(exc):
 @app.route('/')
 def home():
     status = SiteStatus.get_main_status()
-    print(status)
     return render_template('home.html', regions=Region.select().where(Region.live == True).order_by(Region.name.asc()), status=status)
 
 @app.route('/methodology')
@@ -88,7 +87,6 @@ def charts(region):
         r = Region.get(Region.tag == region)
         agencies = [model_to_dict(b) for b in Agency.agency_list(region)]
         maxDate = Summary.max_date(f"{region}-msa")
-        print(type(maxDate))
         auto = Summary.auto_access(region, maxDate)
         reliability = False
         if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
@@ -100,8 +98,8 @@ def charts(region):
             fare = '4'
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 
         'state': r.state, 'county': r.county, 'agencies': r.agencies, 'population': r.population,
-        'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies, 'abstract': r.abstract, 'car_access': auto}
-        return render_template('charts.html', view=view)
+        'max_date': maxDate, 'reliability': reliability, 'fare': fare, 'premium': agencies, 'car_access': auto}
+        return render_template('charts.html', view=view, asbtract=r.abstract)
     except DoesNotExist:
         return redirect('/')
 
