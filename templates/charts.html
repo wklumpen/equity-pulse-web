@@ -235,7 +235,7 @@
               <div id="reliability" class="svg-container"></div>
           </div>
           {% else %}
-          <p class='flow-text'>The real-time data required to make reliability calculations is not available in {{view['title']}}.</p>
+          <p class='flow-text'><b>The real-time data required to make reliability calculations is not available in {{view['title']}}.</b></p>
           {% endif %}
       </div>
   </div>
@@ -354,7 +354,7 @@
     <div class="col s12">
         <h2>Definitions</h2>
         <h5 class='left-align'><b>Regional Transit Network</b></h5>
-        <p class='flow-text'>The following agencies provide service in the {{view['title']}} region study area and were included in the analysis. Premium routes used for fare-capped calculation are shown in the second column.</p>
+        <p class='flow-text'>These transit agencies were included in the {{view['title']}} region study area because they operate at least one transit stop within the geographic extent of the region. Premium routes used for fare-based calculations are shown in the second column.</p>
         <table>
             <thead>
                 <th>Agency</th>
@@ -376,7 +376,7 @@
             <h5 class='left-align'><b>Other Definitions</b></h5>
             <ul class='browser-default'>
                 <li class='flow-text'><p><b>Low-Cost Transit:</b> In {{view['title']}}, we defined a low-cost transit trip as a one-way trip with total fares less than ${{view['fare']}}. If the fastest trip to access a job is more than ${{view['fare']}}, then the analysis automatically removes all high-fare, “premium” transit service to see if the job could be accessed in 45 minutes, for less than ${{view['fare']}} taking inexpensive transit modes.</p></li>
-                <li class='flow-text'><p><b>Single mothers</b> are female householders with children at home and no spouse or partner present, according to the 2018 five-year U.S. Census American Community Survey.</p></li>
+                <li class='flow-text'><p><b>Single mothers</b> are female householders with children at home and no spouse or partner present, according to the 2018 five-year U.S. Census American Community Survey. Research suggests that single mothers have higher reliance on public transit for travel than other parents.</p></li>
                 <li class='flow-text'><p><b>Essential workers</b> are employed in essential industries that operated throughout the Covid-19 pandemic. Transit outcomes for essential workers were estimated based on where workers live, using 2017 Longitudinal Employer-Household Dynamics data.
                 </p></li>
                 <li class='flow-text'><p><b>People living in poverty</b> are people whose household incomes are below the federal poverty line, according to the 2018 five-year U.S. Census American Community Survey.
@@ -387,6 +387,10 @@
                 <li class='flow-text'><p><b>Colleges or universities</b> include campuses of educational institutions that offer classes and degree programs, from the associate to the doctoral level.
                 </p></li>
                 <li class='flow-text'><p>Jobs with <b>low wages</b> pay no more than $12,500 in annual wages, according to 2017 U.S. Census Longitudinal Employer-Household Dynamics data.</p></li>
+                <li class='flow-text'><p>The <b>Metropolitan Statistical Area (MSA)</b> region consists of a high-density urban center and its suburbs, and is defined by the U.S. Census Bureau.</p></li>
+                <li class='flow-text'><p>The <b>Economic Region</b> consists of a high-density urban center plus surrounding counties with high exchange of economic activity and travel, and is defined by TransitCenter. This region includes counties that meet at least one of the following criteria, based on LEHD data: where at least 3% of the people who work in the central city live; where at least 3% of the people who work in the MSA live; where at least 3% of residents of the central city work; and/or where at least 3% of residents of the MSA work. </p></li>
+                <li class='flow-text'><p>The <b>Urban Core</b> is a contiguous area with the highest existing transit use and/or highest potential for transit use in the region. TransitCenter defined this area based on the following conditions: workflow to and from the central city (using LEHD data), population density, household incomes, race and ethnicity, and presence of high-frequency and high-quality transit. Local transit advocates gave input on the definitions.</p></li>
+                <li class='flow-text'><p><b>Equity Neighborhoods</b> are areas that local transit advocates and TransitCenter identified as meriting additional resources for transit improvements because of past disinvestments or marginalization in planning decisions.</p></li>
             </ul>
         </div>
     </div>
