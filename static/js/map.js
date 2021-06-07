@@ -22,7 +22,7 @@ var timeSelectHeight = timeSelectBoxHeight - timeSelectMargin.top - timeSelectMa
 
 // Legend dimensions and margins
 var legendMargin = {top: 10, right: 10, bottom: 10, left: 10}
-var legendBoxHeight = 220
+var legendBoxHeight = 240
 var legendBoxWidth = 300
 var legendWidth =  legendBoxWidth - legendMargin.top - legendMargin.bottom
 var legendHeight = legendBoxHeight - legendMargin.left - legendMargin.right
@@ -297,8 +297,8 @@ function updateMap(){
     }
     else if ((is_travel_time == true) & (is_ratio == true)){
       return {
-        fillColor: getQuintileTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
-        color: getQuintileTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+        fillColor: getFixedTravelTimeRatioColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+        color: getFixedTravelTimeRatioColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
         fillOpacity: 0.7,
         weight: 1.0,
         opacity: 0.5
@@ -316,13 +316,13 @@ function updateMap(){
     
   })
   if ((is_travel_time == true) & (is_ratio == false)){
-    setLegendBins(getTravelTimeLabels(Viridis5), state['score']['label']);
+    setLegendBins(getTravelTimeLabels(Viridis5), state['score']['label'], is_ratio);
   }
   else if ((is_travel_time == true) & (is_ratio == true)){
-    setLegendBins(getQuintileTravelTimeLabels(score, state['score']['unit'], Viridis5), state['score']['label'])
+    setLegendBins(getFixedTravelTimeRatioLabels(score, state['score']['unit'], Viridis5), state['score']['label'], is_ratio)
   }
   else{
-    setLegendBins(getQuintileCumulativeLabels(score, state['score']['unit'], Viridis5), state['score']['label']);
+    setLegendBins(getQuintileCumulativeLabels(score, state['score']['unit'], Viridis5), state['score']['label'], is_ratio);
   }
   
 }

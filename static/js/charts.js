@@ -48,7 +48,7 @@ var hospitalAccessSeriesChartWidth = hospitalAccessSeriesBoxWidth - hospitalAcce
 var hospitalAccessSeriesChartHeight = hospitalAccessSeriesBoxHeight - hospitalAccessSeriesMargin.top - hospitalAccessSeriesMargin.bottom
 
 //Time series of travel times to grocery stores
-var storeAccessSeriesMargin = {top: 25, right: 200, bottom: 80, left: 40}
+var storeAccessSeriesMargin = {top: 25, right: 200, bottom: 40, left: 40}
 var storeAccessSeriesBoxWidth = d3.select("#store-access-series").node().getBoundingClientRect().width
 var storeAccessSeriesBoxHeight = d3.select("#store-access-series").node().getBoundingClientRect().height
 var storeAccessSeriesChartWidth = storeAccessSeriesBoxWidth - storeAccessSeriesMargin.left - storeAccessSeriesMargin.right
@@ -479,7 +479,7 @@ function updateAllCharts(){
         jobsAccessGroupsDateMargin, 
         groups, 
         'Jobs Accessible in 45 min by Transit',
-        'Data for travel in the Urban Core of ' + view['title'] + ' on weekdays from 7am-9am (except if noted weeknights 10pm-12am) as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Data for travel in the ' + view['title'] + ' Urban Core on weekdays from 7am-9am (except if noted weeknights 10pm-12am) as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 
     // == Time series job access ==
@@ -492,7 +492,7 @@ function updateAllCharts(){
         jobsAccessSeriesMargin, 
         groups, 
         'Jobs Accessible in 45 min', 
-        'Data for weekdays 7am-9am (except if noted weeknights 10pm-12am) in the Urban Core of ' + view['title'] + '.'
+        'Data for weekdays 7am-9am (except if noted weeknights 10pm-12am) in the ' + view['title'] + ' Urban Core.'
     )
 
     // == Time series Hosp store access ==
@@ -506,7 +506,7 @@ function updateAllCharts(){
         hospitalAccessSeriesMargin, 
         allGroups, 
         'Average Travel Time (min)', 
-        'Data for weeknights 10pm-12am in the Urban Core of ' + view['title'] + '.'
+        'Data for weeknights 10pm-12am in the ' + view['title'] + ' Urban Core.'
     )
 
     // == Time series SNAP store access ==
@@ -520,7 +520,7 @@ function updateAllCharts(){
         storeAccessSeriesMargin, 
         allGroups, 
         'Average Travel Time (min)', 
-        'Data for Saturdays 10am-12pm in the Urban Core of ' + view['title'] + '.'
+        'Data for Saturdays 10am-12pm in the ' + view['title'] + ' Urban Core.'
     )
 
     // == Time series comparison of weekly trips (level of service)  
@@ -542,7 +542,7 @@ function updateAllCharts(){
         losSeriesMargin, 
         allGroups, 
         'Average Trips/Hour', 
-        'Data shows a typical weekday for the Urban Core of ' + view['title'] + '.'
+        'Data shows a typical weekday for the ' + view['title'] + ' Urban Core.'
     )
 
     // == Time series comparison between fare capped and non-capped
@@ -751,10 +751,10 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .call(d3.axisLeft(y).ticks(5));
 
         
-        if (boxWidth < 600){
+        if (boxWidth < 900){
             svg.append("g")
             .attr("transform", "translate(0," + chartHeight + ")")
-            .call(d3.axisBottom(x).ticks(2).tickFormat(d3.timeFormat("%b %Y")));
+            .call(d3.axisBottom(x).ticks(4).tickFormat(d3.timeFormat("%b %Y")));
         }
         else{
             svg.append("g")
@@ -940,7 +940,7 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             })
 
         svg.select('.barDateLabel')
-            .text("Breakdown for " + moment(barDate).format('MMM D, YYYY'))
+            .text("Week of " + moment(barDate).format('MMM D, YYYY'))
     }
 }
 

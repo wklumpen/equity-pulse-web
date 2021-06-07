@@ -147,7 +147,7 @@ var options = {
   },
   "snap": {
     "destName" : "Grocery Stores",
-    "destMeasureLabel": "Travel Time to grocery stores",
+    "destMeasureLabel": "Travel time to grocery stores",
     "destMeasureUnit": "min",
     "destMeasure": "Transit travel time to the closest food stores that accept benefits from the Supplemental Nutrition Assistance Program (SNAP).",
     "measureCode": "M",
@@ -252,7 +252,7 @@ var options = {
   },
   "schools": {
     "destName" : "Colleges & Universities",
-    "destMeasureLabel": "Travel Time to Post-Secondary Schools",
+    "destMeasureLabel": "Travel time to Post-Secondary Schools",
     "destMeasureUnit": "min",
     "destMeasure": "Transit travel time to the closest college or university.",
     "measureCode": "M",
@@ -499,7 +499,6 @@ function setStateFromParams(){
     state['score']['label'] = options[s_key[0]]['destMeasureLabel']
     if (key.includes('_autoY_')){
       state['score']['unit'] = ''
-      state['score']['label'] += " (transit/auto)"
     }
     else{
       state['score']['unit'] = options[s_key[0]]['destMeasureUnit']

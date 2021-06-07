@@ -98,6 +98,32 @@ function getQuintileTravelTimeColor(d, data, colors) {
 }
 
 /**
+ * Get a color scheme based on fixed ranges. Note that the `data` array
+ * passed to the function must have all NaN's removed and have been sorted,
+ * ideally using d3.ascending.
+ * @param {*} d Value to colorize
+ * @param {Array} data Sorted, clean dataset to use for quintile.
+ * @param {Array} colors Color data
+ */
+ function getFixedTravelTimeRatioColor(d, data, colors) {
+  qData = data.filter(d => d > 0.0)
+  // Handle NAN Value label
+  if(isNaN(d)){
+    return nan_color;
+  }
+  if (d < 0.0){
+    return colors[0]
+  }
+  else {
+    return  d >= 4 ? colors[0]: 
+    d >= 3 ? colors[1]:
+    d >= 2 ? colors[2]:
+    d >= 1 ? colors[3]:
+    colors[4];
+  }
+}
+
+/**
  * Color labels based on quintiles.
  * @param {Number} data Data to quintile.
  * @param {String} unit Unit label.
@@ -125,11 +151,28 @@ function getQuintileCumulativeLabels(data, unit, colors){
 function getQuintileTravelTimeLabels(data, unit, colors){
   qData = data.filter(d => d >= 0.0)
   return [
-    {'label': "Top 20% (less than " + styleNumbers(d3.quantile(data, 0.2)) + " " + unit + ')', 'color': colors[4]},
-    {'label': '60 to 80% (' + styleNumbers(d3.quantile(data, 0.4)) + " to " + styleNumbers(d3.quantile(data, 0.2))+ " " + unit + ")", 'color': colors[3]},
-    {'label': '40 to 60% (' + styleNumbers(d3.quantile(data, 0.6)) + " to " + styleNumbers(d3.quantile(data, 0.4))+ " " + unit + ")", 'color': colors[2]},
-    {'label': '20 to 40% (' + styleNumbers(d3.quantile(data, 0.8)) + " to " + styleNumbers(d3.quantile(data, 0.6))+ " " + unit + ")", 'color': colors[1]},
-    {'label': 'Bottom 20% (more than ' + styleNumbers(d3.quantile(data, 0.8)) + " " + unit + ")", 'color': colors[0]},
+    {'label': "Top 20% (less than " + styleNumbers(d3.quantile(qData, 0.2)) + " " + unit + ')', 'color': colors[4]},
+    {'label': '60 to 80% (' + styleNumbers(d3.quantile(qData, 0.4)) + " to " + styleNumbers(d3.quantile(qData, 0.2))+ " " + unit + ")", 'color': colors[3]},
+    {'label': '40 to 60% (' + styleNumbers(d3.quantile(qData, 0.6)) + " to " + styleNumbers(d3.quantile(qData, 0.4))+ " " + unit + ")", 'color': colors[2]},
+    {'label': '20 to 40% (' + styleNumbers(d3.quantile(qData, 0.8)) + " to " + styleNumbers(d3.quantile(qData, 0.6))+ " " + unit + ")", 'color': colors[1]},
+    {'label': 'Bottom 20% (more than ' + styleNumbers(d3.quantile(qData, 0.8)) + " " + unit + ")", 'color': colors[0]},
+    {'label': "No data/outside region", 'color': nan_color},
+  ]
+}
+
+/**
+ * Color labels based on fixed ratios.
+ * @param {Number} data Data to quintile.
+ * @param {String} unit Unit label.
+ * @param {Array} colors Array of 5 colors to use.
+ */
+ function getFixedTravelTimeRatioLabels(data, unit, colors){
+  return [
+    {'label': 'Less than 1', 'color': colors[4]},
+    {'label': '1 to 2', 'color': colors[3]},
+    {'label': '2 to 3', 'color': colors[2]},
+    {'label': '3 to 4', 'color': colors[1]},
+    {'label': 'More than 4', 'color': colors[0]},
     {'label': "No data/outside region", 'color': nan_color},
   ]
 }
