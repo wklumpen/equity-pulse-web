@@ -77,7 +77,9 @@
           <li><code>delay_early</code>: The average schedule deviation in seconds of all vehicles more than 1 minute early.</li>
           <li><code>fraction</code>: The percent of buses sampled that had appropriate data.</li>
         </ul>
-        <a href="/data/dl/reliability/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i class="material-icons left">cloud_download</i>Download Reliability Data</a>
+        <div class='center-align'>
+          <a href="/data/dl/reliability/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i class="material-icons left">cloud_download</i>Download Reliability Data</a>
+        </div>
       {% else %}
         <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{title}}.</p>
       {% endif %}
@@ -87,9 +89,183 @@
   <div class='row'>
       <div class='col s12'>
           <h2>Data Definitons</h2>
-          
+          <h3>Acccess and Transit Scores</h3>
+          <p class='flow-text'>Access and transit scores (and the shareable map URLs) use a unique code to identify the parameter configuration being measured:</p>
+          <p class='flow-text'><code>[opportunity]_[parameter]_[period]_[autoFlag]_[fareFlag]</code></p>
+          <p class='flow-text'>Where <code>period</code> is one of <code>AM</code> (weekday morning peak), <code>PM</code> (weekday evening), or <code>WE</code> (weekend). Transit service column names are in the form <code>los_trips_[period]</code>, where <code>period</code> is one of <code>WKD</code> for a weekday measure and <code>SAT</code> for a Saturday measure. The table below provides a reference for the other various options in the score keys. You can refer to the <a href="/methodology">how it works</a> page for more detail on the scores.</p>
+      </div>
+  </div>
+  <div class='row'>
+      <div class='col s12'>
+          <table class='highlight'>
+              <thead>
+                <tr>
+                  <th rowspan="2">Opportunity</th>
+                  <th rowspan="2">Measure Type</th>
+                  <th rowspan="2">Unit</th>
+                  <th rowspan="2">Code</th>
+                  <th colspan="2">Parameter 1</th>
+                  <th colspan="2">Parameter 2</th>
+                  <th colspan="2">Parameter 3</th>
+                  <th colspan="2">Auto Ratio</th>
+                  <th colspan="2">Fare Capped</th>
+                </tr>
+                <tr>
+                  <td><i>Description</i></td>
+                  <td><i>Code</i></td>
+                  <td><i>Description</i></td>
+                  <td><i>Code</i></td>
+                  <td><i>Description</i></td>
+                  <td><i>Code</i></td>
+                  <td><i>Yes</i></td>
+                  <td><i>No</i></td>
+                  <td><i>Yes</i></td>
+                  <td><i>No</i></td>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Jobs</td>
+                  <td>Cumulative</td>
+                  <td>Jobs</td>
+                  <td><code>C000_P</code></td>
+                  <td>30 min</td>
+                  <td><code>c30</code></td>
+                  <td>45 minutes</td>
+                  <td><code>c45</code></td>
+                  <td>60 minutes</td>
+                  <td><code>c60</code></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td><code>fareY</code></td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Low-Income Jobs</td>
+                  <td>Cumulative</td>
+                  <td>Jobs</td>
+                  <td><code>CE01_P</code></td>
+                  <td>30 min</td>
+                  <td><code>c30</code></td>
+                  <td>45 minutes</td>
+                  <td><code>c45</code></td>
+                  <td>60 minutes</td>
+                  <td><code>c60</code></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td><code>fareY</code></td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Groceries</td>
+                  <td>Travel Time</td>
+                  <td>Minutes</td>
+                  <td><code>snap_M</code></td>
+                  <td>Closest</td>
+                  <td><code>t1</code></td>
+                  <td>3rd Closest</td>
+                  <td><code>t3</code></td>
+                  <td>-</td>
+                  <td></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td>-</td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Hospitals</td>
+                  <td>Travel Time</td>
+                  <td>Minutes</td>
+                  <td><code>hospitals_M</code></td>
+                  <td>Closest</td>
+                  <td><code>t1</code></td>
+                  <td>3rd Closest</td>
+                  <td><code>t3</code></td>
+                  <td>-</td>
+                  <td></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td>-</td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Urgent Care</td>
+                  <td>Travel Time</td>
+                  <td>Minutes</td>
+                  <td><code>urgentcare_M</code></td>
+                  <td>Closest</td>
+                  <td><code>t1</code></td>
+                  <td>3rd Closest</td>
+                  <td><code>t3</code></td>
+                  <td>-</td>
+                  <td></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td>-</td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Pharmacies</td>
+                  <td>Travel Time</td>
+                  <td>Minutes</td>
+                  <td><code>pharmacies_M</code></td>
+                  <td>Closest</td>
+                  <td><code>t1</code></td>
+                  <td>3rd Closest</td>
+                  <td><code>t3</code></td>
+                  <td>-</td>
+                  <td></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td>-</td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Parks</td>
+                  <td>Cumulative</td>
+                  <td>Acres</td>
+                  <td><code>parks_P</code></td>
+                  <td>15 minutes</td>
+                  <td><code>c15</code></td>
+                  <td>30 minutes</td>
+                  <td><code>c30</code></td>
+                  <td>-</td>
+                  <td></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td><code>fareY</code></td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Post-Secondary Institutions</td>
+                  <td>Travel Time</td>
+                  <td>Minutes</td>
+                  <td><code>schools_M</code></td>
+                  <td>Closest</td>
+                  <td><code>t1</code></td>
+                  <td>3rd Closest</td>
+                  <td><code>t3</code></td>
+                  <td>-</td>
+                  <td></td>
+                  <td><code>autoY</code></td>
+                  <td><code>autoN</code></td>
+                  <td>-</td>
+                  <td><code>fareN</code></td>
+                </tr>
+                <tr>
+                  <td>Transit Service Intensity</td>
+                  <td>Trips Per Day</td>
+                  <td>Trips</td>
+                  <td>los_trips</td>
+                  <td colspan="10">Options are WKD for weekday service, SAT for Saturday service.</td>
+                </tr>
+              </tbody>
+          </table>
+          <p><b>Note: </b>An additional gravity-based accessibility score is included for access to jobs, both low-income and all. A gravity-based accessibility measure that uses a continuous decay function to weight opportunities based on how quickly they can be reached. These scores are represented with the paremeter <code>nexp</code>. These scores are not included in the summary data as they are not used in the story page.</p>
       </div>
   </div>
 </div>
 {% include 'footer.html' %}
 {% endblock %}
+
+
