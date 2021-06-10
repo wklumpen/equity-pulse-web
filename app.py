@@ -41,7 +41,7 @@ def _db_close(exc):
 @app.route('/')
 def home():
     status = SiteStatus.get_main_status()
-    return render_template('home.html', regions=Region.select().where(Region.live == True).order_by(Region.name.asc()), status=status)
+    return render_template('home.html', regions=Region.select().order_by(Region.name.asc()), status=status)
 
 @app.route('/methodology')
 def documentation():
@@ -57,6 +57,8 @@ def download():
 def download_region(region):
     try:
         r = Region.get(Region.tag == region)
+        if r.live == False:
+            return redirect('/')
         dates = Run.select(Run.date, Run.note).where(Run.region == region).where(Run.live == True).order_by(Run.date.desc())
         datelist = []
         reliability = False
@@ -73,6 +75,8 @@ def download_region(region):
 def map(region):
     try:
         r = Region.get(Region.tag == region)
+        if r.live == False:
+            return redirect('/')
         # Get the maximum date
         start_date = Summary.max_date(f"{region}-msa")
         view = {'title': r.name, 'name': r.tag, 'lat': r.lat, 'lon': r.lon, 'max_date': start_date}
@@ -85,6 +89,8 @@ def map(region):
 def charts(region):
     try:
         r = Region.get(Region.tag == region)
+        if r.live == False:
+            return redirect('/')
         agencies = [model_to_dict(b) for b in Agency.agency_list(region)]
         maxDate = Summary.max_date(f"{region}-msa")
         auto = Summary.auto_access(region, maxDate)
