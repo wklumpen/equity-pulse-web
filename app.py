@@ -95,7 +95,7 @@ def charts(region):
         maxDate = Summary.max_date(f"{region}-msa")
         auto = Summary.auto_access(region, maxDate)
         reliability = False
-        if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
+        if region in ['nyc', 'chicago', 'sf', 'philadelphia', 'dc']:
             reliability = True
 
         if region in ['boston', 'nyc', 'sf', 'dc']:
