@@ -1,34 +1,42 @@
 var popStyle = {
     'pop_total' : {
         'label': 'Everyone',
+        'sentence': 'everyone',
         'color': "#7F7F7F"
     },
     'pop_asiapacific' : {
         'label': "Asian",
+        'sentence': 'Asian people, Native Hawaiians, and Pacific Islanders',
         'color': "#1F77B4"
     },
     'pop_black': {
         'label': "Black",
+        'sentence': 'Black people',
         'color': "#2CA02C"
     },
     'pop_hispanic': {
         'label': "Latinx",
+        'sentence': "Latinx people",
         'color': "#D62728"
     },
     'pop_white': {
         'label': "White",
+        'sentence': 'white people',
         'color': "#9467BD"
     },
     'pop_poverty': {
         'label': "In Poverty",
+        'sentence': 'people in poverty',
         'color': '#8C564B'
     },
     'hhld_single_mother': {
         'label': 'Single Mother',
+        'sentence': 'single mothers',
         'color': '#E377C2'
     },
     'workers_essential': {
         'label': 'Essential Worker',
+        'sentence': 'essential workers',
         'color': '#FF7F0E'
     },
     'everyone_fares': {
@@ -51,7 +59,9 @@ var carLabels = {
 
 var subgroupLabels ={
     'car_time': 'by Car',
-    'bus_time': 'by Transit'
+    'bus_time': 'by Transit',
+    'with_fare': 'With a fare budget (low-cost trips)',
+    'without_fare': 'Without a fare budget (all trips)'
 }
 
 var colorList = ['#1F77B4', '#FF7F0E', '#D62728', '#9467BD', '#8C564B']

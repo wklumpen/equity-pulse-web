@@ -285,44 +285,55 @@ function updateMap(){
   else{
     var is_ratio = false;
   }
-  bgLayer.setStyle(function(feature){
-    if ((is_travel_time == true) & (is_ratio == false)){
-      return {
-        fillColor: getTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], Viridis5),
-        color: getTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], Viridis5),
-        fillOpacity: 0.7,
-        weight: 1.0,
-        opacity: 0.5
-      }
-    }
-    else if ((is_travel_time == true) & (is_ratio == true)){
-      return {
-        fillColor: getFixedTravelTimeRatioColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
-        color: getFixedTravelTimeRatioColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
-        fillOpacity: 0.7,
-        weight: 1.0,
-        opacity: 0.5
-      }
-    }
-    else{
-      return {
-        fillColor: getQuintileCumulativeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
-        color: getQuintileCumulativeColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
-        fillOpacity: 0.7,
-        weight: 1.0,
-        opacity: 0.5
-      }
-    }
-    
-  })
-  if ((is_travel_time == true) & (is_ratio == false)){
-    setLegendBins(getTravelTimeLabels(Viridis5), state['score']['label'], is_ratio);
-  }
-  else if ((is_travel_time == true) & (is_ratio == true)){
-    setLegendBins(getFixedTravelTimeRatioLabels(score, state['score']['unit'], Viridis5), state['score']['label'], is_ratio)
+
+  if (is_travel_time == false){
+    // Get the labels from the database
+    var fetchURL = '/data/bin/'+ view['name'] + '/' + state['score']['key']
+    d3.json(fetchURL).then(function(data){
+      var bins = [data.bin_0, data.bin_1, data.bin_2, data.bin_3, data.bin_4, data.bin_5]
+      // Set color styles on features
+      bgLayer.setStyle(function(feature){
+        return {
+          fillColor: getFiveBinCumulativeColor(state['score']['data'][parseInt(feature.properties.GEOID)], bins, Viridis5),
+          color: getFiveBinCumulativeColor(state['score']['data'][parseInt(feature.properties.GEOID)], bins, Viridis5),
+          fillOpacity: 0.7,
+          weight: 1.0,
+          opacity: 0.5
+        }
+      })
+      // Update the legends
+      setLegendBins(getFiveBinCumulativeLabels(bins, state['score']['unit'], Viridis5), state['score']['label'], false);
+
+    })
   }
   else{
-    setLegendBins(getQuintileCumulativeLabels(score, state['score']['unit'], Viridis5), state['score']['label'], is_ratio);
+    bgLayer.setStyle(function(feature){
+      if (is_ratio == false){
+        return {
+          fillColor: getTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], Viridis5),
+          color: getTravelTimeColor(state['score']['data'][parseInt(feature.properties.GEOID)], Viridis5),
+          fillOpacity: 0.7,
+          weight: 1.0,
+          opacity: 0.5
+        }
+      }
+      else{
+        return {
+          fillColor: getFixedTravelTimeRatioColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+          color: getFixedTravelTimeRatioColor(state['score']['data'][parseInt(feature.properties.GEOID)], score, Viridis5),
+          fillOpacity: 0.7,
+          weight: 1.0,
+          opacity: 0.5
+        }
+      }
+    })
+
+    if (is_ratio == false){
+      setLegendBins(getTravelTimeLabels(Viridis5), state['score']['label'], is_ratio);
+    }
+    else{
+      setLegendBins(getFixedTravelTimeRatioLabels(score, state['score']['unit'], Viridis5), state['score']['label'], is_ratio)
+    }
   }
   
 }

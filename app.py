@@ -19,7 +19,7 @@ import csv
 from config import DevelopmentConfig, REGION_LIST
 
 # Custom local imports
-from db import Score, Population, BlockGroup, Tag, Region, Summary, Run, Realtime, SiteStatus, Agency
+from db import Score, Population, BlockGroup, Tag, Region, Summary, Run, Realtime, SiteStatus, Agency, Bin
 from dbconfig import database
 
 app = Flask(__name__)
@@ -127,10 +127,10 @@ def score(zone, score_key, date_key):
     scores = Score.by_tag_type_with_date(zone, score_key, date_key)
     return jsonify(scores)
 
-# @app.route('/data/bg/<tag>')
-# def data_bg_tag(tag):
-#     bg = BlockGroup.by_tag(tag)
-#     return jsonify([model_to_dict(b) for b in bg])
+@app.route('/data/bin/<region>/<score_key>')
+def cumulative_bins(region, score_key):
+    bins = Bin.select().where(Bin.region == region).where(Bin.score_key == score_key)
+    return jsonify([model_to_dict(b) for b in bins][0])
 
 @app.route('/data/dl/view/csv/<zone>/<score_key>/<date_key>')
 def current_data_csv(zone, score_key, date_key):
@@ -138,7 +138,7 @@ def current_data_csv(zone, score_key, date_key):
     out = []
     for key, val in scores.items():
         out.append({'block_group': key, 'score': val})
-    return send_csv(out, f"tcep_{zone}_{score_key}_{date_key}.csv", ['block_group', 'score'])
+    return send_csv(out, f"ted_{zone}_{score_key}_{date_key}.csv", ['block_group', 'score'])
 
 @app.route('/data/dl/view/geojson/<zone>/<score_key>/<date_key>')
 def current_data_geojson(zone, score_key, date_key):
@@ -154,17 +154,17 @@ def current_data_geojson(zone, score_key, date_key):
            feature['properties']['score'] = out[int(feature['properties']['GEOID'])] 
         return Response(json.dumps(data),
             mimetype='application/json',
-            headers={'Content-Disposition':f'attachment;filename=tcep_{score_key}_{date_key}.geojson'})
+            headers={'Content-Disposition':f'attachment;filename=ted_{zone}_{score_key}_{date_key}.geojson'})
 
 @app.route('/data/dl/all/<zone>/<date_key>')
 def all_data_csv(zone, date_key):
     scores = Score.by_tag_type_with_date_all(zone, date_key)
-    return send_csv(scores.to_dict(orient='records'), f"tcep_{zone}_{date_key}_all.csv", scores.columns)
+    return send_csv(scores.to_dict(orient='records'), f"ted_{zone}_{date_key}_all.csv", scores.columns)
 
 @app.route('/data/dl/primal/<zone>/<date_key>')
 def primal_download(zone, date_key):
     scores = Score.by_tag_type_with_date_primal(zone, date_key)
-    return send_csv(scores.to_dict(orient='records'), f"tcep_{zone}_{date_key}_cumulative.csv", scores.columns)
+    return send_csv(scores.to_dict(orient='records'), f"ted_{zone}_{date_key}_cumulative.csv", scores.columns)
 
 @app.route('/data/dl/summary/<zone>')
 def summary_data(zone):
@@ -174,7 +174,7 @@ def summary_data(zone):
     # Get rid of the ID column
     for item in summary_d:
         del(item['id'])
-    return send_csv(summary_d, f"tcep_summary_{zone}.csv", columns)
+    return send_csv(summary_d, f"ted_summary_{zone}.csv", columns)
 
 @app.route('/data/dl/reliability/<zone>')
 def reliability_data(zone):
@@ -195,12 +195,12 @@ def reliability_data(zone):
         del(entry['id'])
         del(entry['region'])
     columns = ['timestamp', 'agency', 'mode', 'otp', 'delay_abs', 'delay_late', 'delay_early', 'fraction']
-    return send_csv(data, f"tcep_reliability_{zone}.csv", columns)
+    return send_csv(data, f"ted_reliability_{zone}.csv", columns)
 
 @app.route('/data/dl/pop/<zone>')
 def pop_download(zone):
     scores = Population.for_export(zone)
-    return send_csv(scores.to_dict(orient='records'), f"tcep_population_{zone}_all.csv", scores.columns)
+    return send_csv(scores.to_dict(orient='records'), f"ted_population_{zone}_all.csv", scores.columns)
 
 @app.route('/data/pop/<zone>/<pop_key>')
 def data_population(zone, pop_key):

@@ -54,7 +54,7 @@ var storeAccessSeriesBoxHeight = d3.select("#store-access-series").node().getBou
 var storeAccessSeriesChartWidth = storeAccessSeriesBoxWidth - storeAccessSeriesMargin.left - storeAccessSeriesMargin.right
 var storeAccessSeriesChartHeight = storeAccessSeriesBoxHeight - storeAccessSeriesMargin.top - storeAccessSeriesMargin.bottom
 
-var jobsFaresSeriesMargin = {top: 50, right: 20, bottom: 40, left: 20}
+var jobsFaresSeriesMargin = {top: 100, right: 20, bottom: 40, left: 20}
 var jobsFaresSeriesBoxWidth = d3.select("#jobs-fares-series").node().getBoundingClientRect().width
 var jobsFaresSeriesBoxHeight = d3.select("#jobs-fares-series").node().getBoundingClientRect().height
 var jobsFaresSeriesChartWidth = jobsFaresSeriesBoxWidth - jobsFaresSeriesMargin.left - jobsFaresSeriesMargin.right
@@ -273,7 +273,6 @@ function updateCoronaPlot(){
         .on("mousemove", function () {
             mouse = d3.mouse(this);
             mouseX = mouse[0] - coronaMargin.left
-            // console.log(mouse)
             date = moment(x.invert(mouseX)).startOf('day').valueOf();
 
             // Now look up the hovered data
@@ -545,7 +544,7 @@ function updateAllCharts(){
         'Data shows a typical weekday for the ' + view['title'] + ' Urban Core.'
     )
 
-    // == Time series comparison between fare capped and non-capped
+    // == Single date comparison between fare capped and non-capped
     var scores = chartData.filter(d => (d['zone'] == view['name']+'-msa'))
     var fareCompare = []
     var autoCompareJobs = []
@@ -555,21 +554,21 @@ function updateAllCharts(){
         'pop_poverty'
     ]
     allGroups.forEach(function(key, index){
-        var subset = scores.filter(d => d['description'] == key)
-        // Now we get some dates
-        var plotDates = []
-        subset.forEach(function(dateKey, index){
-            if (!plotDates.includes(dateKey.date)){
-                plotDates.push(dateKey.date)
-            }
-        })
-        plotDates.forEach(function(dateKey, index){
-            var withFare = subset.filter(d => (d['date'] == dateKey) & (d.score_key == 'C000_P_c45_AM_autoN_fareY'))[0].value
-            var withoutFare = subset.filter(d => (d['date'] == dateKey) & (d.score_key == 'C000_P_c45_AM_autoN_fareN'))[0].value
-            var newValue = 100*(withFare/withoutFare)
-
-            fareCompare.push({'date': dateKey, 'description': key, 'score_key':'extra_jobs_premium', 'value': newValue, 'zone': view['name']+'-msa'})
-        })
+        var subset = chartData.filter(d => d['description'] == key)
+        var withFare = subset.filter(d => (d['date'] == maxDate) & (d.score_key == 'C000_P_c60_AM_autoN_fareY'))[0].value
+        var withoutFare = subset.filter(d => (d['date'] == maxDate) & (d.score_key == 'C000_P_c60_AM_autoN_fareN'))[0].value
+        fareCompare.push({
+            'description': key,
+            'subgroup': 'with_fare',
+            'value': withFare,
+            'pct': 100*withFare/withoutFare,
+            'zone': view['name']+'-msa'})
+        fareCompare.push({
+            'description': key,
+            'subgroup': 'without_fare',
+            'value': withoutFare,
+            'pct': 100*withFare/withoutFare,
+            'zone': view['name']+'-msa'})
     })
 
     carGroups = [
@@ -599,20 +598,37 @@ function updateAllCharts(){
         carGroups,
         ['car_time', 'bus_time'],
         'Travel Time to Destinations',
+        carLabels,
+        'min',
         'Data for Saturdays from 10am-12pm in the ' + view['title'] + ' MSA, as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
+    
+    // Quick adjustment of the fare labels for the grouped chart
+    var fareLabels = {}
+    for (var key in popStyle){
+        fareLabels[key] = popStyle[key]['label']
+    }
+    fareCompare = fareCompare.slice().sort((a, b) => d3.descending(a.value, b.value))
+    fareGroups = []
+    var test = fareCompare.filter(
+        d => d['subgroup'] == 'without_fare').slice().sort(
+            (a, b) => d3.descending(a.value, b.value))
+    test.forEach(val => {
+        fareGroups.push(val['description'])
+    })
 
-    // == Time series comparison between fare capped and non-capped
-    barChart(
+    fareBarChart(
         jobsFaresSereiesBox, 
         jobsFaresSeriesSVG, 
-        fareCompare.filter(d => d['date'] == maxDate),
-        maxDate,
-        '#jobs-fares-series', 
-        jobsFaresSeriesMargin, 
-        allGroups, 
-        'Jobs accessible by low-cost transit trips as percent of all accessible jobs',
-        'Data for weekdays 7am-9am in ' + view['title'] + ' MSA as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        fareCompare,
+        '#jobs-fares-series',
+        jobsFaresSeriesMargin,
+        fareGroups,
+        ['without_fare', 'with_fare'],
+        'Number of Jobs Reachable in 60 Minutes With and Without a Fare Budget',
+        fareLabels,
+        '',
+        'Data for travel in the ' + view['title'] + ' MSA, on weekdays from 7am-9am as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 }
 
@@ -838,7 +854,6 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
     })
 
     sticks.on('mouseover', function (d) {
-        console.log("Moused over stick", d)
         d3.select(this)
         .transition()
         .attr('stroke', '#2D74ED')
@@ -847,7 +862,6 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
     })
     .on('mouseout', function (d) {
         if (d == barDate){
-            console.log("MaxDate")
             d3.select(this).transition().attr('stroke', '#BEBEBE')
         }
         else{
@@ -900,14 +914,6 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .attr('text-anchor', 'left')
             .attr("dy", ".35em")
             .attr("font-size", "0.8em")
-            // .style('font-weight', function(d){
-            //     if (d.description == 'pop_total'){
-            //         return 'bold';
-            //     }
-            //     else{
-            //         return 'normal';
-            //     }
-            // })
             .style('fill', function(d){
                 if (d.description == 'pop_total'){
                     return 'white';
@@ -1057,7 +1063,7 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .attr("font-size", "0.7em")
 }
 
-function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel, note){
+function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel, groupLabels, unit, note){
     var boxWidth = d3.select(id).node().getBoundingClientRect().width
     var boxHeight = d3.select(id).node().getBoundingClientRect().height
     var chartWidth = boxWidth - margin.left - margin.right
@@ -1069,7 +1075,7 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
     // var toPlot = chartData.filter(d => (d['description'] == key));
 
     var x = d3.scaleBand()
-        .domain(groups.map(d => carLabels[d]))
+        .domain(groups.map(d => groupLabels[d]))
         .range([margin.left, chartWidth])
         .padding(0.2);  
 
@@ -1090,7 +1096,7 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .data(scores)
         .enter()
         .append('rect')
-        .attr("x", d => x(carLabels[d.description]) + xSub(d.subgroup))
+        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup))
         .attr('y', d => y(d.value))
         .attr("width", xSub.bandwidth())
         .attr("height", d => chartHeight - y(d.value))
@@ -1101,9 +1107,9 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .data(scores)
         .enter()
         .append("text")
-        .attr("x", d => x(carLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth()/2)
+        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth()/2)
         .attr('y', d => y(d.value) - 6)
-        .text(d => d.value.toFixed(0) + " min")
+        .text(d => styleNumbers(d.value) + " " + unit)
         .attr('text-anchor', 'middle')
         .attr("font-size", "0.8em")
 
@@ -1150,6 +1156,126 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .text(ylabel)
         .attr('text-anchor', 'start')
         .attr('font-weight', 'bold')
+}
+
+function fareBarChart(box, svg, scores, id, margin, groups, 
+    subgroups, ylabel, groupLabels, unit, note){
+    var boxWidth = d3.select(id).node().getBoundingClientRect().width
+    var boxHeight = d3.select(id).node().getBoundingClientRect().height
+    var chartWidth = boxWidth - margin.left - margin.right
+    var chartHeight = boxHeight - margin.top - margin.bottom
+
+    box.attr('width', boxWidth).attr('height', boxHeight);
+    svg.selectAll('*').remove();
+
+    // var toPlot = chartData.filter(d => (d['description'] == key));
+    var x = d3.scaleBand()
+        .domain(groups.map(d => groupLabels[d]))
+        .range([margin.left, chartWidth])
+        .padding(0.2);  
+
+    var y = d3.scaleLinear()
+        .domain([0, d3.max(scores, d => d.value)])
+        .range([chartHeight, 0])
+
+    var xSub = d3.scaleBand()
+        .domain(subgroups)
+        .range([0, x.bandwidth()])
+        .padding(0.05)
+
+    // var color = d3.scaleOrdinal()
+    //     .domain(subgroups)
+    //     .range(['#f58426', 'purple'])
+
+    var opacity = d3.scaleOrdinal()
+        .domain(subgroups)
+        .range([0.8, 0.3])
+
+    bars = svg.selectAll('bars')
+        .data(scores)
+        .enter()
+        .append('rect')
+        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup))
+        .attr('y', d => y(d.value))
+        .attr("width", xSub.bandwidth())
+        .attr("height", d => chartHeight - y(d.value))
+        .attr("fill", d => popStyle[d.description]['color'])
+        .attr('opacity', d => opacity(d.subgroup))
+
+    svg.selectAll("barLabel")
+        .data(scores)
+        .enter()
+        .append("text")
+        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth()/2)
+        .attr('y', d => y(d.value) - 6)
+        .text(d => styleNumbers(d.value) + " " + unit)
+        .attr('text-anchor', 'middle')
+        .attr("font-size", "0.7em")
+
+    svg.append("g")
+        .attr("transform", "translate(0," + chartHeight + ")")
+        .call(d3.axisBottom(x))
+        .selectAll('text')
+        .style("text-anchor", "middle");
+
+    svg.append("text")
+        .attr("x", chartWidth)
+        .attr('y', chartHeight + margin.bottom)
+        .attr("dy", "-.75em")
+        .text(note)
+        .attr('text-anchor', 'end')
+        .attr("font-size", "0.7em")
+
+    // Now a legend
+    svg.selectAll('legendText')
+        .data(subgroups)
+        .enter()
+        .append("text")
+        .attr("x", margin.left + 20)
+        .attr('y', d => 52 - margin.top + 15*subgroups.indexOf(d))
+        .text(d => subgroupLabels[d])
+        .attr('text-anchor', 'start')
+        .attr('dominant-baseline', 'middle')
+        .attr("font-size", "0.8em")
+
+    svg.selectAll('legendBox')
+        .data(subgroups)
+        .enter()
+        .append('rect')
+        .attr('x', margin.left)
+        .attr('y', d => 47 - margin.top + 15*(subgroups.indexOf(d)))
+        .attr('width', 10)
+        .attr('height', 10)
+        .attr('fill', "#7F7F7F")
+        .attr('opacity', d => opacity(d))
+
+    svg.append('text')
+        .attr("x", margin.left)
+        .attr('y', 20 - margin.top)
+        .text(ylabel)
+        .attr('text-anchor', 'start')
+        .attr('font-weight', 'bold')
+
+    subtitle = svg.append('text')
+        .attr("x", margin.left)
+        .attr('y', 37 - margin.top)
+        .text("Hover over a group to learn more")
+        .attr('text-anchor', 'start')
+        .attr('font-style', 'italic')
+        .attr("font-size", "0.9em")
+
+    bars.on('mouseover', function (d) {
+        subtitle.text("On average, " + popStyle[d.description]['sentence'] + " with a fare budget can reach " + d.pct.toFixed(0) +'% of the total accessible jobs')
+        .transition()
+        d3.select(this)
+        .transition()
+        .attr('opacity', opacity(d.subgroup) + 0.2)
+    })
+    .on('mouseout', function (d) {
+        d3.select(this)
+        .transition()
+        .attr('opacity', opacity(d.subgroup))
+    })
 }
 
 function populateDates(){

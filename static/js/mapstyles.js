@@ -72,6 +72,29 @@ function getQuintileCumulativeColor(d, data, colors) {
 }
 
 /**
+ * Get a color scheme based on bins provided by the user.
+ * @param {*} d Value to colorize
+ * @param {Array} data Sorted, clean dataset to use for quintile.
+ * @param {Array} colors Color data
+ */
+ function getFiveBinCumulativeColor(d, bins, colors) {
+  if(isNaN(d)){
+    return nan_color;
+  }
+  if (d < 0.0){
+    return colors[4]
+  }
+  else {
+    return  d >= bins[4] ? colors[4]: 
+      d >= bins[3] ? colors[3]:
+      d >= bins[2] ? colors[2]:
+      d >= bins[1] ? colors[1]:
+      colors[0];
+  }
+}
+
+
+/**
  * Get a color scheme based on quintile ranges. Note that the `data` array
  * passed to the function must have all NaN's removed and have been sorted,
  * ideally using d3.ascending.
@@ -152,10 +175,27 @@ function getQuintileTravelTimeLabels(data, unit, colors){
   qData = data.filter(d => d >= 0.0)
   return [
     {'label': "Top 20% (less than " + styleNumbers(d3.quantile(qData, 0.2)) + " " + unit + ')', 'color': colors[4]},
-    {'label': '60 to 80% (' + styleNumbers(d3.quantile(qData, 0.4)) + " to " + styleNumbers(d3.quantile(qData, 0.2))+ " " + unit + ")", 'color': colors[3]},
-    {'label': '40 to 60% (' + styleNumbers(d3.quantile(qData, 0.6)) + " to " + styleNumbers(d3.quantile(qData, 0.4))+ " " + unit + ")", 'color': colors[2]},
-    {'label': '20 to 40% (' + styleNumbers(d3.quantile(qData, 0.8)) + " to " + styleNumbers(d3.quantile(qData, 0.6))+ " " + unit + ")", 'color': colors[1]},
+    {'label': '60 to 80% (' + styleNumbers(d3.quantile(qData, 0.4)) + " to " + styleNumbers(d3.quantile(qData, 0.2)) + " " + unit + ")", 'color': colors[3]},
+    {'label': '40 to 60% (' + styleNumbers(d3.quantile(qData, 0.6)) + " to " + styleNumbers(d3.quantile(qData, 0.4)) + " " + unit + ")", 'color': colors[2]},
+    {'label': '20 to 40% (' + styleNumbers(d3.quantile(qData, 0.8)) + " to " + styleNumbers(d3.quantile(qData, 0.6)) + " " + unit + ")", 'color': colors[1]},
     {'label': 'Bottom 20% (more than ' + styleNumbers(d3.quantile(qData, 0.8)) + " " + unit + ")", 'color': colors[0]},
+    {'label': "No data/outside region", 'color': nan_color},
+  ]
+}
+
+/**
+ * Color labels based on fixed values provided.
+ * @param {Number} data Data to quintile.
+ * @param {String} unit Unit label.
+ * @param {Array} colors Array of 5 colors to use.
+ */
+ function getFiveBinCumulativeLabels(bins, unit, colors){
+  return [
+    {'label': styleNumbers(bins[4]) + " to " + styleNumbers(bins[5]) + " " + unit, 'color': colors[4]},
+    {'label': styleNumbers(bins[3]) + " to " + styleNumbers(bins[4]) + " " + unit, 'color': colors[3]},
+    {'label': styleNumbers(bins[2]) + " to " + styleNumbers(bins[3]) + " " + unit, 'color': colors[2]},
+    {'label': styleNumbers(bins[1]) + " to " + styleNumbers(bins[2]) + " " + unit, 'color': colors[1]},
+    {'label': 'Less than ' + styleNumbers(bins[1]) + " " + unit, 'color': colors[0]},
     {'label': "No data/outside region", 'color': nan_color},
   ]
 }

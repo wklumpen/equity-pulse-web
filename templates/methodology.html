@@ -25,7 +25,7 @@
             <p class='flow-text'>Klumpenhouwer, W., Allen, J., Li, L., Liu, R., Robinson, M., Da Silva, D. L., Farber, S., Karner, A., Rowangould, D., Shalaby, A., Buchanan, M., & Higashide, S. (2021). <a href='https://findingspress.org/article/25224-a-comprehensive-transit-accessibility-and-equity-dashboard'>A Comprehensive Transit Accessibility and Equity Dashboard.</a><i>Findings</i>, July.
 
             <h2>How is the information shown on the Dashboard calculated?</h2>
-            <p class='flow-text'>Below we provide a brief description of the methods used to create the dashboard. A more detailed methodology is available upon request. Please contact dashboard@transitcenter.org for more information.</p>
+            <p class='flow-text'>Below we provide a brief description of the methods used to create the dashboard. A more detailed methodology is available <a href="https://transitcenter.org/wp-content/uploads/2021/07/TransitCenterEquityDashboardTechDocumentation_062421.pdf">here</a>(PDF). Please contact dashboard@transitcenter.org for more information.</p>
 
             <p class='flow-text'><b>Accessibility</b> represents the ease with which people can reach the places they want and need to go. Accessibility is a function of transportation and land use (where essential destinations are located). Access to opportunities measures, which represent the ease of reaching a specific type of destination, are a commonly used measure of accessibility. The dashboard evaluates access to opportunity on public transit with several measures, including number of jobs, low-wage jobs, or amount of park space accessible in a set amount of time. The dashboard also shows access to opportunity in terms of the travel times to nearby grocery stores, hospitals, urgent care facilities, pharmacies, and colleges or universities.</p>
 
@@ -72,7 +72,7 @@
                 <p class='flow-text'>In addition the source code used to generate the measures and the web dashboard are publicly available:
                 <ul class='browser-default'>
                     <li class='flow-text'>Fares, travel times, access calculations (including access to destinations and transit service): <a href="https://github.com/diluisi/TransitCenter">https://github.com/diluisi/TransitCenter</a></li>
-                    <li class='flow-text'>Accessibility measures (general functions): <a href="https://github.com/wklumpen/equity-pulse-realtime">https://github.com/jamaps/tracc</a></li>
+                    <li class='flow-text'>Accessibility measures (general functions): <a href="https://github.com/jamaps/tracc">https://github.com/jamaps/tracc</a></li>
                     <li class='flow-text'>Realtime Data Gathering (including reliability measures): <a href="https://github.com/wklumpen/equity-pulse-realtime">https://github.com/wklumpen/equity-pulse-realtime</a></li>
                     <li class='flow-text'>Website Code: <a href="https://github.com/wklumpen/equity-pulse-web">https://github.com/wklumpen/equity-pulse-web</a></li>
                 </ul>
@@ -251,6 +251,9 @@
             <h2 id='endnote'>Transit Agencies and Routes Used</h2>
             {% for region in regions %}
                 <h3>{{region.name}}</h3>
+                {% if region.tag == 'nyc' %}
+                  <p><i>Data Note: The Staten Island Ferry is incorrectly classified as a "premium" route, despite being a free service. This is <a href="https://github.com/wklumpen/equity-pulse-web/issues/130">known issue</a>, however due to the relatively low impact of the error and the high cost to correct it we are leaving it as-is. A more detailed explanation can be found <a href="https://github.com/wklumpen/equity-pulse-web/issues/130#issuecomment-938087288">here</a>.</i></p>
+                {% endif %}
                 <table>
                 <thead>
                     <th>Agency</th>
@@ -290,7 +293,7 @@
                     <td>Kevin Zolkiewicz</td>
                     <td>Benjamin Dziechciowski</td>
                     <td>Frederick Dennstedt</td>
-                    <td>Alex Proimos</td>
+                    <td>Peter Burkas</td>
                     <td>David Wilson</td>
                     <td>Sunny Lam</td>
                     <td>Thomas Hawk</td>
