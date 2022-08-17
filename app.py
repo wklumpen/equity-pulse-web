@@ -62,7 +62,7 @@ def download_region(region):
         dates = Run.select(Run.date, Run.note).where(Run.region == region).where(Run.live == True).order_by(Run.date.desc())
         datelist = []
         reliability = False
-        if region in ['nyc', 'chicago', 'sf', 'philadelphia']:
+        if region in ['nyc', 'chicago', 'sf', 'philadelphia', 'dc']:
             reliability = True
         for d in dates:
             datelist.append([d.date, d.note])
