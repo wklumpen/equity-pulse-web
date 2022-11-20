@@ -17,167 +17,184 @@
 {% endblock%}
 
 {% block content %}
-  <div class='container-main'>
-      <div id='loading'>LOADING</div>
-      <div id="map">
-        <script>
-            var view = JSON.parse('{{ view | tojson}}');
-            var zoom = '{{zoom}}';
-            var bgURL = '/static/data/{{region}}_bg.geojson';
-        </script>
+<div class='container-main'>
+  <div id='loading'>LOADING</div>
+  <div id="map">
+    <script>
+      var view = JSON.parse('{{ view | tojson}}');
+      var zoom = '{{zoom}}';
+      var bgURL = '/static/data/{{region}}_bg.geojson';
+    </script>
+  </div>
+
+  <div id="sidebar" class="leaflet-sidebar collapsed">
+    <!-- Nav tabs -->
+    <div class="leaflet-sidebar-tabs">
+      <ul role="tablist">
+        <!-- top aligned tabs -->
+        <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Customize the Map"></i></a></li>
+        <!-- <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li> -->
+        <li><a href="#story" role="tab"><i class="fa fa-book" title="Understand the Story"></i></a></li>
+        <li><a href="#share" role="tab"><i class="fa fa-share" title="Share the Map"></i></a></li>
+        <li><a href="#download" role="tab"><i class="fa fa-download" title="Download the Data"></i></a></li>
+        <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
+      </ul>
     </div>
 
-    <div id="sidebar" class="leaflet-sidebar collapsed">
-      <!-- Nav tabs -->
-      <div class="leaflet-sidebar-tabs">
-          <ul role="tablist"> <!-- top aligned tabs -->
-              <li><a href="#data" role="tab"><i class="fa fa-cogs" title="Customize the Map"></i></a></li>
-              <!-- <li><a href="#charts" role="tab"><i class="fa fa-chart-line" title="Summary charts"></i></a></li> -->
-              <li><a href="#story" role="tab"><i class="fa fa-book" title="Understand the Story"></i></a></li>
-              <li><a href="#share" role="tab"><i class="fa fa-share" title="Share the Map"></i></a></li>
-              <li><a href="#download" role="tab"><i class="fa fa-download" title="Download the Data"></i></a></li>
-              <li><a href="#info" role="tab"><i class="fa fa-info-circle"></i></a></li>
-          </ul>
+    <!-- Tab panes -->
+    <div class="leaflet-sidebar-content">
+      <div class="leaflet-sidebar-pane" id="data">
+        <h1 class="leaflet-sidebar-header">
+          Customize this Map
+          <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+        </h1>
+        <p>Adjust the settings to select metrics to display on the map, then click “Update Map” below to see results.
+          Select a date from the timeline on the bottom right to see how transit access has changed over time.</p>
+
+        <p class="label">Opportunity to Access</p>
+        <div class="dropdown-select">
+          <select class="browser-default" id="destination" name="destination" title="Choose a destination."
+            onchange="optionsUpdate()">
+            <option value="C000" selected>Jobs</option>
+            <option value="CE01">Low-Wage Jobs</option>
+            <option value="parks">Parks</option>
+            <option value="snap">Grocery Stores</option>
+            <option value="hospitals">Hospitals</option>
+            <option value="urgentcare">Urgent Care Facilities</option>
+            <option value="pharmacies">Pharmacies</option>
+            <option value="schools">Colleges and Universities</option>
+            <option value="los">Transit Service</option>
+          </select>
+        </div>
+
+        <p id="measurement"></p>
+
+        <p class="label">Time Period</p>
+        <div class="dropdown-select">
+          <select class="browser-default" id="period" name="period" title="Choose a time period.">
+          </select>
+        </div>
+
+        <p class="label">More Trip Options</p>
+        <div class="dropdown-select">
+          <select class="browser-default" id="param" name="param" title="Choose a parameter.">
+          </select>
+        </div>
+
+        <p id="parameterDesc"></p>
+
+        <p class="label">Region</p>
+        <div class="dropdown-select">
+          <select class="browser-default" id="zones" name="zones"
+            title="Choose a portion of the region to display on the map.">
+            <option value="msa">Metropolitan Statistical Area</option>
+            <option value="er">Economic Region</option>
+            <option value="urban">Urban Core</option>
+            <option value="equity">Equity Neighborhoods</option>
+          </select>
+        </div>
+
+        <p id="regionDisc">Choose a geographic area to display. The “metropolitan statistical area” consists of a
+          high-density urban center and its suburbs, as defined by the federal government. The “economic region”
+          consists of counties with high exchange of travel. The “urban core” consists of dense areas with diverse
+          demographics or frequent transit service. “Equity neighborhoods” are underserved by transit and should be
+          prioritized for quality service.</p>
+
+        <p class="label">Show Only Affordable Trips</p>
+        <div class="dropdown-select">
+          <select class="browser-default" id="fare" name="fare" title="Choose a parameter.">
+          </select>
+        </div>
+
+        <p id="fareDisc">Show only transit options with one-way fares of $4 or less, including transfers (in LA,
+          Chicago, Philadelphia), or $5 or less, including transfers (in Bay Area, DC, Boston, or NYC).</p>
+
+        <p class="label">Show How Transit Compares to Driving</p>
+        <div class="dropdown-select">
+          <select class="browser-default" id="auto" name="auto" title="Choose a parameter.">
+          </select>
+        </div>
+
+        <p id="ratioDisc">For access measures, a ratio of 1.0 means someone can reach an equal number of destinations by
+          transit or car in a given time; 0.1 means reaching one-tenth the number of destinations by transit as by car.
+          For travel time measures, a ratio of 1.0 means that trips are equally long by transit or car; 2.0 means that
+          trips by transit take twice as long as by car.</p>
+
+        <p class="label">Demographics</p>
+        <div class="dropdown-select">
+          <select class="browser-default" id="demo" name="zones" title="Choose a population overlap to add to the map.">
+            <option value='none'>No Overlay</option>
+            <option value="pop_asiapacific">1 dot = 100 Asian/Pacific Islanders</option>
+            <option value="pop_black">1 dot = 100 Black people</option>
+            <option value="pop_hispanic">1 dot = 100 Latinx people</option>
+            <option value="pop_white">1 dot = 100 White people</option>
+            <option value="pop_poverty">1 dot = 100 people below the povery line (low-income)</option>
+            <option value="workers_essential">1 dot = 50 essential workers</option>
+            <option value="hhld_single_mother">1 dot = 50 single-mother households</option>
+            <option value="hhld_nocar">1 dot = 50 no-car households</option>
+          </select>
+        </div>
+        <p id="demoDisc">Displays where people of different demographic groups live.</p>
+        <button onclick="updateMapClicked()">Update Map</button>
+
+        <p class='label'>Show Major Transit Lines</p>
+        <div class="switch">
+          <label>
+            Off
+            <input id='transitCheck' checked='checked' type="checkbox" onchange="transitToggle(value)">
+            <span class="lever blue"></span>
+            On
+          </label>
+        </div>
       </div>
-  
-      <!-- Tab panes -->
-      <div class="leaflet-sidebar-content"> 
-          <div class="leaflet-sidebar-pane" id="data">
-              <h1 class="leaflet-sidebar-header">
-                Customize this Map
-                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-              </h1>
-              <p>Adjust the settings to select metrics to display on the map, then click “Update Map” below to see results. Select a date from the timeline on the bottom right to see how transit access has changed over time.</p>
 
-              <p class="label">Opportunity to Access</p>
-              <div class="dropdown-select">
-                <select class="browser-default" id="destination" name="destination" title="Choose a destination." onchange="optionsUpdate()">
-                  <option value="C000"selected>Jobs</option>
-                  <option value="CE01">Low-Wage Jobs</option>
-                  <option value="parks">Parks</option>
-                  <option value="snap">Grocery Stores</option>
-                  <option value="hospitals">Hospitals</option>
-                  <option value="urgentcare">Urgent Care Facilities</option>
-                  <option value="pharmacies">Pharmacies</option>
-                  <option value="schools">Colleges and Universities</option>
-                  <option value="los">Transit Service</option>
-                </select>
-              </div>
+      <div class="leaflet-sidebar-pane" id="story">
+        <h1 class="leaflet-sidebar-header">
+          Understand the Story
+          <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+        </h1>
+        <p>Explore access to opportunity for different groups of people and see how transit equity has trended over time
+          on the <a href="/charts/{{view['name']}}">story page</a>.</p>
+      </div>
 
-              <p id="measurement"></p>
+      <div class="leaflet-sidebar-pane" id="share">
+        <h1 class="leaflet-sidebar-header">
+          Share the Map
+          <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+        </h1>
+        <p>Copy the link below to share your map with its current settings.</p>
+        <pre><code id='share-link'></code></pre>
+      </div>
 
-              <p class="label">Time Period</p>
-              <div class="dropdown-select">
-                <select class="browser-default" id="period" name="period" title="Choose a time period.">
-                </select>
-              </div>
+      <div class="leaflet-sidebar-pane" id="download">
+        <h1 class="leaflet-sidebar-header">
+          Download the Data
+          <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+        </h1>
+        <p>Download the data you've selected to display <b>for the entire region</b> as a CSV file or as a spatial
+          dataset (GeoJSON format). This data file does not include any overlays.</p>
+        <p><a id='csv-link'>Download CSV</a></p>
+        <p><a id='geojson-link'>Download GeoJSON</a></p>
+        <p>Visit the <a href="/download/{{view['name']}}">download center</a> for more datasets.</p>
+        <p>You can find a data dictionary for this data file on the download center and on the <a
+            href="/methodology">How It Works</a> page.</p>
+      </div>
 
-              <p class="label">More Trip Options</p>
-              <div class="dropdown-select">
-                <select class="browser-default" id="param" name="param" title="Choose a parameter.">
-                </select>
-              </div>
-
-              <p id="parameterDesc"></p>
-
-              <p class="label">Region</p>
-              <div class="dropdown-select">
-                <select class="browser-default" id="zones" name="zones" title="Choose a portion of the region to display on the map.">
-                  <option value="msa">Metropolitan Statistical Area</option>
-                  <option value="er">Economic Region</option>
-                  <option value="urban">Urban Core</option>
-                  <option value="equity">Equity Neighborhoods</option>
-                </select>
-              </div>
-
-              <p id="regionDisc">Choose a geographic area to display. The “metropolitan statistical area” consists of a high-density urban center and its suburbs, as defined by the federal government. The “economic region” consists of counties with high exchange of travel. The “urban core” consists of dense areas with diverse demographics or frequent transit service. “Equity neighborhoods” are underserved by transit and should be prioritized for quality service.</p>
-
-              <p class="label">Show Only Affordable Trips</p>
-              <div class="dropdown-select">
-                <select class="browser-default" id="fare" name="fare" title="Choose a parameter.">
-                </select>
-              </div>
-
-              <p id="fareDisc">Show only transit options with one-way fares of $4 or less, including transfers (in LA, Chicago, Philadelphia), or $5 or less, including transfers (in Bay Area, DC, Boston, or NYC).</p>
-
-              <p class="label">Show How Transit Compares to Driving</p>
-              <div class="dropdown-select">
-                <select  class="browser-default" id="auto" name="auto" title="Choose a parameter.">
-                </select>
-              </div>
-
-              <p id="ratioDisc">For access measures, a ratio of 1.0 means someone can reach an equal number of destinations by transit or car in a given time; 0.1 means reaching one-tenth the number of destinations by transit as by car. For travel time measures, a ratio of 1.0 means that trips are equally long by transit or car; 2.0 means that trips by transit take twice as long as by car.</p>
-
-              <p class="label">Demographics</p>
-              <div class="dropdown-select">
-                <select class="browser-default" id="demo" name="zones" title="Choose a population overlap to add to the map.">
-                  <option value='none'>No Overlay</option>
-                  <option value="pop_asiapacific">1 dot = 100 Asian/Pacific Islanders</option>
-                  <option value="pop_black">1 dot = 100 Black people</option>
-                  <option value="pop_hispanic">1 dot = 100 Latinx people</option>
-                  <option value="pop_white">1 dot = 100 White people</option>
-                  <option value="pop_poverty">1 dot = 100 people below the povery line (low-income)</option>
-                  <option value="workers_essential">1 dot = 50 essential workers</option>
-                  <option value="hhld_single_mother">1 dot = 50 single-mother households</option>
-                  <option value="hhld_nocar">1 dot = 50 no-car households</option>
-                </select>
-              </div>
-              <p id="demoDisc">Displays where people of different demographic groups live.</p>
-              <button onclick="updateMapClicked()">Update Map</button>
-
-              <p class='label'>Show Major Transit Lines</p>
-              <div class="switch">
-                <label>
-                  Off
-                  <input id='transitCheck' checked='checked' type="checkbox" onchange="transitToggle(value)">
-                  <span class="lever blue"></span>
-                  On
-                </label>
-              </div>
-          </div>
-
-          <div class="leaflet-sidebar-pane" id="story">
-            <h1 class="leaflet-sidebar-header">
-                Understand the Story
-                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-            </h1>
-            <p>Explore access to opportunity for different groups of people and see how transit equity has trended over time on the <a href="/charts/{{view['name']}}">story page</a>.</p>
-          </div>
-
-          <div class="leaflet-sidebar-pane" id="share">
-            <h1 class="leaflet-sidebar-header">
-                Share the Map
-                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-            </h1>
-            <p>Copy the link below to share your map with its current settings.</p>
-            <pre><code id='share-link'></code></pre>
-          </div>
-
-          <div class="leaflet-sidebar-pane" id="download">
-            <h1 class="leaflet-sidebar-header">
-                Download the Data
-                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-            </h1>
-            <p>Download the data you've selected to display <b>for the entire region</b> as a CSV file or as a spatial dataset (GeoJSON format). This data file does not include any overlays.</p>
-            <p><a id='csv-link'>Download CSV</a></p>
-            <p><a id='geojson-link'>Download GeoJSON</a></p>
-            <p>Visit the <a href="/download/{{view['name']}}">download center</a> for more datasets.</p>
-          </div>
-
-          <div class="leaflet-sidebar-pane" id="info">
-            <h1 class="leaflet-sidebar-header">
-                About This Application
-                <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
-            </h1>
-            <p>This application and the data analysis behind it was proudly built for TransitCenter by
-              <a href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
-              SF2 Enterprises, and <a href="https://www.klumpentown.com/">Klumpentown Consulting</a>.
-            </p>
-            <p>See the <a href='/methodology'>How It Works</a> page for more information on the project team and the analysis.</p>
-          </div>
+      <div class="leaflet-sidebar-pane" id="info">
+        <h1 class="leaflet-sidebar-header">
+          About This Application
+          <div class="leaflet-sidebar-close"><i class="fa fa-caret-left"></i></div>
+        </h1>
+        <p>This application and the data analysis behind it was proudly built for TransitCenter by
+          <a href="http://www.sustainablesystemsresearch.net/">Sustainable Systems Research</a>,
+          SF2 Enterprises, and <a href="https://www.klumpentown.com/">Klumpentown Consulting</a>.
+        </p>
+        <p>See the <a href='/methodology'>How It Works</a> page for more information on the project team and the
+          analysis.</p>
       </div>
     </div>
   </div>
+</div>
 
 <!-- Supporting Scripts -->
 <script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>

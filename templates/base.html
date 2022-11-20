@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <!-- Basic Page Needs
   –––––––––––––––––––––––––––––––––––––––––––––––––– -->
@@ -19,7 +20,8 @@
 
   <!-- CSS -->
   <!--Import materialize.css-->
-  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"  media="screen,projection"/>
+  <link type="text/css" rel="stylesheet" href="{{ url_for('static', filename='css/materialize.min.css') }}"
+    media="screen,projection" />
   <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
 
   <!-- FAVICON -->
@@ -28,12 +30,14 @@
   <!-- PAGE SPEICIFCS-->
   {% block head %}{% endblock %}
 </head>
+
 <body>
   <header>
     <nav class="blue transit">
       <div class="nav-wrapper">
         <!-- <a href="/" class="brand-logo center"><img class="responsive-img" id="logo" src="{{ url_for('static', filename='img/logo.png') }}"/></a> -->
-        <a href="/" class="brand-logo center"><b class='hide-on-med-and-down'>TransitCenter</b><span class='hide-on-small-only'> Equity Dashboard</span></a>
+        <a href="/" class="brand-logo center"><b class='hide-on-med-and-down'>TransitCenter</b><span
+            class='hide-on-small-only'> Equity Dashboard</span></a>
         <a href="#" data-target="mobile-demo" class="sidenav-trigger"><i class="material-icons">menu</i></a>
         <ul id="nav-mobile" class="left hide-on-med-and-down">
           <li class='purple transit lighten-2'><a href="https://transitcenter.org/"><b>TransitCenter</b></a></li>
@@ -41,7 +45,8 @@
           <!-- <li><a href="/download">Downloads</a></li> -->
         </ul>
         <ul id="nav-mobile" class="right hide-on-med-and-down">
-          <li><a href="https://github.com/wklumpen/equity-pulse-web/issues" class='grey-text text-lighten-2 version'>v1.1.0</i></a></li>
+          <li><a href="https://github.com/wklumpen/equity-pulse-web/issues"
+              class='grey-text text-lighten-2 version'>v1.2.0</i></a></li>
         </ul>
       </div>
     </nav>
@@ -58,10 +63,10 @@
   <script type="text/javascript" src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
   <script type="text/javascript" src="{{ url_for('static', filename='js/materialize.min.js') }}"></script>
   <script>
-      $(document).ready(function(){
-        $('.sidenav').sidenav();
-        $('select').formSelect();
-      });
+    $(document).ready(function () {
+      $('.sidenav').sidenav();
+      $('select').formSelect();
+    });
   </script>
-  
+
 </body>
