@@ -127,6 +127,7 @@ sidebar.on('content', function(e){
   }
   if (e.id == 'download'){
     var dlCSVLink = document.getElementById('csv-link')
+    console.log(state);
     dlCSVLink.setAttribute('href', '/data/dl/view/csv/'+ view['name'] + '/' + state['score']['key'] + '/' + state['date'])
     var dlGeoJSONLink = document.getElementById('geojson-link')
     dlGeoJSONLink.setAttribute('href', '/data/dl/view/geojson/'+ view['name'] + '/' + state['score']['key'] + '/' + state['date'])
@@ -413,7 +414,8 @@ function updateTimeSeries(unused, xlabel, ylabel){
   
   // Add selection functionality to nodes
   nodes.on('click', function (d){
-    sliderTrigger(d)
+    sliderTrigger(d);
+    sidebar.open('data');
   })
 }
 

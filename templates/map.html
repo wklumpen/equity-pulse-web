@@ -22,6 +22,7 @@
   <div id="map">
     <script>
       var view = JSON.parse('{{ view | tojson}}');
+      console.log(view);
       var zoom = '{{zoom}}';
       var bgURL = '/static/data/{{region}}_bg.geojson';
     </script>

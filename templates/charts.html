@@ -36,7 +36,7 @@
     <div class='col s12'>
         <p class='flow-text'>We evaluated the extent to which residents of the {{view['title']}} region have equitable transit access to jobs, stores, hospitals, and other important destinations. Do people with the greatest need for transit have the best access to fast, frequent, reliable, affordable service close to home? This page summarizes disparities in transit access between different groups of people, and shows how those outcomes have shifted (or not) as a result of service changes since February 2020. Evaluations are based on the combined services provided by all transit agencies in the {{view['title']}} region.</p>
 
-        <p class='flow-text'>Given the substantial impacts of the Covid-19 pandemic, we include a chart of local Covid-19 cases <a href='#coronaChart'>below</a> for reference. Definitions used in this analysis are also below. See the <a href='/methodology'>How It Works</a> page for more information on the analysis.</p>
+        <p class='flow-text'>The analyses below are based on scheduled transit service and cannot account for the impact of disruptions in service delivery like canceled trips, which have been significant at some times in some regions (you can read more about the technical challenges in tracking "ghost buses" <a href="https://transitcenter.org/ghost-buses-are-haunting-riders-across-america/">here</a>. See the <a href='/methodology'>How It Works</a> page for more information on the analysis.</p>
     </div>
 
     <div class='col s12 m6 offset-m3'>
@@ -66,7 +66,7 @@
 
     <p class='flow-text'>One of the most important ways to assess public transit is to measure the access it provides. What can you reach on transit in a given amount of time, and how does that compare to other travel options?</p>
 
-    <p class='flow-text'>Public transit doesn’t need to provide greater access than driving to be useful to large numbers of people. However, transit will meet few people’s needs when it is <i>substantially</i> slower than a car trip. If people are consistently unable to access places using the public transit system, they are more likely to buy private vehicles.</p>
+    <p class='flow-text'>Public transit doesn't need to provide greater access than driving to be useful to large numbers of people. However, transit will meet few people's needs when it is <i>substantially</i> slower than a car trip. If people are consistently unable to access places using the public transit system, they are more likely to buy private vehicles.</p>
     
     <p class='flow-text'>This chart compares average travel times for each mode for people living in poverty. For each of the following categories, it shows the average travel time by car or transit: the nearest hospital, urgent care facility, and college/university, and the third-nearest grocery store and pharmacy.</p>
   </div>
@@ -84,7 +84,7 @@
         <p class='flow-text'>Even in regions without this access gap, transit is scarce for many riders. In the {{view['title']}} region, the average resident can access {{ "{:,.0f}".format(view['car_access'])}} jobs in 45 minutes by car, substantially more than by transit. </p>
         <p class='flow-text'>When people are unable to access many jobs using transit, their opportunities in life may be limited. They may have to forgo a job that is a good match for their skills, for instance. Or they may be compelled to take out risky loans to buy and maintain a car.</p>
         <p class='flow-text'>Access is a function of both transportation and land use. In regions where white residents tend to live closer to the central business district, making transit more equitable will entail intentionally accounting for that proximity advantage.</p>
-        <p class='flow-text'>(Note: Access to jobs can be a useful proxy for access to other destinations, since many jobs represent retail and service outlets that are important in people’s everyday lives.)</p>
+        <p class='flow-text'>(Note: Access to jobs can be a useful proxy for access to other destinations, since many jobs represent retail and service outlets that are important in people's everyday lives.)</p>
     </div>
   </div>
   <div class='row'>
@@ -167,7 +167,7 @@
       <div class='col s12'>
           <h3 class='left-align'>How has the average hourly number of transit trips serving people near their homes changed?</h3>
 
-          <p class='flow-text'>In most regions, transit agencies cut service during the initial stages of the pandemic, then gradually restored it over time. Within regions, the changes were not uniform -- many agencies maintained or increased service on routes that essential workers rely on. But overall, most people have access to less transit service than they did in February 2020. </p>
+          <p class='flow-text'>In most regions, transit agencies cut service during the initial stages of the pandemic, and have partially restored it over time. However, many agencies have  <a href="https://transitcenter.org/publication/bus-operators-in-crisis/">faced challenges</a> hiring and retaining enough transit operators to restore service to pre-pandemic levels.</p>
 
           <p class='flow-text'>This chart shows how transit service intensity has changed for different groups over time. Transit service intensity is a function of route density (how many routes are within walking distance) and frequency (how often they run).</p>
               
@@ -228,7 +228,7 @@
 
           <p class='flow-text'>Buses, which often have to share street space with car traffic, are less reliable than trains, which tend to operate in dedicated rights of way. The disparity is inequitable: Bus riders are more likely than train riders to be people of color and people with low incomes.</p>
 
-          <p class='flow-text'>This chart tracks transit on-time performance where data was available. On-time performance is defined as the fraction of all vehicles that arrive at stops between 1 minute earlier and 5 minutes later than scheduled.</p>
+          <p class='flow-text'>This chart tracks transit on-time performance where data was available. On-time performance is defined as the fraction of all vehicles that arrive at stops between 1 minute earlier and 5 minutes later than scheduled. This measure does not capture canceled trips. Though rates of canceled trips have been elevated in some regions compared to 2019, most transit agencies still do not publicly report on cancellations.</p>
 
           {% if view['reliability'] %}
           <div class="card-panel">

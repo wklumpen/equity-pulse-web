@@ -56,6 +56,10 @@ h2 {
     background: rgba(255,255,255,.5);
 } */
 
+.stickText {
+    white-space: pre-line;
+}
+
 #jobs-access-groups-date{
     width: 100%;
     height: 400px;

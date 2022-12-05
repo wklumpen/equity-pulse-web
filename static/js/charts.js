@@ -34,21 +34,21 @@ var jobsAccessGroupsDateChartWidth = jobsAccessGroupsDateBoxWidth - jobsAccessGr
 var jobsAccessGroupsDateChartHeight = jobsAccessGroupsDateBoxHeight - jobsAccessGroupsDateMargin.top - jobsAccessGroupsDateMargin.bottom
 
 // jobs-access-series shows a time series of job access
-var jobsAccessSeriesMargin = {top: 25, right: 200, bottom: 40, left: 40}
+var jobsAccessSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
 var jobsAccessSeriesBoxWidth = d3.select("#jobs-access-series").node().getBoundingClientRect().width
 var jobsAccessSeriesBoxHeight = d3.select("#jobs-access-series").node().getBoundingClientRect().height
 var jobsAccessSeriesChartWidth = jobsAccessSeriesBoxWidth - jobsAccessSeriesMargin.left - jobsAccessSeriesMargin.right
 var jobsAccessSeriesChartHeight = jobsAccessSeriesBoxHeight - jobsAccessSeriesMargin.top - jobsAccessSeriesMargin.bottom
 
 //Time series of travel times to hospitals
-var hospitalAccessSeriesMargin = {top: 25, right: 200, bottom: 40, left: 40}
+var hospitalAccessSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
 var hospitalAccessSeriesBoxWidth = d3.select("#hospital-access-series").node().getBoundingClientRect().width
 var hospitalAccessSeriesBoxHeight = d3.select("#hospital-access-series").node().getBoundingClientRect().height
 var hospitalAccessSeriesChartWidth = hospitalAccessSeriesBoxWidth - hospitalAccessSeriesMargin.left - hospitalAccessSeriesMargin.right
 var hospitalAccessSeriesChartHeight = hospitalAccessSeriesBoxHeight - hospitalAccessSeriesMargin.top - hospitalAccessSeriesMargin.bottom
 
 //Time series of travel times to grocery stores
-var storeAccessSeriesMargin = {top: 25, right: 200, bottom: 40, left: 40}
+var storeAccessSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
 var storeAccessSeriesBoxWidth = d3.select("#store-access-series").node().getBoundingClientRect().width
 var storeAccessSeriesBoxHeight = d3.select("#store-access-series").node().getBoundingClientRect().height
 var storeAccessSeriesChartWidth = storeAccessSeriesBoxWidth - storeAccessSeriesMargin.left - storeAccessSeriesMargin.right
@@ -60,7 +60,7 @@ var jobsFaresSeriesBoxHeight = d3.select("#jobs-fares-series").node().getBoundin
 var jobsFaresSeriesChartWidth = jobsFaresSeriesBoxWidth - jobsFaresSeriesMargin.left - jobsFaresSeriesMargin.right
 var jobsFaresSeriesChartHeight = jobsFaresSeriesBoxHeight - jobsFaresSeriesMargin.top - jobsFaresSeriesMargin.bottom
 
-var losSeriesMargin = {top: 25, right: 200, bottom: 40, left: 40}
+var losSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
 var losSeriesBoxWidth = d3.select("#los-series").node().getBoundingClientRect().width
 var losSeries = d3.select("#los-series").node().getBoundingClientRect().height
 var losSeriesChartWidth = losSeriesBoxWidth - losSeriesMargin.left - losSeriesMargin.right
@@ -600,7 +600,7 @@ function updateAllCharts(){
         'Travel Time to Destinations',
         carLabels,
         'min',
-        'Data for Saturdays from 10am-12pm in the ' + view['title'] + ' MSA, as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
+        'Data for Saturdays from 10am-12pm for people living in the ' + view['title'] + ' MSA, as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
     
     // Quick adjustment of the fare labels for the grouped chart
@@ -693,11 +693,13 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .enter()
         .append("text")
         .attr("class", 'stickText')
-        .attr("x", d => x(d))
-        .attr('y', -18)
-        .attr("dy", "-.75em")
+        // .attr("x", d => x(d))
+        // .attr('y', -18)
+        .attr("transform", d => "translate("+(x(d)+5)+",-5) rotate(45)")
+        // .attr("dy", "-.75em")
+        // .attr('dx')
         .text(d => moment(d).format('MMM D'))
-        .attr('text-anchor', 'middle')
+        .attr('text-anchor', 'end')
         .attr("dy", ".35em")
         .attr("font-size", "0.7em")
         .style('cursor', 'pointer')
@@ -709,12 +711,14 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
                 return 'normal'
             }
         })
+        
+        
 
     svg.append('text')
         .attr('class', 'barDateLabel')
         .attr('x', chartWidth + 10)
-        .attr('y', margin.top)
-        .attr("dy", "-1.55em")
+        .attr('y', 0)
+        // .attr("dy", "-1.55em")
         .text("Week of " + moment(barDate).format('MMM D, YYYY'))
         .attr('text-anchor', 'start')
         .attr("font-size", "0.8em")
