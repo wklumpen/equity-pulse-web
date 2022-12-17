@@ -238,7 +238,7 @@ def zone_dates(zone):
 @app.route('/data/reliability/<zone>')
 def reliability(zone):
     if zone == 'sf':
-        data = data = Realtime.select(
+        data = Realtime.select(
             Realtime.agency, Realtime.mode, 
             fn.AVG(Realtime.otp).alias('otp'), fn.DATE(Realtime.timestamp).alias('timestamp')
         ).where(
