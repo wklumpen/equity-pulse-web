@@ -254,7 +254,8 @@ def reliability(zone):
                 fn.AVG(Realtime.otp).alias('otp'), fn.DATE(Realtime.timestamp).alias('timestamp')
             ).where(
                 Realtime.region == zone, 
-                Realtime.otp > 0
+                Realtime.otp > 0,
+                Realtime.timestamp > dt.datetime(2022, 11, 1, 0, 0, 0)
             ).group_by(Realtime.agency, Realtime.mode, fn.DATE(Realtime.timestamp))
         data = [model_to_dict(r) for r in data]
     for entry in data:
