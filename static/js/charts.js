@@ -4,7 +4,7 @@ var coronaData = []
 var reliabilityData = []
 var reliabilityAgencyMode = []
 
-var coronaMargin = {top: 50, right: 60, bottom: 40, left: 30}
+var coronaMargin = { top: 50, right: 60, bottom: 40, left: 30 }
 var coronaBoxWidth = d3.select("#corona").node().getBoundingClientRect().width
 var coronaBoxHeight = d3.select("#corona").node().getBoundingClientRect().height
 var coronaChartWidth = coronaBoxWidth - coronaMargin.left - coronaMargin.right
@@ -13,8 +13,8 @@ var coronaChartHeight = coronaBoxHeight - coronaMargin.top - coronaMargin.bottom
 var coronaBox = d3.select("#corona").append('svg').attr('width', coronaBoxWidth).attr('height', coronaBoxHeight)
 var coronaSVG = coronaBox.append('g').attr("transform", "translate(" + coronaMargin.left + "," + coronaMargin.top + ")");
 
-if (view['reliability'] == true){
-    var reliabilityMargin = {top: 20, right: 40, bottom: 80, left: 30}
+if (view['reliability'] == true) {
+    var reliabilityMargin = { top: 20, right: 40, bottom: 80, left: 30 }
     var reliabilityBoxWidth = d3.select("#reliability").node().getBoundingClientRect().width
     var reliabilityBoxHeight = d3.select("#reliability").node().getBoundingClientRect().height
     var reliabilityChartWidth = reliabilityBoxWidth - reliabilityMargin.left - reliabilityMargin.right
@@ -27,46 +27,46 @@ if (view['reliability'] == true){
 
 
 // jobs-access-groups-date chart shows access on a single date
-var jobsAccessGroupsDateMargin = {top: 50, right: 20, bottom: 40, left: 20}
+var jobsAccessGroupsDateMargin = { top: 50, right: 20, bottom: 40, left: 20 }
 var jobsAccessGroupsDateBoxWidth = d3.select("#jobs-access-groups-date").node().getBoundingClientRect().width
 var jobsAccessGroupsDateBoxHeight = d3.select("#jobs-access-groups-date").node().getBoundingClientRect().height
 var jobsAccessGroupsDateChartWidth = jobsAccessGroupsDateBoxWidth - jobsAccessGroupsDateMargin.left - jobsAccessGroupsDateMargin.right
 var jobsAccessGroupsDateChartHeight = jobsAccessGroupsDateBoxHeight - jobsAccessGroupsDateMargin.top - jobsAccessGroupsDateMargin.bottom
 
 // jobs-access-series shows a time series of job access
-var jobsAccessSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
+var jobsAccessSeriesMargin = { top: 50, right: 200, bottom: 40, left: 40 }
 var jobsAccessSeriesBoxWidth = d3.select("#jobs-access-series").node().getBoundingClientRect().width
 var jobsAccessSeriesBoxHeight = d3.select("#jobs-access-series").node().getBoundingClientRect().height
 var jobsAccessSeriesChartWidth = jobsAccessSeriesBoxWidth - jobsAccessSeriesMargin.left - jobsAccessSeriesMargin.right
 var jobsAccessSeriesChartHeight = jobsAccessSeriesBoxHeight - jobsAccessSeriesMargin.top - jobsAccessSeriesMargin.bottom
 
 //Time series of travel times to hospitals
-var hospitalAccessSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
+var hospitalAccessSeriesMargin = { top: 50, right: 200, bottom: 40, left: 40 }
 var hospitalAccessSeriesBoxWidth = d3.select("#hospital-access-series").node().getBoundingClientRect().width
 var hospitalAccessSeriesBoxHeight = d3.select("#hospital-access-series").node().getBoundingClientRect().height
 var hospitalAccessSeriesChartWidth = hospitalAccessSeriesBoxWidth - hospitalAccessSeriesMargin.left - hospitalAccessSeriesMargin.right
 var hospitalAccessSeriesChartHeight = hospitalAccessSeriesBoxHeight - hospitalAccessSeriesMargin.top - hospitalAccessSeriesMargin.bottom
 
 //Time series of travel times to grocery stores
-var storeAccessSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
+var storeAccessSeriesMargin = { top: 50, right: 200, bottom: 40, left: 40 }
 var storeAccessSeriesBoxWidth = d3.select("#store-access-series").node().getBoundingClientRect().width
 var storeAccessSeriesBoxHeight = d3.select("#store-access-series").node().getBoundingClientRect().height
 var storeAccessSeriesChartWidth = storeAccessSeriesBoxWidth - storeAccessSeriesMargin.left - storeAccessSeriesMargin.right
 var storeAccessSeriesChartHeight = storeAccessSeriesBoxHeight - storeAccessSeriesMargin.top - storeAccessSeriesMargin.bottom
 
-var jobsFaresSeriesMargin = {top: 100, right: 20, bottom: 40, left: 20}
+var jobsFaresSeriesMargin = { top: 100, right: 20, bottom: 40, left: 20 }
 var jobsFaresSeriesBoxWidth = d3.select("#jobs-fares-series").node().getBoundingClientRect().width
 var jobsFaresSeriesBoxHeight = d3.select("#jobs-fares-series").node().getBoundingClientRect().height
 var jobsFaresSeriesChartWidth = jobsFaresSeriesBoxWidth - jobsFaresSeriesMargin.left - jobsFaresSeriesMargin.right
 var jobsFaresSeriesChartHeight = jobsFaresSeriesBoxHeight - jobsFaresSeriesMargin.top - jobsFaresSeriesMargin.bottom
 
-var losSeriesMargin = {top: 50, right: 200, bottom: 40, left: 40}
+var losSeriesMargin = { top: 50, right: 200, bottom: 40, left: 40 }
 var losSeriesBoxWidth = d3.select("#los-series").node().getBoundingClientRect().width
 var losSeries = d3.select("#los-series").node().getBoundingClientRect().height
 var losSeriesChartWidth = losSeriesBoxWidth - losSeriesMargin.left - losSeriesMargin.right
 var losSeriesChartHeight = losSeries - losSeriesMargin.top - losSeriesMargin.bottom
 
-var carJobsAccessSeriesMargin = {top: 50, right: 10, bottom: 40, left: 10}
+var carJobsAccessSeriesMargin = { top: 50, right: 10, bottom: 40, left: 10 }
 var carJobsAccessSeriesBoxWidth = d3.select("#car-jobs-access-series").node().getBoundingClientRect().width
 var carJobsAccessSeriesBoxHeight = d3.select("#car-jobs-access-series").node().getBoundingClientRect().height
 var carJobsAccessSeriesChartWidth = carJobsAccessSeriesBoxWidth - carJobsAccessSeriesMargin.left - carJobsAccessSeriesMargin.right
@@ -110,89 +110,89 @@ d3.select(window).on('resize', handleResize);
 // loadReliabilityData();
 handleResize();
 
-function loadCoronaData(){
+function loadCoronaData() {
     d3.csv("https://raw.githubusercontent.com/CSSEGISandData/COVID-19/master/csse_covid_19_data/csse_covid_19_time_series/time_series_covid19_confirmed_US.csv")
-    .then(function(data){
-        // First we filter down to the one region
-        if (view['name'] == 'nyc'){
-            counties = ['New York', 'Kings', 'Queens', 'Bronx', 'Richmond']
-            d = data.filter(d => (counties.includes(d['Admin2']) & d['Province_State'] == view['state']));
-        }
-        else if (view['name'] == 'dc'){
-            d = data.filter(d => (d['Admin2'] == 'District of Columbia' & d['Province_State'] == "District of Columbia"));
-        }
-        else{
-            d = data.filter(d => (d['Admin2'] == view['county'] & d['Province_State'] == view['state']));
-        }
-        
-        coronaData = []
+        .then(function (data) {
+            // First we filter down to the one region
+            if (view['name'] == 'nyc') {
+                counties = ['New York', 'Kings', 'Queens', 'Bronx', 'Richmond']
+                d = data.filter(d => (counties.includes(d['Admin2']) & d['Province_State'] == view['state']));
+            }
+            else if (view['name'] == 'dc') {
+                d = data.filter(d => (d['Admin2'] == 'District of Columbia' & d['Province_State'] == "District of Columbia"));
+            }
+            else {
+                d = data.filter(d => (d['Admin2'] == view['county'] & d['Province_State'] == view['state']));
+            }
 
-        $.each(d[0], function(key, val){
-            if (moment(key, "M/D/YY", true).isValid()){
-                if (val > 1){
-                    coronaData.push({"date":moment(key, "MM/DD/YY").valueOf(), "cases": +val/(view['population']/100000)})
+            coronaData = []
+
+            $.each(d[0], function (key, val) {
+                if (moment(key, "M/D/YY", true).isValid()) {
+                    if (val > 1) {
+                        coronaData.push({ "date": moment(key, "MM/DD/YY").valueOf(), "cases": +val / (view['population'] / 100000) })
+                    }
+                }
+            });
+
+            coronaData.sort((a, b) => d3.ascending(a.date, b.date))
+
+            for (i = 0; i < coronaData.length; i++) {
+                if (i < 7) {
+                    coronaData[i]['new'] = null;
+                }
+                else {
+                    coronaData[i]['new'] = (coronaData[i].cases - coronaData[i - 7].cases) / 7
                 }
             }
-        });
-
-        coronaData.sort((a, b) => d3.ascending(a.date, b.date))
-
-        for (i=0; i < coronaData.length; i++){
-            if (i < 7){
-                coronaData[i]['new'] = null;
-            }
-            else{
-                coronaData[i]['new'] = (coronaData[i].cases - coronaData[i-7].cases)/7
-            }
-        }
-        coronaData.splice(0, 6);
-        updateCoronaPlot();
-    })
+            coronaData.splice(0, 6);
+            updateCoronaPlot();
+        })
 }
 
-function loadReliabilityData(){
-    if (view['reliability'] == true){
+function loadReliabilityData() {
+    if (view['reliability'] == true) {
         reliabilityData = []
         reliabilityAgencies = []
         reliabilityModes = []
-        d3.json("/data/reliability/"+ view['name'], {
-            headers : new Headers({
+        d3.json("/data/reliability/" + view['name'], {
+            headers: new Headers({
                 "Content-Type": "application/json",
                 'Accept': 'application/json'
             }),
         })
-        .then(function(data){
-            reliabilityData = []
-            data.forEach(function(item, index){
-                reliabilityData.push({'timestamp': moment(item.timestamp).valueOf(), 'agency': item.agency, 'mode': item.mode, 'otp':+item.otp})
-                reliabilityAgencyMode.push(item.agency+'-'+item.mode)
-            })
-            reliabilityAgencyMode = [... new Set(reliabilityAgencyMode)]
-            reliabilityData.sort((a,b) => d3.ascending(a.timestamp, b.timestamp))
-            updateReliabilityChart();
-            
-        });
+            .then(function (data) {
+                reliabilityData = []
+                data.forEach(function (item, index) {
+                    reliabilityData.push({ 'timestamp': moment(item.timestamp).valueOf(), 'agency': item.agency, 'mode': item.mode, 'otp': +item.otp })
+                    reliabilityAgencyMode.push(item.agency + '-' + item.mode)
+                })
+                reliabilityAgencyMode = [... new Set(reliabilityAgencyMode)]
+                reliabilityData.sort((a, b) => d3.ascending(a.timestamp, b.timestamp))
+                updateReliabilityChart();
+
+            });
     }
 }
-function loadChartData(){
+function loadChartData() {
     // "/data/summary/"+ view['name']
-    
-    d3.json("/data/summary/"+ view['name'], {
-        headers : new Headers({
+
+    d3.json("/data/summary/" + view['name'], {
+        headers: new Headers({
             "Content-Type": "application/json",
             'Accept': 'application/json'
         }),
     })
-    .then(function(data){
-        chartData = []
-        data.forEach(function(item, index){
-            chartData.push({'date': moment(item.date).valueOf(), 'description': item.description, 'zone': item.zone, 'score_key':item.score_key, 'value': +item.value})
-        })
-        updateAllCharts();
-    });
+        .then(function (data) {
+            chartData = []
+            data.forEach(function (item, index) {
+                chartData.push({ 'date': moment(item.date).valueOf(), 'description': item.description, 'zone': item.zone, 'score_key': item.score_key, 'value': +item.value })
+            })
+            updateAllCharts();
+        });
 }
 
-function updateCoronaPlot(){
+function updateCoronaPlot() {
     coronaBoxWidth = d3.select("#corona").node().getBoundingClientRect().width
     coronaBoxHeight = d3.select("#corona").node().getBoundingClientRect().height
     coronaChartWidth = coronaBoxWidth - coronaMargin.left - coronaMargin.right
@@ -206,8 +206,8 @@ function updateCoronaPlot(){
 
     var x = d3.scaleTime()
         .domain(d3.extent(coronaData, d => d.date))
-        .rangeRound([coronaMargin.left, coronaChartWidth]);  
-    
+        .rangeRound([coronaMargin.left, coronaChartWidth]);
+
     var y = d3.scaleLinear()
         .domain(d3.extent(coronaData, d => d.new))
         .range([coronaChartHeight, 0])
@@ -230,17 +230,17 @@ function updateCoronaPlot(){
         .call(d3.axisLeft(y).ticks(4));
 
 
-    if (coronaBoxWidth < 600){
+    if (coronaBoxWidth < 600) {
         coronaSVG.append("g")
             .attr("transform", "translate(0," + coronaChartHeight + ")")
             .call(d3.axisBottom(x).ticks(4).tickFormat(d3.timeFormat("%b %Y")));
     }
-    else{
+    else {
         coronaSVG.append("g")
             .attr("transform", "translate(0," + coronaChartHeight + ")")
             .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %Y")));
     }
-    
+
     coronaSVG.append("text")
         .attr("x", coronaChartWidth)
         .attr('y', coronaChartHeight + coronaMargin.bottom)
@@ -255,7 +255,7 @@ function updateCoronaPlot(){
         .text("New Cases per 100,000 people, 7-day rolling average")
         .attr('text-anchor', 'start')
         .attr('font-weight', 'bold')
-      
+
     // Now let's get to the mouse effects
     var mouseLine = coronaSVG.append('g')
         .attr('class', 'mouse-over-effects')
@@ -266,7 +266,7 @@ function updateCoronaPlot(){
         .style('stroke-width', '1px')
         .style("opacity", "0")
         .style('shape-rendering', 'crispEdges')
-    
+
     var mouseText = coronaSVG.append('text')
 
     coronaBox
@@ -279,10 +279,10 @@ function updateCoronaPlot(){
             hoverData = coronaData.filter(d => d.date == date)[0];
 
             // Now add some text
-            if (typeof(hoverData) !== 'undefined'){
+            if (typeof (hoverData) !== 'undefined') {
                 mouseLine
-                    .attr("d", function(){
-                    return "M" + (mouseX) + "," + coronaChartHeight + " " + (mouseX) + "," + 0;
+                    .attr("d", function () {
+                        return "M" + (mouseX) + "," + coronaChartHeight + " " + (mouseX) + "," + 0;
                     })
                     .attr('display', null)
                     .style("opacity", 1)
@@ -292,11 +292,11 @@ function updateCoronaPlot(){
                     .attr("transform", "translate(" + (mouseX) + "-5)")
                     .attr('display', null)
                     .style("text-anchor", "middle")
-                    .text(function (){
-                        if (Math.round(hoverData.new) != 1){
+                    .text(function () {
+                        if (Math.round(hoverData.new) != 1) {
                             return Math.round(hoverData.new) + " new cases/100k people"
                         }
-                        else{
+                        else {
                             return Math.round(hoverData.new) + " new cases/100k people"
                         }
                     }).transition(100)
@@ -307,14 +307,14 @@ function updateCoronaPlot(){
             mouseText
                 .attr('display', 'none')
                 .transition(10)
-            
+
             mouseLine
                 .attr('display', 'none')
                 .transition(10)
         });
 }
 
-function updateReliabilityChart(){
+function updateReliabilityChart() {
     reliabilityBoxWidth = d3.select("#reliability").node().getBoundingClientRect().width
     reliabilityBoxHeight = d3.select("#reliability").node().getBoundingClientRect().height
     reliabilityChartWidth = reliabilityBoxWidth - reliabilityMargin.left - reliabilityMargin.right
@@ -328,8 +328,8 @@ function updateReliabilityChart(){
 
     var x = d3.scaleTime()
         .domain(d3.extent(reliabilityData, d => d.timestamp))
-        .rangeRound([reliabilityMargin.left, reliabilityChartWidth]);  
-    
+        .rangeRound([reliabilityMargin.left, reliabilityChartWidth]);
+
     var y = d3.scaleLinear()
         .domain([0, 100])
         .range([reliabilityChartHeight, 0])
@@ -339,7 +339,7 @@ function updateReliabilityChart(){
         .y(d => y(d.otp))
         .curve(d3.curveLinear)
 
-    reliabilityAgencyMode.forEach(function(item){
+    reliabilityAgencyMode.forEach(function (item) {
         var itemIndex = reliabilityAgencyMode.indexOf(item)
         var agency = item.split('-')[0]
         var mode = item.split('-')[1]
@@ -351,44 +351,44 @@ function updateReliabilityChart(){
             .attr("d", line)
             .style('fill', 'none')
             .style('stroke', colorList[itemIndex])
-            .style("stroke-dasharray", function(d){
-                if (mode == 'Rail'){
+            .style("stroke-dasharray", function (d) {
+                if (mode == 'Rail') {
                     return ("2, 3")
                 }
-                else{
+                else {
                     return null;
                 }
-            }) 
+            })
             .style('stroke-width', 2)
             .attr('opacity', 0.8)
 
         reliabilitySVG.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - reliabilityMargin.left)
-            .attr("x",0 - (reliabilityChartHeight / 2))
+            .attr("x", 0 - (reliabilityChartHeight / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text("Daily Average On-Time Performance (%)");  
+            .text("Daily Average On-Time Performance (%)");
 
         reliabilitySVG.append("g")
             .attr("transform", "translate(" + reliabilityMargin.left + ", 0)")
             .call(d3.axisLeft(y).ticks(5));
 
-        
-        if (reliabilityBoxWidth < 600){
+
+        if (reliabilityBoxWidth < 600) {
             reliabilitySVG.append("g")
-            .attr("transform", "translate(0," + reliabilityChartHeight + ")")
-            .call(d3.axisBottom(x).ticks(2));
+                .attr("transform", "translate(0," + reliabilityChartHeight + ")")
+                .call(d3.axisBottom(x).ticks(2));
         }
-        else{
+        else {
             reliabilitySVG.append("g")
-            .attr("transform", "translate(0," + reliabilityChartHeight + ")")
-            .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %d %Y")));
+                .attr("transform", "translate(0," + reliabilityChartHeight + ")")
+                .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %d %Y")));
         }
         //Let's add a label
         reliabilitySVG.append("text")
             .attr("x", reliabilityMargin.left + 30)
-            .attr('y', reliabilityChartHeight + reliabilityMargin.top + 25 + itemIndex*15)
+            .attr('y', reliabilityChartHeight + reliabilityMargin.top + 25 + itemIndex * 15)
             .attr("dy", "-.75em")
             .text(agency + " (" + mode + ")")
             .attr('text-anchor', 'start')
@@ -397,133 +397,133 @@ function updateReliabilityChart(){
         reliabilitySVG.append('line')
             .attr("x1", reliabilityMargin.left)
             .attr("x2", reliabilityMargin.left + 18)
-            .attr("y1", reliabilityChartHeight + reliabilityMargin.top + 25 + (itemIndex-1)*15)
-            .attr("y2", reliabilityChartHeight + reliabilityMargin.top + 25 + (itemIndex-1)*15)
+            .attr("y1", reliabilityChartHeight + reliabilityMargin.top + 25 + (itemIndex - 1) * 15)
+            .attr("y2", reliabilityChartHeight + reliabilityMargin.top + 25 + (itemIndex - 1) * 15)
             .style('fill', 'none')
             .style('stroke', colorList[itemIndex])
-            .style("stroke-dasharray", function(d){
-                if (mode == 'Rail'){
+            .style("stroke-dasharray", function (d) {
+                if (mode == 'Rail') {
                     return ("2, 3")
                 }
-                else{
+                else {
                     return null;
                 }
-            }) 
+            })
             .style('stroke-width', 2)
             .attr('opacity', 0.8)
     });
 }
 
 
-function handleResize(){
-    if(chartData.length == 0){
+function handleResize() {
+    if (chartData.length == 0) {
         loadChartData();
     }
-    else{
+    else {
         updateAllCharts();
     }
 }
 
-function updateAllCharts(){
+function updateAllCharts() {
     loadCoronaData();
     loadReliabilityData();
 
     var maxDate = d3.max(chartData, d => d['date'])
     // == Get job access and add in fare capped data ==
-    var scores = chartData.filter(d => (d['score_key'] == 'C000_P_c45_AM_autoN_fareN') & (d['zone'] == view['name']+'-urban'))
-    var everyoneFares = chartData.filter(d => (d['score_key'] == 'C000_P_c45_AM_autoN_fareY') & (d['zone'] == view['name']+'-urban') & (d['description'] == 'pop_total'))
-    var everyoneWeeknights = chartData.filter(d =>(d['score_key'] == 'C000_P_c45_PM_autoN_fareN') & (d['zone'] == view['name']+'-urban') & (d['description'] == 'pop_total'))
-    everyoneFares.forEach(function(item, index){
+    var scores = chartData.filter(d => (d['score_key'] == 'C000_P_c45_AM_autoN_fareN') & (d['zone'] == view['name'] + '-urban'))
+    var everyoneFares = chartData.filter(d => (d['score_key'] == 'C000_P_c45_AM_autoN_fareY') & (d['zone'] == view['name'] + '-urban') & (d['description'] == 'pop_total'))
+    var everyoneWeeknights = chartData.filter(d => (d['score_key'] == 'C000_P_c45_PM_autoN_fareN') & (d['zone'] == view['name'] + '-urban') & (d['description'] == 'pop_total'))
+    everyoneFares.forEach(function (item, index) {
         scores.push({
-            'date':item.date, 
-            'description': 
-            'everyone_fares', 
-            'zone': view['name'] + '-urban', 
-            'value': item.value, 
+            'date': item.date,
+            'description':
+                'everyone_fares',
+            'zone': view['name'] + '-urban',
+            'value': item.value,
             'score_key': 'C000_P_c45_AM_autoN_fareN'
         })
     });
 
-    everyoneWeeknights.forEach(function(item, index){
+    everyoneWeeknights.forEach(function (item, index) {
         scores.push({
-            'date':item.date, 
-            'description': 
-            'everyone_weeknights', 
-            'zone': view['name'] + '-urban', 
-            'value': item.value, 
+            'date': item.date,
+            'description':
+                'everyone_weeknights',
+            'zone': view['name'] + '-urban',
+            'value': item.value,
             'score_key': 'C000_P_c45_AM_autoN_fareN'
         })
     });
 
     // Define groups to plot
     var groups = [
-        'pop_total', 
-        'pop_asiapacific', 
-        'pop_black', 
-        'pop_hispanic', 
-        'pop_white', 
-        'pop_poverty', 
-        'hhld_single_mother', 
+        'pop_total',
+        'pop_asiapacific',
+        'pop_black',
+        'pop_hispanic',
+        'pop_white',
+        'pop_poverty',
+        'hhld_single_mother',
         'workers_essential',
         'everyone_fares',
         'everyone_weeknights'
     ]
 
     barChart(
-        jobsAccessGroupsDateBox, 
-        jobsAccessGroupsDateSVG, 
+        jobsAccessGroupsDateBox,
+        jobsAccessGroupsDateSVG,
         scores.filter(d => d['date'] == maxDate),
         maxDate,
-        '#jobs-access-groups-date', 
-        jobsAccessGroupsDateMargin, 
-        groups, 
+        '#jobs-access-groups-date',
+        jobsAccessGroupsDateMargin,
+        groups,
         'Jobs Accessible in 45 min by Transit',
         'Data for travel in the ' + view['title'] + ' Urban Core on weekdays from 7am-9am (except if noted weeknights 10pm-12am) as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
 
     // == Time series job access ==
     multilinePlot(
-        jobsAccessSeriesBox, 
-        jobsAccessSeriesSVG, 
+        jobsAccessSeriesBox,
+        jobsAccessSeriesSVG,
         scores,
-        maxDate, 
-        '#jobs-access-series', 
-        jobsAccessSeriesMargin, 
-        groups, 
-        'Jobs Accessible in 45 min', 
+        maxDate,
+        '#jobs-access-series',
+        jobsAccessSeriesMargin,
+        groups,
+        'Jobs Accessible in 45 min',
         'Data for weekdays 7am-9am (except if noted weeknights 10pm-12am) in the ' + view['title'] + ' Urban Core.'
     )
 
     // == Time series Hosp store access ==
-    scores = chartData.filter(d => (d['score_key'] == 'hospitals_M_t1_PM_autoN_fareN') & (d['zone'] == view['name']+'-urban'))
+    scores = chartData.filter(d => (d['score_key'] == 'hospitals_M_t1_PM_autoN_fareN') & (d['zone'] == view['name'] + '-urban'))
     multilinePlot(
-        hospitalAccessSeriesBox, 
-        hospitalAccessSeriesSVG, 
+        hospitalAccessSeriesBox,
+        hospitalAccessSeriesSVG,
         scores,
-        maxDate, 
-        '#hospital-access-series', 
-        hospitalAccessSeriesMargin, 
-        allGroups, 
-        'Average Travel Time (min)', 
+        maxDate,
+        '#hospital-access-series',
+        hospitalAccessSeriesMargin,
+        allGroups,
+        'Average Travel Time (min)',
         'Data for weeknights 10pm-12am in the ' + view['title'] + ' Urban Core.'
     )
 
     // == Time series SNAP store access ==
-    scores = chartData.filter(d => (d['score_key'] == 'snap_M_t3_WE_autoN_fareN') & (d['zone'] == view['name']+'-msa'))
+    scores = chartData.filter(d => (d['score_key'] == 'snap_M_t3_WE_autoN_fareN') & (d['zone'] == view['name'] + '-msa'))
     multilinePlot(
-        storeAccessSeriesBox, 
-        storeAccessSeriesSVG, 
+        storeAccessSeriesBox,
+        storeAccessSeriesSVG,
         scores,
-        maxDate, 
-        '#store-access-series', 
-        storeAccessSeriesMargin, 
-        allGroups, 
-        'Average Travel Time (min)', 
+        maxDate,
+        '#store-access-series',
+        storeAccessSeriesMargin,
+        allGroups,
+        'Average Travel Time (min)',
         'Data for Saturdays 10am-12pm in the ' + view['title'] + ' Urban Core.'
     )
 
     // == Time series comparison of weekly trips (level of service)  
-    var scores = chartData.filter(d => (d['score_key'] == 'los_trips_WKD') & (d['zone'] == view['name']+'-urban'))
+    var scores = chartData.filter(d => (d['score_key'] == 'los_trips_WKD') & (d['zone'] == view['name'] + '-urban'))
     groups = [
         'pop_total',
         'pop_asiapacific',
@@ -533,19 +533,19 @@ function updateAllCharts(){
         'workers_essential'
     ]
     multilinePlot(
-        losSeriesBox, 
-        losSeriesSVG, 
+        losSeriesBox,
+        losSeriesSVG,
         scores,
-        maxDate, 
-        '#los-series', 
-        losSeriesMargin, 
-        allGroups, 
-        'Average Trips/Hour', 
+        maxDate,
+        '#los-series',
+        losSeriesMargin,
+        allGroups,
+        'Average Trips/Hour',
         'Data shows a typical weekday for the ' + view['title'] + ' Urban Core.'
     )
 
     // == Single date comparison between fare capped and non-capped
-    var scores = chartData.filter(d => (d['zone'] == view['name']+'-msa'))
+    var scores = chartData.filter(d => (d['zone'] == view['name'] + '-msa'))
     var fareCompare = []
     var autoCompareJobs = []
     var autoCompareLow = []
@@ -553,7 +553,7 @@ function updateAllCharts(){
         'pop_total',
         'pop_poverty'
     ]
-    allGroups.forEach(function(key, index){
+    allGroups.forEach(function (key, index) {
         var subset = chartData.filter(d => d['description'] == key)
         var withFare = subset.filter(d => (d['date'] == maxDate) & (d.score_key == 'C000_P_c60_AM_autoN_fareY'))[0].value
         var withoutFare = subset.filter(d => (d['date'] == maxDate) & (d.score_key == 'C000_P_c60_AM_autoN_fareN'))[0].value
@@ -561,14 +561,16 @@ function updateAllCharts(){
             'description': key,
             'subgroup': 'with_fare',
             'value': withFare,
-            'pct': 100*withFare/withoutFare,
-            'zone': view['name']+'-msa'})
+            'pct': 100 * withFare / withoutFare,
+            'zone': view['name'] + '-msa'
+        })
         fareCompare.push({
             'description': key,
             'subgroup': 'without_fare',
             'value': withoutFare,
-            'pct': 100*withFare/withoutFare,
-            'zone': view['name']+'-msa'})
+            'pct': 100 * withFare / withoutFare,
+            'zone': view['name'] + '-msa'
+        })
     })
 
     carGroups = [
@@ -579,14 +581,14 @@ function updateAllCharts(){
         'schools_M_t1_WE'
     ]
     var carData = []
-    var scores = chartData.filter(d => (d['zone'] == view['name']+'-msa') & (d['date'] == maxDate) & (d['description'] == 'pop_poverty'))
-    carGroups.forEach(function(key, index){
+    var scores = chartData.filter(d => (d['zone'] == view['name'] + '-msa') & (d['date'] == maxDate) & (d['description'] == 'pop_poverty'))
+    carGroups.forEach(function (key, index) {
         var carTime = scores.filter(d => d['score_key'] == (key + '_autoY_fareN'))[0].value
         var busTime = scores.filter(d => d['score_key'] == (key + '_autoN_fareN'))[0].value
-        carTime = (1/carTime)*busTime
-        
-        carData.push({'description': key, 'subgroup': 'car_time', 'value': carTime, 'zone': view['name'] + '-msa'})
-        carData.push({'description': key, 'subgroup':'bus_time', 'value': busTime, 'zone': view['name'] + '-msa'})
+        carTime = (1 / carTime) * busTime
+
+        carData.push({ 'description': key, 'subgroup': 'car_time', 'value': carTime, 'zone': view['name'] + '-msa' })
+        carData.push({ 'description': key, 'subgroup': 'bus_time', 'value': busTime, 'zone': view['name'] + '-msa' })
     })
 
     groupedBarChart(
@@ -602,10 +604,10 @@ function updateAllCharts(){
         'min',
         'Data for Saturdays from 10am-12pm for people living in the ' + view['title'] + ' MSA, as of the week of ' + moment.utc(maxDate).format('MMMM D, YYYY') + '.'
     )
-    
+
     // Quick adjustment of the fare labels for the grouped chart
     var fareLabels = {}
-    for (var key in popStyle){
+    for (var key in popStyle) {
         fareLabels[key] = popStyle[key]['label']
     }
     fareCompare = fareCompare.slice().sort((a, b) => d3.descending(a.value, b.value))
@@ -618,8 +620,8 @@ function updateAllCharts(){
     })
 
     fareBarChart(
-        jobsFaresSereiesBox, 
-        jobsFaresSeriesSVG, 
+        jobsFaresSereiesBox,
+        jobsFaresSeriesSVG,
         fareCompare,
         '#jobs-fares-series',
         jobsFaresSeriesMargin,
@@ -632,7 +634,7 @@ function updateAllCharts(){
     )
 }
 
-function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, note){
+function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, note) {
     var boxWidth = d3.select(id).node().getBoundingClientRect().width
     var boxHeight = d3.select(id).node().getBoundingClientRect().height
     var chartWidth = boxWidth - margin.left - margin.right
@@ -641,15 +643,15 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
     box.attr('width', boxWidth).attr('height', boxHeight);
     svg.selectAll('*').remove();
 
-    scores.sort((a,b) => d3.ascending(a.date, b.date))
+    scores.sort((a, b) => d3.ascending(a.date, b.date))
 
     var barDate = maxDate
     var barScores = scores.filter(d => d['date'] == barDate)
     barScores = barScores.sort((a, b) => d3.ascending(a.value, b.value))
 
     var x = d3.scaleTime()
-    .domain(d3.extent(scores, d => d.date))
-    .rangeRound([margin.left, chartWidth])
+        .domain(d3.extent(scores, d => d.date))
+        .rangeRound([margin.left, chartWidth])
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(scores, d => d.value)])
@@ -659,11 +661,11 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .x(d => x(d.date))
         .y(d => y(d.value))
         .curve(d3.curveLinear)
-    
+
     // Now we simply add in some dates
     var dateList = []
-    scores.forEach(function(key, index){
-        if (!dateList.includes(key.date)){
+    scores.forEach(function (key, index) {
+        if (!dateList.includes(key.date)) {
             dateList.push(key.date)
         }
     })
@@ -676,18 +678,18 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr("x2", d => x(d))
         .attr("y1", 0)
         .attr("y2", chartHeight)
-        .attr("stroke", function(d){
-            if (d == barDate){
+        .attr("stroke", function (d) {
+            if (d == barDate) {
                 return '#BEBEBE'
             }
-            else{
+            else {
                 return "#F1F1F1"
             }
         })
         .attr('opacity', 0.7)
         .style('cursor', 'pointer')
         .style('stroke-width', '10px')
-    
+
     var stickTexts = svg.selectAll("stickLabel")
         .data(dateList)
         .enter()
@@ -695,7 +697,7 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr("class", 'stickText')
         // .attr("x", d => x(d))
         // .attr('y', -18)
-        .attr("transform", d => "translate("+(x(d)+5)+",-5) rotate(45)")
+        .attr("transform", d => "translate(" + (x(d) + 5) + ",-5) rotate(45)")
         // .attr("dy", "-.75em")
         // .attr('dx')
         .text(d => moment(d).format('MMM D'))
@@ -703,16 +705,16 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr("dy", ".35em")
         .attr("font-size", "0.7em")
         .style('cursor', 'pointer')
-        .style('font-weight', function(d){
-            if (d == barDate){
+        .style('font-weight', function (d) {
+            if (d == barDate) {
                 return 'bold'
             }
-            else{
+            else {
                 return 'normal'
             }
         })
-        
-        
+
+
 
     svg.append('text')
         .attr('class', 'barDateLabel')
@@ -732,7 +734,7 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr('text-anchor', 'end')
         .attr("font-size", "0.7em")
 
-    groups.forEach(function(key, index){
+    groups.forEach(function (key, index) {
         var toPlot = scores.filter(d => (d['description'] == key));
         item = popStyle[key]
         svg.append('path')
@@ -741,19 +743,19 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .attr("d", line)
             .style('fill', 'none')
             .style('stroke', item.color)
-            .style('stroke-width', function(){
-                if (key == 'pop_total'){
+            .style('stroke-width', function () {
+                if (key == 'pop_total') {
                     return 4;
                 }
-                else{
+                else {
                     return 2;
                 }
             })
-            .style('opacity', function(){
-                if (key == 'pop_total'){
+            .style('opacity', function () {
+                if (key == 'pop_total') {
                     return 1.0;
                 }
-                else{
+                else {
                     return 0.7;
                 }
             })
@@ -761,37 +763,37 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         svg.append("text")
             .attr("transform", "rotate(-90)")
             .attr("y", 0 - margin.left)
-            .attr("x",0 - (chartHeight / 2))
+            .attr("x", 0 - (chartHeight / 2))
             .attr("dy", "1em")
             .style("text-anchor", "middle")
-            .text(ylabel);  
+            .text(ylabel);
 
         svg.append("g")
             .attr("transform", "translate(" + margin.left + ", 0)")
             .call(d3.axisLeft(y).ticks(5));
 
-        
-        if (boxWidth < 900){
+
+        if (boxWidth < 900) {
             svg.append("g")
-            .attr("transform", "translate(0," + chartHeight + ")")
-            .call(d3.axisBottom(x).ticks(4).tickFormat(d3.timeFormat("%b %Y")));
+                .attr("transform", "translate(0," + chartHeight + ")")
+                .call(d3.axisBottom(x).ticks(4).tickFormat(d3.timeFormat("%b %Y")));
         }
-        else{
+        else {
             svg.append("g")
-            .attr("transform", "translate(0," + chartHeight + ")")
-            .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %Y")));
+                .attr("transform", "translate(0," + chartHeight + ")")
+                .call(d3.axisBottom(x).tickFormat(d3.timeFormat("%b %Y")));
         }
     });
 
     var barY = d3.scaleBand()
         .domain(barScores.map(d => popStyle[d.description].label))
         .range([chartHeight, 10])
-        .padding(0.1);  
+        .padding(0.1);
 
     var barX = d3.scaleLinear()
         .domain([0, d3.max(barScores, d => d.value)])
-        .range([0, margin.right-20])
-    
+        .range([0, margin.right - 20])
+
     var bars = svg.selectAll('bars')
         .data(barScores)
         .enter()
@@ -801,80 +803,80 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
         .attr("x", d => chartWidth + 10)
         .attr("height", barY.bandwidth())
         .attr("width", d => barX(d.value))
-        .style("opacity", function(d){
-            if (d.description == 'pop_total'){
+        .style("opacity", function (d) {
+            if (d.description == 'pop_total') {
                 return 1.0;
             }
-            else{
+            else {
                 return 0.5;
             }
         })
         .attr("fill", d => popStyle[d.description].color)
-    
+
     var barLabels = svg.selectAll("barlabel")
         .data(barScores)
         .enter()
         .append("text")
         .attr('class', 'mpbarText')
         .attr("x", d => chartWidth + 14)
-        .attr('y', d => barY(popStyle[d.description].label) + barY.bandwidth()/2)
+        .attr('y', d => barY(popStyle[d.description].label) + barY.bandwidth() / 2)
         .text(d => popStyle[d.description].label + " (" + styleNumbers(d.value) + ")")
         .attr('text-anchor', 'left')
         .attr("dy", ".35em")
         .attr("font-size", "0.8em")
-        .style('fill', function(d){
-            if (d.description == 'pop_total'){
+        .style('fill', function (d) {
+            if (d.description == 'pop_total') {
                 return 'white';
             }
-            else{
+            else {
                 return 'black';
             }
         })
-    
+
     // Now some mouse effects
-    stickTexts.on('click', function (d){
+    stickTexts.on('click', function (d) {
         updateBars(d)
     })
 
-    sticks.on('click', function (d){
+    sticks.on('click', function (d) {
         updateBars(d)
     })
 
     stickTexts.on('mouseover', function (d) {
         d3.select(this)
-        .transition()
-        .style('fill', '#2D74ED')
-        .style('font-weight', 'bold')
+            .transition()
+            .style('fill', '#2D74ED')
+            .style('font-weight', 'bold')
         // Highlight the connections
     })
-    .on('mouseout', function (d) {
-        if (d == barDate){
-            d3.select(this).transition().style('font-weight', 'bold').style('fill', 'black')
-        }
-        else{
-            d3.select(this).transition().style('font-weight', 'normal').style('fill', 'black')
-        }
-        
-    })
+        .on('mouseout', function (d) {
+            if (d == barDate) {
+                d3.select(this).transition().style('font-weight', 'bold').style('fill', 'black')
+            }
+            else {
+                d3.select(this).transition().style('font-weight', 'normal').style('fill', 'black')
+            }
+
+        })
 
     sticks.on('mouseover', function (d) {
         d3.select(this)
-        .transition()
-        .attr('stroke', '#2D74ED')
-        .attr('opacity', 0.5)
+            .transition()
+            .attr('stroke', '#2D74ED')
+            .attr('opacity', 0.5)
         // Highlight the connections
     })
-    .on('mouseout', function (d) {
-        if (d == barDate){
-            d3.select(this).transition().attr('stroke', '#BEBEBE')
-        }
-        else{
-            d3.select(this).transition().attr('stroke', '#F1F1F1')
-        }
-        
-    })
+        .on('mouseout', function (d) {
+            if (d == barDate) {
+                d3.select(this).transition().attr('stroke', '#BEBEBE')
+            }
+            else {
+                d3.select(this).transition().attr('stroke', '#F1F1F1')
+            }
 
-    function updateBars(upDate){
+        })
+
+    function updateBars(upDate) {
         barDate = upDate
         barScores = scores.filter(d => d['date'] == barDate)
         barScores = barScores.sort((a, b) => d3.ascending(a.value, b.value))
@@ -894,16 +896,16 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .attr("x", d => chartWidth + 10)
             .attr("height", barY.bandwidth())
             .attr("width", d => barX(d.value))
-            .style("opacity", function(d){
-                if (d.description == 'pop_total'){
+            .style("opacity", function (d) {
+                if (d.description == 'pop_total') {
                     return 1.0;
                 }
-                else{
+                else {
                     return 0.5;
                 }
             })
             .attr("fill", d => popStyle[d.description].color)
-            
+
 
         svg.selectAll(".mpbarText")
             .remove()
@@ -913,38 +915,38 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
             .append("text")
             .attr('class', 'mpbarText')
             .attr("x", d => chartWidth + 14)
-            .attr('y', d => barY(popStyle[d.description].label) + barY.bandwidth()/2)
+            .attr('y', d => barY(popStyle[d.description].label) + barY.bandwidth() / 2)
             .text(d => popStyle[d.description].label + " (" + styleNumbers(d.value) + ")")
             .attr('text-anchor', 'left')
             .attr("dy", ".35em")
             .attr("font-size", "0.8em")
-            .style('fill', function(d){
-                if (d.description == 'pop_total'){
+            .style('fill', function (d) {
+                if (d.description == 'pop_total') {
                     return 'white';
                 }
-                else{
+                else {
                     return 'black';
                 }
             })
-        
+
         svg.selectAll(".stickText")
-        .transition()
-            .style('font-weight', function(d){
-                if (d == barDate){
+            .transition()
+            .style('font-weight', function (d) {
+                if (d == barDate) {
                     return 'bold'
                 }
-                else{
+                else {
                     return 'normal'
                 }
             })
-        
+
         svg.selectAll('.theStick')
-        .transition()
-            .attr("stroke", function(d){
-                if (d == barDate){
+            .transition()
+            .attr("stroke", function (d) {
+                if (d == barDate) {
                     return '#BEBEBE'
                 }
-                else{
+                else {
                     return "#F1F1F1"
                 }
             })
@@ -954,7 +956,7 @@ function multilinePlot(box, svg, scores, maxDate, id, margin, groups, ylabel, no
     }
 }
 
-function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
+function barChart(box, svg, scores, date, id, margin, groups, ylabel, note) {
     var boxWidth = d3.select(id).node().getBoundingClientRect().width
     var boxHeight = d3.select(id).node().getBoundingClientRect().height
     var chartWidth = boxWidth - margin.left - margin.right
@@ -965,26 +967,26 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
 
     // var scores = chartData.filter(d => (d['score_key'] == score) & (d['zone'] == zone))
     var toPlot = scores.filter(d => groups.includes(d.description))
-    
+
     toPlot = toPlot.sort((a, b) => d3.descending(a.value, b.value))
     // var toPlot = chartData.filter(d => (d['description'] == key));
 
     var x = d3.scaleBand()
         .domain(toPlot.map(d => popStyle[d.description].label))
         .range([margin.left, chartWidth])
-        .padding(0.2);  
+        .padding(0.2);
 
-    if (id == '#jobs-fare-series'){
+    if (id == '#jobs-fare-series') {
         var y = d3.scaleLinear()
-        .domain([0, 100])
-        .range([chartHeight, 0])
+            .domain([0, 100])
+            .range([chartHeight, 0])
     }
-    else{
+    else {
         var y = d3.scaleLinear()
-        .domain([0, d3.max(toPlot, d => d.value)])
-        .range([chartHeight, 0])
+            .domain([0, d3.max(toPlot, d => d.value)])
+            .range([chartHeight, 0])
     }
-    
+
 
     svg.append("g")
         .attr("transform", "translate(0," + chartHeight + ")")
@@ -992,11 +994,11 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .selectAll('text')
         // .attr("transform", "translate(-10,0)")
         .style("text-anchor", "middle");
-    
+
     // svg.append("g")
     //     .attr("transform", "translate(" + margin.left + ", 0)")
     //     .call(d3.axisLeft(y));
-    
+
     svg.selectAll('bars')
         .data(toPlot)
         .enter()
@@ -1006,19 +1008,19 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .attr("width", x.bandwidth())
         .attr("height", d => chartHeight - y(d.value))
         .attr("fill", d => popStyle[d.description].color)
-        .attr('stroke', function(d){
-            if (d.description == 'pop_total'){
+        .attr('stroke', function (d) {
+            if (d.description == 'pop_total') {
                 return '5px solid black';
             }
-            else{
+            else {
                 return 'none';
             }
         })
-        .attr('opacity', function(d){
-            if (d.description == 'pop_total'){
+        .attr('opacity', function (d) {
+            if (d.description == 'pop_total') {
                 return 1.0;
             }
-            else{
+            else {
                 return 0.5;
             }
         })
@@ -1042,14 +1044,14 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .data(toPlot)
         .enter()
         .append("text")
-        .attr("x", d => x(popStyle[d.description].label) + x.bandwidth()/2)
+        .attr("x", d => x(popStyle[d.description].label) + x.bandwidth() / 2)
         .attr('y', d => y(d.value) - 10)
         .text(d => styleNumbers(d.value))
-        .style('font-weight', function(d){
-            if (d.description == 'pop_total'){
+        .style('font-weight', function (d) {
+            if (d.description == 'pop_total') {
                 return 'bold';
             }
-            else{
+            else {
                 return 'normal';
             }
         })
@@ -1067,7 +1069,7 @@ function barChart(box, svg, scores, date, id, margin, groups, ylabel, note){
         .attr("font-size", "0.7em")
 }
 
-function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel, groupLabels, unit, note){
+function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel, groupLabels, unit, note) {
     var boxWidth = d3.select(id).node().getBoundingClientRect().width
     var boxHeight = d3.select(id).node().getBoundingClientRect().height
     var chartWidth = boxWidth - margin.left - margin.right
@@ -1081,7 +1083,7 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
     var x = d3.scaleBand()
         .domain(groups.map(d => groupLabels[d]))
         .range([margin.left, chartWidth])
-        .padding(0.2);  
+        .padding(0.2);
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(scores, d => d.value)])
@@ -1111,7 +1113,7 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .data(scores)
         .enter()
         .append("text")
-        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth()/2)
+        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth() / 2)
         .attr('y', d => y(d.value) - 6)
         .text(d => styleNumbers(d.value) + " " + unit)
         .attr('text-anchor', 'middle')
@@ -1137,7 +1139,7 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .enter()
         .append("text")
         .attr("x", margin.left + 20)
-        .attr('y', d => 35 - margin.top + 15*subgroups.indexOf(d))
+        .attr('y', d => 35 - margin.top + 15 * subgroups.indexOf(d))
         .text(d => subgroupLabels[d])
         .attr('text-anchor', 'start')
         .attr('dominant-baseline', 'middle')
@@ -1148,7 +1150,7 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .enter()
         .append('rect')
         .attr('x', margin.left)
-        .attr('y', d => 30 - margin.top + 15*(subgroups.indexOf(d)))
+        .attr('y', d => 30 - margin.top + 15 * (subgroups.indexOf(d)))
         .attr('width', 10)
         .attr('height', 10)
         .attr('fill', d => color(d))
@@ -1162,8 +1164,8 @@ function groupedBarChart(box, svg, scores, id, margin, groups, subgroups, ylabel
         .attr('font-weight', 'bold')
 }
 
-function fareBarChart(box, svg, scores, id, margin, groups, 
-    subgroups, ylabel, groupLabels, unit, note){
+function fareBarChart(box, svg, scores, id, margin, groups,
+    subgroups, ylabel, groupLabels, unit, note) {
     var boxWidth = d3.select(id).node().getBoundingClientRect().width
     var boxHeight = d3.select(id).node().getBoundingClientRect().height
     var chartWidth = boxWidth - margin.left - margin.right
@@ -1176,7 +1178,7 @@ function fareBarChart(box, svg, scores, id, margin, groups,
     var x = d3.scaleBand()
         .domain(groups.map(d => groupLabels[d]))
         .range([margin.left, chartWidth])
-        .padding(0.2);  
+        .padding(0.2);
 
     var y = d3.scaleLinear()
         .domain([0, d3.max(scores, d => d.value)])
@@ -1210,7 +1212,7 @@ function fareBarChart(box, svg, scores, id, margin, groups,
         .data(scores)
         .enter()
         .append("text")
-        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth()/2)
+        .attr("x", d => x(groupLabels[d.description]) + xSub(d.subgroup) + xSub.bandwidth() / 2)
         .attr('y', d => y(d.value) - 6)
         .text(d => styleNumbers(d.value) + " " + unit)
         .attr('text-anchor', 'middle')
@@ -1236,7 +1238,7 @@ function fareBarChart(box, svg, scores, id, margin, groups,
         .enter()
         .append("text")
         .attr("x", margin.left + 20)
-        .attr('y', d => 52 - margin.top + 15*subgroups.indexOf(d))
+        .attr('y', d => 52 - margin.top + 15 * subgroups.indexOf(d))
         .text(d => subgroupLabels[d])
         .attr('text-anchor', 'start')
         .attr('dominant-baseline', 'middle')
@@ -1247,7 +1249,7 @@ function fareBarChart(box, svg, scores, id, margin, groups,
         .enter()
         .append('rect')
         .attr('x', margin.left)
-        .attr('y', d => 47 - margin.top + 15*(subgroups.indexOf(d)))
+        .attr('y', d => 47 - margin.top + 15 * (subgroups.indexOf(d)))
         .attr('width', 10)
         .attr('height', 10)
         .attr('fill', "#7F7F7F")
@@ -1269,61 +1271,61 @@ function fareBarChart(box, svg, scores, id, margin, groups,
         .attr("font-size", "0.9em")
 
     bars.on('mouseover', function (d) {
-        subtitle.text("On average, " + popStyle[d.description]['sentence'] + " with a fare budget can reach " + d.pct.toFixed(0) +'% of the total accessible jobs')
-        .transition()
+        subtitle.text("On average, " + popStyle[d.description]['sentence'] + " with a fare budget can reach " + d.pct.toFixed(0) + '% of the total accessible jobs')
+            .transition()
         d3.select(this)
-        .transition()
-        .attr('opacity', opacity(d.subgroup) + 0.2)
+            .transition()
+            .attr('opacity', opacity(d.subgroup) + 0.2)
     })
-    .on('mouseout', function (d) {
-        d3.select(this)
-        .transition()
-        .attr('opacity', opacity(d.subgroup))
-    })
+        .on('mouseout', function (d) {
+            d3.select(this)
+                .transition()
+                .attr('opacity', opacity(d.subgroup))
+        })
 }
 
-function populateDates(){
+function populateDates() {
     var startDateList = document.getElementById('start-date')
     var endDateList = document.getElementById('end-date')
 
     // Clear out what's there
 
     var x = startDateList.options.length - 1;
-    for(i = x; i >= 0; i--) {
+    for (i = x; i >= 0; i--) {
         startDateList.remove(i);
     }
     var x = endDateList.options.length - 1;
-    for(i = x; i >= 0; i--) {
+    for (i = x; i >= 0; i--) {
         endDateList.remove(i);
     }
 
     d3.json("/data/dates/" + view['name'])
-        .then(function(data){
+        .then(function (data) {
             // Rebuild it
             x = data.length
-            for(i=0; i < x; i++){
+            for (i = 0; i < x; i++) {
                 startDateList.options[i] = new Option(moment(data[i]).format("MMMM Do, YYYY"), moment(data[i]).valueOf())
                 endDateList.options[i] = new Option(moment(data[i]).format("MMMM Do, YYYY"), moment(data[i]).valueOf())
             }
 
-            startDateList.options[startDateList.options.length-1].selected = true;
+            startDateList.options[startDateList.options.length - 1].selected = true;
             startDateList.options[0].disabled = true;
             endDateList.options[0].selected = true;
-            endDateList.options[endDateList.options.length-1].disabled=true;
-    });
+            endDateList.options[endDateList.options.length - 1].disabled = true;
+        });
 }
 
-function startDateChanged(){
+function startDateChanged() {
     var startDateList = document.getElementById('start-date')
     var endDateList = document.getElementById('end-date')
 
     var startIndex = startDateList.selectedIndex
     var x = endDateList.options.length
-    for (i=0; i<x; i++){
-        if (i >= startIndex){
+    for (i = 0; i < x; i++) {
+        if (i >= startIndex) {
             endDateList.options[i].disabled = true;
         }
-        else{
+        else {
             endDateList.options[i].disabled = false;
         }
     }
@@ -1342,40 +1344,40 @@ function startDateChanged(){
  *    follow the previous, false otherwise.
  * @return {Array} An array of segments (subarrays) of the line data
  */
- function computeSegments(lineData, defined, isNext) {
+function computeSegments(lineData, defined, isNext) {
     defined = defined || function (d) { return true; };
     isNext = isNext || function (prev, curr) { return true; };
     var startNewSegment = true;
-  
+
     // split into segments of continuous data
     var segments = lineData.reduce(function (segments, d) {
-      // skip if this point has no data
-      if (!defined(d)) {
-        startNewSegment = true;
-        return segments;
-      }
-  
-      // if we are starting a new segment, start it with this point
-      if (startNewSegment) {
-        segments.push([d]);
-        startNewSegment = false;
-  
-      // otherwise see if we are adding to the last segment
-      } else {
-        var lastSegment = segments[segments.length - 1];
-        var lastDatum = lastSegment[lastSegment.length - 1];
-        // if we expect this point to come next, add it to the segment
-        if (isNext(lastDatum, d)) {
-          lastSegment.push(d);
-  
-        // otherwise create a new segment
-        } else {
-          segments.push([d]);
+        // skip if this point has no data
+        if (!defined(d)) {
+            startNewSegment = true;
+            return segments;
         }
-      }
-  
-      return segments;
+
+        // if we are starting a new segment, start it with this point
+        if (startNewSegment) {
+            segments.push([d]);
+            startNewSegment = false;
+
+            // otherwise see if we are adding to the last segment
+        } else {
+            var lastSegment = segments[segments.length - 1];
+            var lastDatum = lastSegment[lastSegment.length - 1];
+            // if we expect this point to come next, add it to the segment
+            if (isNext(lastDatum, d)) {
+                lastSegment.push(d);
+
+                // otherwise create a new segment
+            } else {
+                segments.push([d]);
+            }
+        }
+
+        return segments;
     }, []);
-  
+
     return segments;
-  }
+}

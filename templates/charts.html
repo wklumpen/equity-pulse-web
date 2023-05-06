@@ -10,396 +10,594 @@
 <!-- Primary Page Layout
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <script>
-    var view = JSON.parse('{{ view | tojson}}');
+  var view = JSON.parse('{{ view | tojson}}');
 </script>
 <!-- <div class='wrapper white banner' style="background-image: url('/static/img/{{view['name']}}.jpg');"> -->
 <div class="grey lighten-4">
-<div class="row container">
-  <div class="col s12 l10 offset-l1">
-    <h1><b>The {{view['title']}} Story</b></h1>
-    <p class='flow-text'>Public transportation can offer a "ladder of opportunity", providing affordable and convenient connections to jobs, goods and services, medical care, and other essentials of daily life. But pervasive racism and discrimination in land use, transportation, and transit planning have created wide gaps in transit access across race, income, and other characteristics, worsening social inequity.</p>
-    <p class='flow-text'><b>The {{view['title']}} region is no exception:</b></p>
-    {{abstract|safe}}
-  </div>
-</div>
-<div class='center-align'>
-  <img class='responsive-img' src="/static/img/{{view['name']}}/banner-1.jpg">
-</div>
-<div class='section container'>
-  <div class="row">
-    <div class='col s12'>
-      <a id="introduction"></a>
-      <h2>Introduction</h2>
-    </div>
-  </div>
-  <div class="row">
-    <div class='col s12'>
-        <p class='flow-text'>We evaluated the extent to which residents of the {{view['title']}} region have equitable transit access to jobs, stores, hospitals, and other important destinations. Do people with the greatest need for transit have the best access to fast, frequent, reliable, affordable service close to home? This page summarizes disparities in transit access between different groups of people, and shows how those outcomes have shifted (or not) as a result of service changes since February 2020. Evaluations are based on the combined services provided by all transit agencies in the {{view['title']}} region.</p>
-
-        <p class='flow-text'>The analyses below are based on scheduled transit service and cannot account for the impact of disruptions in service delivery like canceled trips, which have been significant at some times in some regions (you can read more about the technical challenges in tracking "ghost buses" <a href="https://transitcenter.org/ghost-buses-are-haunting-riders-across-america/">here</a>. See the <a href='/methodology'>How It Works</a> page for more information on the analysis.</p>
+  <div class="row container">
+    <div class="col s12 l10 offset-l1">
+      <h1><b>The {{view['title']}} Story</b></h1>
+      <p class='flow-text'>Public transportation can offer a "ladder of opportunity", providing affordable and
+        convenient connections to jobs, goods and services, medical care, and other essentials of daily life. But
+        pervasive racism and discrimination in land use, transportation, and transit planning have created wide gaps in
+        transit access across race, income, and other characteristics, worsening social inequity.</p>
+      <p class='flow-text'><b>The {{view['title']}} region is no exception:</b></p>
+      {{abstract|safe}}
+      <div class="card-panel amber lighten-3">
+        <span class="black-text">
+          <p class='flow-text'><b>Note about Fare Data:</b> Data issues may be influencing the low-cost fare access
+            measures. Until we can resolve this issue, we caution against using the low-cost fare access metrics. Please
+            contact dashboard@transitcenter.org with questions.</p>
+      </div>
     </div>
 
-    <div class='col s12 m6 offset-m3'>
-      <h5>Jump to a Section</h5>
-      <div class="collection grey lighten-5">
+  </div>
+  <div class='center-align'>
+    <img class='responsive-img' src="/static/img/{{view['name']}}/banner-1.jpg">
+  </div>
+  <div class='section container'>
+    <div class="row">
+      <div class='col s12'>
+        <a id="introduction"></a>
+        <h2>Introduction</h2>
+      </div>
+    </div>
+    <div class="row">
+      <div class='col s12'>
+        <p class='flow-text'>We evaluated the extent to which residents of the {{view['title']}} region have equitable
+          transit access to jobs, stores, hospitals, and other important destinations. Do people with the greatest need
+          for transit have the best access to fast, frequent, reliable, affordable service close to home? This page
+          summarizes disparities in transit access between different groups of people, and shows how those outcomes have
+          shifted (or not) as a result of service changes since February 2020. Evaluations are based on the combined
+          services provided by all transit agencies in the {{view['title']}} region.</p>
+
+        <p class='flow-text'>The analyses below are based on scheduled transit service and cannot account for the impact
+          of disruptions in service delivery like canceled trips, which have been significant at some times in some
+          regions (you can read more about the technical challenges in tracking "ghost buses" <a
+            href="https://transitcenter.org/ghost-buses-are-haunting-riders-across-america/">here</a>). See the <a
+            href='/methodology'>How It Works</a> page for more information on the analysis.</p>
+      </div>
+
+      <div class='col s12 m6 offset-m3'>
+        <h5>Jump to a Section</h5>
+        <div class="collection grey lighten-5">
           <a href="#theme-access" class="collection-item blue-text text-darken-2">Access to Destinations on Transit</a>
           <a href="#los" class="collection-item blue-text text-darken-2">Transit Service Intensity</a>
-          <a href="#fares" class="collection-item blue-text text-darken-2">Transit Fares</a>
+          <!-- <a href="#fares" class="collection-item blue-text text-darken-2">Transit Fares</a> -->
           <a href="#reliabilitySection" class="collection-item blue-text text-darken-2">Service Reliability</a>
           <a href="#ada" class="collection-item blue-text text-darken-2">ADA Accessibility</a>
-      </div>
-    </div>
-  </div>
-</div>
-<div class='center-align'>
-  <img class='responsive-img' src="/static/img/{{view['name']}}/banner-2.jpg">
-</div>
-<div class='section container'>
-  <div class='row'>
-    <div class="col s12">
-      <a id="theme-access"></a>
-      <h2>Access to Destinations on Transit</h2>
-    </div>
-  </div>
-  <div class='row'>
-    <h3 class='left-align'>How long are trips to essential destinations when traveling by transit vs. by car?</h3>
-
-    <p class='flow-text'>One of the most important ways to assess public transit is to measure the access it provides. What can you reach on transit in a given amount of time, and how does that compare to other travel options?</p>
-
-    <p class='flow-text'>Public transit doesn't need to provide greater access than driving to be useful to large numbers of people. However, transit will meet few people's needs when it is <i>substantially</i> slower than a car trip. If people are consistently unable to access places using the public transit system, they are more likely to buy private vehicles.</p>
-    
-    <p class='flow-text'>This chart compares average travel times for each mode for people living in poverty. For each of the following categories, it shows the average travel time by car or transit: the nearest hospital, urgent care facility, and college/university, and the third-nearest grocery store and pharmacy.</p>
-  </div>
-  <div class='row'>
-    <div class='col s12'>
-        <div class="card-panel">
-            <div id="car-jobs-access-series" class="svg-container"></div>
         </div>
-    </div>
-  </div>
-  <div class='row'>
-    <div class='col s12 left-align'>
-        <h3 class='left-align'>How many jobs can people reach in 45 minutes on public transit?</h3>
-        <p class='flow-text'>This chart shows the number of jobs that different groups of people can reach on transit in 45 minutes. <b>In most regions, there is a significant racial access gap</b>: The average white resident can access many more jobs using transit compared to the average Black or Latinx resident.</p>
-        <p class='flow-text'>Even in regions without this access gap, transit is scarce for many riders. In the {{view['title']}} region, the average resident can access {{ "{:,.0f}".format(view['car_access'])}} jobs in 45 minutes by car, substantially more than by transit. </p>
-        <p class='flow-text'>When people are unable to access many jobs using transit, their opportunities in life may be limited. They may have to forgo a job that is a good match for their skills, for instance. Or they may be compelled to take out risky loans to buy and maintain a car.</p>
-        <p class='flow-text'>Access is a function of both transportation and land use. In regions where white residents tend to live closer to the central business district, making transit more equitable will entail intentionally accounting for that proximity advantage.</p>
-        <p class='flow-text'>(Note: Access to jobs can be a useful proxy for access to other destinations, since many jobs represent retail and service outlets that are important in people's everyday lives.)</p>
-    </div>
-  </div>
-  <div class='row'>
-      <div class="col s12">
-          <div class="card-panel">
-              <div id="jobs-access-groups-date" class="svg-container"></div>
-              <p>You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the {{view['title']}} Urban Core on a map.</a></p>
-          </div>
       </div>
+    </div>
   </div>
-  <div class='row'>
+  <div class='center-align'>
+    <img class='responsive-img' src="/static/img/{{view['name']}}/banner-2.jpg">
+  </div>
+  <div class='section container'>
+    <div class='row'>
+      <div class="col s12">
+        <a id="theme-access"></a>
+        <h2>Access to Destinations on Transit</h2>
+      </div>
+    </div>
+    <div class='row'>
+      <h3 class='left-align'>How long are trips to essential destinations when traveling by transit vs. by car?</h3>
+
+      <p class='flow-text'>One of the most important ways to assess public transit is to measure the access it provides.
+        What can you reach on transit in a given amount of time, and how does that compare to other travel options?</p>
+
+      <p class='flow-text'>Public transit doesn't need to provide greater access than driving to be useful to large
+        numbers of people. However, transit will meet few people's needs when it is <i>substantially</i> slower than a
+        car trip. If people are consistently unable to access places using the public transit system, they are more
+        likely to buy private vehicles.</p>
+
+      <p class='flow-text'>This chart compares average travel times for each mode for people living in poverty. For each
+        of the following categories, it shows the average travel time by car or transit: the nearest hospital, urgent
+        care facility, and college/university, and the third-nearest grocery store and pharmacy.</p>
+    </div>
+    <div class='row'>
+      <div class='col s12'>
+        <div class="card-panel">
+          <div id="car-jobs-access-series" class="svg-container"></div>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
+      <div class='col s12 left-align'>
+        <h3 class='left-align'>How many jobs can people reach in 45 minutes on public transit?</h3>
+        <p class='flow-text'>This chart shows the number of jobs that different groups of people can reach on transit in
+          45 minutes. <b>In most regions, there is a significant racial access gap</b>: The average white resident can
+          access many more jobs using transit compared to the average Black or Latinx resident.</p>
+        <p class='flow-text'>Even in regions without this access gap, transit is scarce for many riders. In the
+          {{view['title']}} region, the average resident can access {{ "{:,.0f}".format(view['car_access'])}} jobs in 45
+          minutes by car, substantially more than by transit. </p>
+        <p class='flow-text'>When people are unable to access many jobs using transit, their opportunities in life may
+          be limited. They may have to forgo a job that is a good match for their skills, for instance. Or they may be
+          compelled to take out risky loans to buy and maintain a car.</p>
+        <p class='flow-text'>Access is a function of both transportation and land use. In regions where white residents
+          tend to live closer to the central business district, making transit more equitable will entail intentionally
+          accounting for that proximity advantage.</p>
+        <p class='flow-text'>(Note: Access to jobs can be a useful proxy for access to other destinations, since many
+          jobs represent retail and service outlets that are important in people's everyday lives.)</p>
+      </div>
+    </div>
+    <div class='row'>
+      <div class="col s12">
+        <div class="card-panel">
+          <div id="jobs-access-groups-date" class="svg-container"></div>
+          <p>You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the
+              most recent data on access to jobs in the {{view['title']}} Urban Core on a map.</a></p>
+        </div>
+      </div>
+    </div>
+    <div class='row'>
       <div class='col s12'>
         <h3 class='left-align'>How has access to jobs by public transit changed over time?</h3>
       </div>
-      <p class='flow-text'>The pandemic has led to significant transit service changes (see Transit Service Intensity below), which have affected what people can access on transit. This figure shows how the number of jobs accessible in 45 minutes has changed since February 2020.</p>
+      <p class='flow-text'>The pandemic has led to significant transit service changes (see Transit Service Intensity
+        below), which have affected what people can access on transit. This figure shows how the number of jobs
+        accessible in 45 minutes has changed since February 2020.</p>
 
-      <p class='flow-text'>While jobs access has fluctuated for most groups of people, <b>in most regions large racial and income access gaps persisted over the course of the pandemic</b>, even while BIPOC workers were far more likely than white workers to continue commuting. This shows how inequitable access is rooted in segregated land use that isolates some people from job centers, and transit systems that inadequately connect them to those opportunities. Transit service may have changed during the pandemic, but not in ways that overcome the underlying segregation.</p>
-  </div>
+      <p class='flow-text'>While jobs access has fluctuated for most groups of people, <b>in most regions large racial
+          and income access gaps persisted over the course of the pandemic</b>, even while BIPOC workers were far more
+        likely than white workers to continue commuting. This shows how inequitable access is rooted in segregated land
+        use that isolates some people from job centers, and transit systems that inadequately connect them to those
+        opportunities. Transit service may have changed during the pandemic, but not in ways that overcome the
+        underlying segregation.</p>
+    </div>
 
-  <div class='row'>
+    <div class='row'>
       <div class="col s12">
-          <div class="card-panel">
-              <div id="jobs-access-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to jobs in the Urban Core on a map.</a></p>
-          </div>
+        <div class="card-panel">
+          <div id="jobs-access-series" class="svg-container"></div>
+          <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the
+            data on the right bar chart by clicking a different date or a gray bar. You can also <a
+              href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareN&zone=urban&demo=none">view the most recent data
+              on access to jobs in the Urban Core on a map.</a></p>
+        </div>
       </div>
-  </div>
+    </div>
 
-  <div class='row'>
+    <div class='row'>
       <div class='col s12'>
-          <h3>How long does it take to travel to the nearest hospital on public transit?</h3>
+        <h3>How long does it take to travel to the nearest hospital on public transit?</h3>
       </div>
-      <p class='flow-text'>Transit's importance goes far beyond the commute. Transit riders need reliable access to essential services like health care. Research has shown a strong connection between unreliable transportation and worse health outcomes, due to missed appointments or inability to access treatment in the first place.</p>
+      <p class='flow-text'>Transit's importance goes far beyond the commute. Transit riders need reliable access to
+        essential services like health care. Research has shown a strong connection between unreliable transportation
+        and worse health outcomes, due to missed appointments or inability to access treatment in the first place.</p>
 
-      <p class='flow-text'>This chart shows transit travel time to the nearest hospital and how it varies for different groups of people.</p>
-  </div>
+      <p class='flow-text'>This chart shows transit travel time to the nearest hospital and how it varies for different
+        groups of people.</p>
+    </div>
 
-  <div class='row'>
+    <div class='row'>
       <div class="col s12">
-          <div class="card-panel">
-              <div id="hospital-access-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent data on access to hospitals in the Urban Core on a map.</a> 
-              </p>
-          </div>
+        <div class="card-panel">
+          <div id="hospital-access-series" class="svg-container"></div>
+          <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the
+            data on the right bar chart by clicking a different date or a gray bar. You can also <a
+              href="/map/{{view['name']}}?key=hospitals_M_t1_PM_autoN_fareN&zone=urban&demo=none">view the most recent
+              data on access to hospitals in the Urban Core on a map.</a>
+          </p>
+        </div>
       </div>
-  </div>
+    </div>
 
-  <div class='row'>
-    <div class='col s12'>
+    <div class='row'>
+      <div class='col s12'>
         <h3>How long does it take to travel to the third-nearest grocery store on public transit?</h3>
-        <p class='flow-text'>Transit access to healthy food matters too. This chart shows the average transit travel time to the third-closest grocery store on Saturday mornings.</p>
+        <p class='flow-text'>Transit access to healthy food matters too. This chart shows the average transit travel
+          time to the third-closest grocery store on Saturday mornings.</p>
 
-        <p class='flow-text'>We show the third-closest store in order to convey how transit should connect people to a variety of food options. A growing body of research indicates that people don’t simply travel to the closest food store. They value multiple options that offer different combinations of value, quality, variety, and culturally-relevant food.</p>
+        <p class='flow-text'>We show the third-closest store in order to convey how transit should connect people to a
+          variety of food options. A growing body of research indicates that people don’t simply travel to the closest
+          food store. They value multiple options that offer different combinations of value, quality, variety, and
+          culturally-relevant food.</p>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class="col s12">
+        <div class="card-panel">
+          <div id="store-access-series" class="svg-container"></div>
+          <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the
+            data on the right bar chart by clicking a different date or a gray bar. You can also <a
+              href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data
+              on access to grocery stores in the Urban Core on a map.</a>
+          </p>
+        </div>
+      </div>
     </div>
   </div>
 
-  <div class='row'>
-      <div class="col s12">
-          <div class="card-panel">
-              <div id="store-access-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=snap_M_t3_WE_autoN_fareN&zone=urban&demo=none">view the most recent data on access to grocery stores in the Urban Core on a map.</a> 
-              </p>
-          </div>
-      </div>
+  <div class='center-align'>
+    <img class='responsive-img' src="/static/img/{{view['name']}}/banner-3.jpg">
   </div>
-</div>
 
-<div class='center-align'>
-  <img class='responsive-img' src="/static/img/{{view['name']}}/banner-3.jpg">
-</div>
-
-<div class='section container'>
-  <div class='row'>
+  <div class='section container'>
+    <div class='row'>
       <a id="los"></a>
       <h2>Transit Service Intensity</h2>
-      <p class='flow-text'>Transit agencies regularly adjust schedules, affecting how much transit service people have near home.</p>
-  </div>
-
-  <div class='row'>
-      <div class='col s12'>
-          <h3 class='left-align'>How has the average hourly number of transit trips serving people near their homes changed?</h3>
-
-          <p class='flow-text'>In most regions, transit agencies cut service during the initial stages of the pandemic, and have partially restored it over time. However, many agencies have  <a href="https://transitcenter.org/publication/bus-operators-in-crisis/">faced challenges</a> hiring and retaining enough transit operators to restore service to pre-pandemic levels.</p>
-
-          <p class='flow-text'>This chart shows how transit service intensity has changed for different groups over time. Transit service intensity is a function of route density (how many routes are within walking distance) and frequency (how often they run).</p>
-              
-          <p class='flow-text'>Demographic groups with access to high levels of transit service intensity tend to have short rides to neighborhood destinations like grocery stores combined with low transit access to regional destinations like major job centers. This seemingly contradictory outcome arises from the combination of racially segregated land use and the prevalence of rapid, regional-scale transit service in affluent areas. It underscores the importance of measuring people’s transit access to actual destinations: Assessing only transit inputs, such as transit service intensity, is not sufficient to convey the transit outcomes that people experience.</p>
-      </div>
-  </div>
-
-  <div class='row'>
-      <div class='col s12'>
-          <div class="card-panel">
-              <div id="los-series" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the data on the right bar chart by clicking a different date or a gray bar. You can also <a href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on average daily trips in the Urban Core on a map.</a></p>
-          </div>
-      </div>
-  </div>
-</div>
-
-<div class='center-align'>
-  <img class='responsive-img' src="/static/img/{{view['name']}}/banner-4.jpg">
-</div>
-
-<div class="section container">
-    <div class='row'>
-        <a id="fares"></a>
-        <h2>Transit Fares</h2>
-        <p class='flow-text'>Expensive fares for “premium” services constrain what people with limited income can reach on transit.</p>
+      <p class='flow-text'>Transit agencies regularly adjust schedules, affecting how much transit service people have
+        near home.</p>
     </div>
 
     <div class='row'>
-        <div class='col s12'>
-            <h3 class='left-align'>How does access to opportunity shrink for transit riders with a limited transportation budget?</h3>
-            
-            <p class='flow-text'>Many regions have a two-tiered transit system, with expensive, rapid regional transit on the one hand and affordable but slow local transit on the other. In these regions, people with low incomes are priced out of parts of the transit network, and don’t have as much access as more affluent riders.</p>
+      <div class='col s12'>
+        <h3 class='left-align'>How has the average hourly number of transit trips serving people near their homes
+          changed?</h3>
 
-            <p class='flow-text'>This chart shows how access shrinks for people who can’t afford "premium" transit trips. For each group, it compares the average person’s access to jobs taking only low-cost transit trips with their access to jobs using the entire transit network.</p> 
-                
-            <p class='flow-text'>Hover over a group to learn the share of total accessible jobs that can be reached by low-cost transit trips on average. A value of 100% means that someone taking only low-cost transit trips has the same access to jobs as someone who can afford higher fares. A value of 50% means that someone taking only low-cost trips can access half as many jobs.</p>
+        <p class='flow-text'>In most regions, transit agencies cut service during the initial stages of the pandemic,
+          and have partially restored it over time. However, many agencies have <a
+            href="https://transitcenter.org/publication/bus-operators-in-crisis/">faced challenges</a> hiring and
+          retaining enough transit operators to restore service to pre-pandemic levels.</p>
+
+        <p class='flow-text'>This chart shows how transit service intensity has changed for different groups over time.
+          Transit service intensity is a function of route density (how many routes are within walking distance) and
+          frequency (how often they run).</p>
+
+        <p class='flow-text'>Demographic groups with access to high levels of transit service intensity tend to have
+          short rides to neighborhood destinations like grocery stores combined with low transit access to regional
+          destinations like major job centers. This seemingly contradictory outcome arises from the combination of
+          racially segregated land use and the prevalence of rapid, regional-scale transit service in affluent areas. It
+          underscores the importance of measuring people’s transit access to actual destinations: Assessing only transit
+          inputs, such as transit service intensity, is not sufficient to convey the transit outcomes that people
+          experience.</p>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col s12'>
+        <div class="card-panel">
+          <div id="los-series" class="svg-container"></div>
+          <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Change the
+            data on the right bar chart by clicking a different date or a gray bar. You can also <a
+              href="/map/{{view['name']}}?key=los_trips_WKD&zone=urban&demo=none">view the most recent data on average
+              daily trips in the Urban Core on a map.</a></p>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='center-align' style="display:none;">
+    <img class='responsive-img' src="/static/img/{{view['name']}}/banner-4.jpg">
+  </div>
+
+  <div class="section container" style="display:none;">
+    <div class='row'>
+      <a id="fares"></a>
+      <h2>Transit Fares</h2>
+      <p class='flow-text'>Expensive fares for “premium” services constrain what people with limited income can reach on
+        transit.</p>
     </div>
 
     <div class='row'>
-        <div class='col s12'>
-            <div class="card-panel">
-                <div id="jobs-fares-series" class="svg-container"></div>
-                <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Hover over a group to learn about the fare disparity within that group. You can also <a href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareY&zone=msa&demo=none">view the most recent data on access to jobs via low-cost transit in the MSA on a map.</a></p>
-            </div>
-        </div>
-    </div>
-</div>
-<div>
-  <img class='responsive-img' src="/static/img/{{view['name']}}/banner-5.jpg">
-</div>
-<div class='section container' id='reliabilitySection'>
-  <div class='row'>
       <div class='col s12'>
-          <h2>Reliability</h2>
-          <p class='flow-text'>Will your train get delayed? Do you catch an early bus so that you’re not late to work if there’s traffic? Reliability, or how well transit service adheres to the schedule, affects access to opportunity. Unreliable transit service limits access by extending travel times — whether because someone’s trip is actually delayed or because they assume it will be and build in extra time for the trip.</p>
+        <h3 class='left-align'>How does access to opportunity shrink for transit riders with a limited transportation
+          budget?</h3>
 
-          <p class='flow-text'>Buses, which often have to share street space with car traffic, are less reliable than trains, which tend to operate in dedicated rights of way. The disparity is inequitable: Bus riders are more likely than train riders to be people of color and people with low incomes.</p>
+        <p class='flow-text'>Many regions have a two-tiered transit system, with expensive, rapid regional transit on
+          the one hand and affordable but slow local transit on the other. In these regions, people with low incomes are
+          priced out of parts of the transit network, and don’t have as much access as more affluent riders.</p>
 
-          <p class='flow-text'>This chart tracks transit on-time performance where data was available. On-time performance is defined as the fraction of all vehicles that arrive at stops between 1 minute earlier and 5 minutes later than scheduled. This measure does not capture canceled trips. Though rates of canceled trips have been elevated in some regions compared to 2019, most transit agencies still do not publicly report on cancellations.</p>
+        <p class='flow-text'>This chart shows how access shrinks for people who can’t afford "premium" transit trips.
+          For each group, it compares the average person’s access to jobs taking only low-cost transit trips with their
+          access to jobs using the entire transit network.</p>
 
-          {% if view['reliability'] %}
-          <div class="card-panel">
-              <div id="reliability" class="svg-container"></div>
-          </div>
-          {% else %}
-          <p class='flow-text'><b>The real-time data required to make reliability calculations is not available in {{view['title']}}.</b></p>
-          {% endif %}
+        <p class='flow-text'>Hover over a group to learn the share of total accessible jobs that can be reached by
+          low-cost transit trips on average. A value of 100% means that someone taking only low-cost transit trips has
+          the same access to jobs as someone who can afford higher fares. A value of 50% means that someone taking only
+          low-cost trips can access half as many jobs.</p>
       </div>
-  </div>
-</div>
-
-<div class='center-align'>
-  <img class='responsive-img' src="/static/img/{{view['name']}}/banner-6.jpg">
-</div>
-<div class='section container'>
-  <div class="row">
-    <div class="col s12" id='ada'>
-      <h2>ADA Accessibility</h2>
-      <p class='flow-text'>The measures above are calculated for people who can use stairs to access transit platforms and vehicles. Transit access is worse for people who use wheelchairs, due to a lack of investment in ADA-compliant transit stations, vehicles, sidewalk networks, and more.</p>
-
-      <p class='flow-text'>Currently, the data required to calculate transit access for people with disabilities are unavailable or incomplete in every region. Using General Transit Feed Specification data, transit agencies can provide information about whether a transit stop allows people using wheelchairs to board, but few do so consistently. Most municipal and regional governments lack complete information about where sidewalks and crosswalks exist, and do not keep this data current. Other required data include the ADA status of vehicles; transit station elevator reliability; and the network of curb cuts.</p>
-
-      <p class='flow-text'>Inadequate data make it more difficult for planners and advocates to address inequities in transportation faced by people with disabilities. Public agencies must address both.</p>
     </div>
-  </div>
-</div>
 
-<div class='center-align'>
-  <img class='responsive-img' src="/static/img/corona-transit.jpg">
-</div>
-<div class='section container'>
-  <div class="row">
-    <div class="col s12" id='coronaChart'>
-      <h2>COVID-19</h2>
-      <p class='flow-text'>During the Covid-19 pandemic, transit agencies have at times reduced service due to budgetary or staffing constraints, or expanded service to provide more space for riders. The pandemic has also shifted people’s decisions of when, where, or if to ride transit. The number of new Covid-19 cases in the central areas of the region are shown here to provide context for the trends above.</p>
-      <div class="col s12">
-          <div class="card-panel">
-              <div id="corona" class="svg-container"></div>
-              <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Hover over the chart to see the prevalence of Covid-19 in {{view['title']}} at different times. 
-          </div>
+    <div class='row'>
+      <div class='col s12'>
+        <div class="card-panel">
+          <div id="jobs-fares-series" class="svg-container"></div>
+          <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Hover over a
+            group to learn about the fare disparity within that group. You can also <a
+              href="/map/{{view['name']}}?key=C000_P_c45_AM_autoN_fareY&zone=msa&demo=none">view the most recent data on
+              access to jobs via low-cost transit in the MSA on a map.</a></p>
+        </div>
       </div>
     </div>
   </div>
+  <div>
+    <img class='responsive-img' src="/static/img/{{view['name']}}/banner-5.jpg">
+  </div>
+  <div class='section container' id='reliabilitySection'>
+    <div class='row'>
+      <div class='col s12'>
+        <h2>Reliability</h2>
+        <p class='flow-text'>Will your train get delayed? Do you catch an early bus so that you’re not late to work if
+          there’s traffic? Reliability, or how well transit service adheres to the schedule, affects access to
+          opportunity. Unreliable transit service limits access by extending travel times — whether because someone’s
+          trip is actually delayed or because they assume it will be and build in extra time for the trip.</p>
 
-  <div class='row'>
-    <div class='col s12'>
-      <h2>What Should Transit Agencies Do in Response to These Findings?</h2>
-      <p class='flow-text'>Agency decision makers should:
+        <p class='flow-text'>Buses, which often have to share street space with car traffic, are less reliable than
+          trains, which tend to operate in dedicated rights of way. The disparity is inequitable: Bus riders are more
+          likely than train riders to be people of color and people with low incomes.</p>
+
+        <p class='flow-text'>This chart tracks transit on-time performance where data was available. On-time performance
+          is defined as the fraction of all vehicles that arrive at stops between 1 minute earlier and 5 minutes later
+          than scheduled. This measure does not capture canceled trips. Though rates of canceled trips have been
+          elevated in some regions compared to 2019, most transit agencies still do not publicly report on
+          cancellations.</p>
+
+        {% if view['reliability'] %}
+        <div class="card-panel">
+          <div id="reliability" class="svg-container"></div>
+        </div>
+        {% else %}
+        <p class='flow-text'><b>The real-time data required to make reliability calculations is not available in
+            {{view['title']}}.</b></p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+
+  <div class='center-align'>
+    <img class='responsive-img' src="/static/img/{{view['name']}}/banner-6.jpg">
+  </div>
+  <div class='section container'>
+    <div class="row">
+      <div class="col s12" id='ada'>
+        <h2>ADA Accessibility</h2>
+        <p class='flow-text'>The measures above are calculated for people who can use stairs to access transit platforms
+          and vehicles. Transit access is worse for people who use wheelchairs, due to a lack of investment in
+          ADA-compliant transit stations, vehicles, sidewalk networks, and more.</p>
+
+        <p class='flow-text'>Currently, the data required to calculate transit access for people with disabilities are
+          unavailable or incomplete in every region. Using General Transit Feed Specification data, transit agencies can
+          provide information about whether a transit stop allows people using wheelchairs to board, but few do so
+          consistently. Most municipal and regional governments lack complete information about where sidewalks and
+          crosswalks exist, and do not keep this data current. Other required data include the ADA status of vehicles;
+          transit station elevator reliability; and the network of curb cuts.</p>
+
+        <p class='flow-text'>Inadequate data make it more difficult for planners and advocates to address inequities in
+          transportation faced by people with disabilities. Public agencies must address both.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class='center-align'>
+    <img class='responsive-img' src="/static/img/corona-transit.jpg">
+  </div>
+  <div class='section container'>
+    <div class="row">
+      <div class="col s12" id='coronaChart'>
+        <h2>COVID-19</h2>
+        <p class='flow-text'>During the Covid-19 pandemic, transit agencies have at times reduced service due to
+          budgetary or staffing constraints, or expanded service to provide more space for riders. The pandemic has also
+          shifted people’s decisions of when, where, or if to ride transit. The number of new Covid-19 cases in the
+          central areas of the region are shown here to provide context for the trends above.</p>
+        <div class="col s12">
+          <div class="card-panel">
+            <div id="corona" class="svg-container"></div>
+            <p class='info'><i class="tiny material-icons">info_outline</i> <b>This chart is interactive.</b> Hover over
+              the chart to see the prevalence of Covid-19 in {{view['title']}} at different times.
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class='row'>
+      <div class='col s12'>
+        <h2>What Should Transit Agencies Do in Response to These Findings?</h2>
+        <p class='flow-text'>Agency decision makers should:
         <ol class='browser-default'>
           <li class='flow-text'>Adopt and publicly publish measures of equitable access on transit.</li>
           <li class='flow-text'>Adjust investments, service, and policy in order to reduce measured gaps in access.</li>
         </ol>
-      </p>
-      <h3 class='left-align'>Measure Equitable Access</h3>
-      <p class='flow-text'>The Equity Dashboard measures <i>transit access to opportunity</i> - the ability for people to conveniently reach important destinations via transit. Access-to-opportunity measures are increasingly used in planning because they evaluate the transportation network according to how people experience it in real life, and because advances in computing capacity have made them feasible to calculate. </p>
+        </p>
+        <h3 class='left-align'>Measure Equitable Access</h3>
+        <p class='flow-text'>The Equity Dashboard measures <i>transit access to opportunity</i> - the ability for people
+          to conveniently reach important destinations via transit. Access-to-opportunity measures are increasingly used
+          in planning because they evaluate the transportation network according to how people experience it in real
+          life, and because advances in computing capacity have made them feasible to calculate. </p>
 
-      <p class='flow-text'>Transit agencies should include these access-to-opportunity measures in equity analysis:
+        <p class='flow-text'>Transit agencies should include these access-to-opportunity measures in equity analysis:
         <ul class='browser-default'>
-          <li class='flow-text'>Access to jobs on transit. (<i>For example, how many jobs are accessible by transit in a certain amount of time?</i>)</li>
-          <li class='flow-text'>Access to non-work destinations on transit, such as health care, groceries, and parks. (<i>For example, how long is the transit trip to the nearest hospital?</i>)</li>
+          <li class='flow-text'>Access to jobs on transit. (<i>For example, how many jobs are accessible by transit in a
+              certain amount of time?</i>)</li>
+          <li class='flow-text'>Access to non-work destinations on transit, such as health care, groceries, and parks.
+            (<i>For example, how long is the transit trip to the nearest hospital?</i>)</li>
           <li class='flow-text'>Changes over time in transit access to work and other essential destinations.</li>
         </ul>
-      </p>
-      <p class='flow-text'>To evaluate transit equity specifically, transit agencies must <b>disaggregate each access-to-opportunity measure for specific population groups, including</b>:
-      <ul class='browser-default'>
-        <li class="flow-text">By race and ethnicity</li>
-        <li class="flow-text">By income level</li>
-        <li class="flow-text">For cost-constrained riders (by calculating access on low-cost transit trips only)</li>
-        <li class="flow-text">For riders with disabilities</li>
-      </ul> 
-      </p>
-      <p class="flow-text">Disaggregated measures show how riders of different demographic groups experience transit service, and point to gaps in access that are inequitable.</p>
-      <p class='flow-text'>Transit agencies should use these measures to assess current service and future changes to the system. The transit access-to-opportunity measures described above can be replicated by any agency that has a high-quality General Transit Feed Specification (GTFS) and the capacity to analyze Census data (low-fare metrics and transit-car comparisons require additional data resources).</p>
-
-    <p class='flow-text'>Additionally, transit agencies should adopt the following practices::
-      <ul class='browser-default'>
-        <li class="flow-text">Make transit equity analysis publicly available, including reporting on these metrics during board meetings</li>
-        <li class="flow-text">Plan service enhancements that reduce the identified racial and economic access gaps over time</li>
-        <li class="flow-text">Develop an equity strategy grounded in clearly-defined principles and goals</li>
-        <li class="flow-text">Adopt public engagement practices that garner representative input</li>
-        <li class="flow-text">Create internal working groups and external advisory groups that advance equity across agency functions</li>
-      </ul>
-      </p>
-      
-      <h3 class='left-align'>Change Service and Focus Development to Reduce Access Gaps</h3>
-      <p class='flow-text'>Transit agencies should work to close racial access gaps and expand transit access for workers with low incomes and essential workers. Transit service changes alone can’t close the gaps; doing so also requires land use changes. The most effective ways to close gaps will vary by region. However, some general strategies include:
+        </p>
+        <p class='flow-text'>To evaluate transit equity specifically, transit agencies must <b>disaggregate each
+            access-to-opportunity measure for specific population groups, including</b>:
         <ul class='browser-default'>
-          <li class="flow-text"><b>Speeding up service</b>: Dedicate lanes on the street for buses and other transit modes.
+          <li class="flow-text">By race and ethnicity</li>
+          <li class="flow-text">By income level</li>
+          <li class="flow-text">For cost-constrained riders (by calculating access on low-cost transit trips only)</li>
+          <li class="flow-text">For riders with disabilities</li>
+        </ul>
+        </p>
+        <p class="flow-text">Disaggregated measures show how riders of different demographic groups experience transit
+          service, and point to gaps in access that are inequitable.</p>
+        <p class='flow-text'>Transit agencies should use these measures to assess current service and future changes to
+          the system. The transit access-to-opportunity measures described above can be replicated by any agency that
+          has a high-quality General Transit Feed Specification (GTFS) and the capacity to analyze Census data (low-fare
+          metrics and transit-car comparisons require additional data resources).</p>
+
+        <p class='flow-text'>Additionally, transit agencies should adopt the following practices::
+        <ul class='browser-default'>
+          <li class="flow-text">Make transit equity analysis publicly available, including reporting on these metrics
+            during board meetings</li>
+          <li class="flow-text">Plan service enhancements that reduce the identified racial and economic access gaps
+            over time</li>
+          <li class="flow-text">Develop an equity strategy grounded in clearly-defined principles and goals</li>
+          <li class="flow-text">Adopt public engagement practices that garner representative input</li>
+          <li class="flow-text">Create internal working groups and external advisory groups that advance equity across
+            agency functions</li>
+        </ul>
+        </p>
+
+        <h3 class='left-align'>Change Service and Focus Development to Reduce Access Gaps</h3>
+        <p class='flow-text'>Transit agencies should work to close racial access gaps and expand transit access for
+          workers with low incomes and essential workers. Transit service changes alone can’t close the gaps; doing so
+          also requires land use changes. The most effective ways to close gaps will vary by region. However, some
+          general strategies include:
+        <ul class='browser-default'>
+          <li class="flow-text"><b>Speeding up service</b>: Dedicate lanes on the street for buses and other transit
+            modes.
             <ul class='browser-default'>
-              <li class='flow-text'>Example: <a href="https://www.masstransitmag.com/bus/infrastructure/press-release/21156127/massachusetts-bay-transportation-authority-mbta-mbta-announces-groundbreaking-for-network-of-bus-lanes-in-everett-to-improve-transit-for-riders">Rapid expansion of bus lanes in the Boston region in 2020.</a></li>
-            </ul></li>
-          <li class="flow-text"><b>Expanding rapid options</b>: Build high-capacity transit projects that benefit communities of color, and add stops in BIPOC neighborhoods that express services have historically bypassed.
-            <ul class='browser-default'>
-              <li class='flow-text'>Example: <a href="https://www.indygo.net/red-line-detailed-information/">Prioritizing bus rapid transit in low-income neighborhoods of color in Indianapolis</a></li>
-              <li class='flow-text'>Example: <a href="https://twitter.com/MTA/status/1392890280983080966?s=20">Building new stations in the Bronx on a regional railroad.</a></li>
-            </ul></li>
-          <li class="flow-text"><b>Increasing all-day frequency</b>: Add more trips to early morning, midday, and evening periods than to the AM and PM rush hours.
-            <ul class='browser-default'>
-            <li class='flow-text'>Example: <a href="https://transitcenter.org/bostons-first-step-toward-regional-rail-reform-off-peak-trains-every-hour/">Shifting trips from peak periods to midday on Boston’s MBTA commuter rail.</a></li>
+              <li class='flow-text'>Example: <a
+                  href="https://www.masstransitmag.com/bus/infrastructure/press-release/21156127/massachusetts-bay-transportation-authority-mbta-mbta-announces-groundbreaking-for-network-of-bus-lanes-in-everett-to-improve-transit-for-riders">Rapid
+                  expansion of bus lanes in the Boston region in 2020.</a></li>
             </ul>
           </li>
-          <li class="flow-text"><b>Making "premium" services affordable</b>: Eliminate transfer fees between services, and create flat fare zones. 
+          <li class="flow-text"><b>Expanding rapid options</b>: Build high-capacity transit projects that benefit
+            communities of color, and add stops in BIPOC neighborhoods that express services have historically bypassed.
             <ul class='browser-default'>
-            <li class='flow-text'>Example: <a href="https://www.cookcountyil.gov/service/fair-transit-south-cook">Discounted commuter rail fares on Chicago’s South Side and South Suburbs.</a></li>
+              <li class='flow-text'>Example: <a
+                  href="https://www.indygo.net/red-line-detailed-information/">Prioritizing bus rapid transit in
+                  low-income neighborhoods of color in Indianapolis</a></li>
+              <li class='flow-text'>Example: <a href="https://twitter.com/MTA/status/1392890280983080966?s=20">Building
+                  new stations in the Bronx on a regional railroad.</a></li>
             </ul>
           </li>
-          <li class="flow-text"><b>Realigning service with people's travel needs</b>: Redesign transit networks to respond to changes in where people live, work, and travel.
+          <li class="flow-text"><b>Increasing all-day frequency</b>: Add more trips to early morning, midday, and
+            evening periods than to the AM and PM rush hours.
             <ul class='browser-default'>
-            <li class='flow-text'>Example: <a href="https://transitcenter.org/in-portland-economic-displacement-may-be-a-driver-of-transit-ridership-loss/">Adding bus service and redesigning routes in suburban Portland</a> in response to residential and business displacement.</li>
+              <li class='flow-text'>Example: <a
+                  href="https://transitcenter.org/bostons-first-step-toward-regional-rail-reform-off-peak-trains-every-hour/">Shifting
+                  trips from peak periods to midday on Boston’s MBTA commuter rail.</a></li>
             </ul>
           </li>
-          <li class="flow-text"><b>Coordinating land use and transit investments</b>: Support the development of jobs and affordable housing near frequent transit lines. 
+          <li class="flow-text"><b>Making "premium" services affordable</b>: Eliminate transfer fees between services,
+            and create flat fare zones.
             <ul class='browser-default'>
-            <li class='flow-text'>Example: Los Angeles’s <a href="https://transitcenter.org/in-portland-economic-displacement-may-be-a-driver-of-transit-ridership-loss/">Transit-Oriented Communities</a> program has produced 7,000 affordable housing units near transit <a href="https://whatnowlosangeles.com/how-las-toc-program-is-producing-thousands-of-affordable-units/">through fall 2020.</a></li>
+              <li class='flow-text'>Example: <a
+                  href="https://www.cookcountyil.gov/service/fair-transit-south-cook">Discounted commuter rail fares on
+                  Chicago’s South Side and South Suburbs.</a></li>
+            </ul>
+          </li>
+          <li class="flow-text"><b>Realigning service with people's travel needs</b>: Redesign transit networks to
+            respond to changes in where people live, work, and travel.
+            <ul class='browser-default'>
+              <li class='flow-text'>Example: <a
+                  href="https://transitcenter.org/in-portland-economic-displacement-may-be-a-driver-of-transit-ridership-loss/">Adding
+                  bus service and redesigning routes in suburban Portland</a> in response to residential and business
+                displacement.</li>
+            </ul>
+          </li>
+          <li class="flow-text"><b>Coordinating land use and transit investments</b>: Support the development of jobs
+            and affordable housing near frequent transit lines.
+            <ul class='browser-default'>
+              <li class='flow-text'>Example: Los Angeles’s <a
+                  href="https://transitcenter.org/in-portland-economic-displacement-may-be-a-driver-of-transit-ridership-loss/">Transit-Oriented
+                  Communities</a> program has produced 7,000 affordable housing units near transit <a
+                  href="https://whatnowlosangeles.com/how-las-toc-program-is-producing-thousands-of-affordable-units/">through
+                  fall 2020.</a></li>
             </ul>
           </li>
         </ul>
-      </p>
+        </p>
+      </div>
     </div>
-  </div>
-  <div class='row'>
-    <div class="col s12">
+    <div class='row'>
+      <div class="col s12">
         <h2>Definitions</h2>
         <h5 class='left-align'><b>Regional Transit Network</b></h5>
-        <p class='flow-text'>These transit agencies were included in the {{view['title']}} region study area because they operate at least one transit stop within the geographic extent of the region. Premium routes used for fare-based calculations are shown in the second column.</p>
+        <p class='flow-text'>These transit agencies were included in the {{view['title']}} region study area because
+          they operate at least one transit stop within the geographic extent of the region. Premium routes used for
+          fare-based calculations are shown in the second column.</p>
         <table>
-            <thead>
-                <th>Agency</th>
-                <th>Premium Routes</th>
-            </thead>
-            <tbody>
-                {% for agency in view['premium'] %}
-                    <tr>
-                        <td>{{agency.agency}}</td>
-                        <td>{{agency.premium}}</td>
-                    </tr>
-                {% endfor %}
-            </tbody>
+          <thead>
+            <th>Agency</th>
+            <th>Premium Routes</th>
+          </thead>
+          <tbody>
+            {% for agency in view['premium'] %}
+            <tr>
+              <td>{{agency.agency}}</td>
+              <td>{{agency.premium}}</td>
+            </tr>
+            {% endfor %}
+          </tbody>
         </table>
+      </div>
     </div>
-</div>
     <div class='row'>
-        <div class="col s12">
-            <h5 class='left-align'><b>Other Definitions</b></h5>
-            <ul class='browser-default'>
-                <li class='flow-text'><p><b>Low-Cost Transit:</b> In {{view['title']}}, we defined a low-cost transit trip as a one-way trip with total fares less than ${{view['fare']}}. If the fastest trip to access a job is more than ${{view['fare']}}, then the analysis automatically removes all high-fare, “premium” transit service to see if the job could be accessed in 45 minutes, for less than ${{view['fare']}} taking inexpensive transit modes.</p></li>
-                <li class='flow-text'><p><b>Single mothers</b> are female householders with children at home and no spouse or partner present, according to the 2018 five-year U.S. Census American Community Survey. Research suggests that single mothers have higher reliance on public transit for travel than other parents.</p></li>
-                <li class='flow-text'><p><b>Essential workers</b> are employed in essential industries that operated throughout the Covid-19 pandemic. Transit outcomes for essential workers were estimated based on where workers live, using 2017 Longitudinal Employer-Household Dynamics data.
-                </p></li>
-                <li class='flow-text'><p><b>People living in poverty</b> are people whose household incomes are below the federal poverty line, according to the 2018 five-year U.S. Census American Community Survey.
-                </p></li>
-                <li class='flow-text'><p><b>Grocery stores</b> are defined as food retailers who belong to the Supplemental Nutrition Assistance Program (SNAP, also known as Food Stamps), according to the USDA.
-                </p></li>
-                <li class='flow-text'><p><b>Urgent care facilities</b> provide walk-in emergency medical care, surgery, or recuperative care outside of a hospital or emergency room setting.</p></li>
-                <li class='flow-text'><p><b>Colleges or universities</b> include campuses of educational institutions that offer classes and degree programs, from the associate to the doctoral level.
-                </p></li>
-                <li class='flow-text'><p>Jobs with <b>low wages</b> pay no more than $12,500 in annual wages, according to 2017 U.S. Census Longitudinal Employer-Household Dynamics data.</p></li>
-                <li class='flow-text'><p>The <b>Metropolitan Statistical Area (MSA)</b> region consists of a high-density urban center and its suburbs, and is defined by the U.S. Census Bureau.</p></li>
-                <li class='flow-text'><p>The <b>Economic Region</b> consists of a high-density urban center plus surrounding counties with high exchange of economic activity and travel, and is defined by TransitCenter. This region includes counties that meet at least one of the following criteria, based on LEHD data: where at least 3% of the people who work in the central city live; where at least 3% of the people who work in the MSA live; where at least 3% of residents of the central city work; and/or where at least 3% of residents of the MSA work. </p></li>
-                <li class='flow-text'><p>The <b>Urban Core</b> is a contiguous area with the highest existing transit use and/or highest potential for transit use in the region. TransitCenter defined this area based on the following conditions: workflow to and from the central city (using LEHD data), population density, household incomes, race and ethnicity, and presence of high-frequency and high-quality transit. Local transit advocates gave input on the definitions.</p></li>
-                <li class='flow-text'><p><b>Equity Neighborhoods</b> are areas that local transit advocates and TransitCenter identified as meriting additional resources for transit improvements because of past disinvestments or marginalization in planning decisions.</p></li>
-            </ul>
-        </div>
+      <div class="col s12">
+        <h5 class='left-align'><b>Other Definitions</b></h5>
+        <ul class='browser-default'>
+          <li class='flow-text'>
+            <p><b>Low-Cost Transit:</b> In {{view['title']}}, we defined a low-cost transit trip as a one-way trip with
+              total fares less than ${{view['fare']}}. If the fastest trip to access a job is more than
+              ${{view['fare']}}, then the analysis automatically removes all high-fare, “premium” transit service to see
+              if the job could be accessed in 45 minutes, for less than ${{view['fare']}} taking inexpensive transit
+              modes.</p>
+          </li>
+          <li class='flow-text'>
+            <p><b>Single mothers</b> are female householders with children at home and no spouse or partner present,
+              according to the 2018 five-year U.S. Census American Community Survey. Research suggests that single
+              mothers have higher reliance on public transit for travel than other parents.</p>
+          </li>
+          <li class='flow-text'>
+            <p><b>Essential workers</b> are employed in essential industries that operated throughout the Covid-19
+              pandemic. Transit outcomes for essential workers were estimated based on where workers live, using 2017
+              Longitudinal Employer-Household Dynamics data.
+            </p>
+          </li>
+          <li class='flow-text'>
+            <p><b>People living in poverty</b> are people whose household incomes are below the federal poverty line,
+              according to the 2018 five-year U.S. Census American Community Survey.
+            </p>
+          </li>
+          <li class='flow-text'>
+            <p><b>Grocery stores</b> are defined as food retailers who belong to the Supplemental Nutrition Assistance
+              Program (SNAP, also known as Food Stamps), according to the USDA.
+            </p>
+          </li>
+          <li class='flow-text'>
+            <p><b>Urgent care facilities</b> provide walk-in emergency medical care, surgery, or recuperative care
+              outside of a hospital or emergency room setting.</p>
+          </li>
+          <li class='flow-text'>
+            <p><b>Colleges or universities</b> include campuses of educational institutions that offer classes and
+              degree programs, from the associate to the doctoral level.
+            </p>
+          </li>
+          <li class='flow-text'>
+            <p>Jobs with <b>low wages</b> pay no more than $12,500 in annual wages, according to 2017 U.S. Census
+              Longitudinal Employer-Household Dynamics data.</p>
+          </li>
+          <li class='flow-text'>
+            <p>The <b>Metropolitan Statistical Area (MSA)</b> region consists of a high-density urban center and its
+              suburbs, and is defined by the U.S. Census Bureau.</p>
+          </li>
+          <li class='flow-text'>
+            <p>The <b>Economic Region</b> consists of a high-density urban center plus surrounding counties with high
+              exchange of economic activity and travel, and is defined by TransitCenter. This region includes counties
+              that meet at least one of the following criteria, based on LEHD data: where at least 3% of the people who
+              work in the central city live; where at least 3% of the people who work in the MSA live; where at least 3%
+              of residents of the central city work; and/or where at least 3% of residents of the MSA work. </p>
+          </li>
+          <li class='flow-text'>
+            <p>The <b>Urban Core</b> is a contiguous area with the highest existing transit use and/or highest potential
+              for transit use in the region. TransitCenter defined this area based on the following conditions: workflow
+              to and from the central city (using LEHD data), population density, household incomes, race and ethnicity,
+              and presence of high-frequency and high-quality transit. Local transit advocates gave input on the
+              definitions.</p>
+          </li>
+          <li class='flow-text'>
+            <p><b>Equity Neighborhoods</b> are areas that local transit advocates and TransitCenter identified as
+              meriting additional resources for transit improvements because of past disinvestments or marginalization
+              in planning decisions.</p>
+          </li>
+        </ul>
+      </div>
     </div>
-</div>
-{% include 'footer.html' %}
-<script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
-<script src="{{ url_for('static', filename='js/d3-array.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
-<script src="{{ url_for('static', filename='js/moment.js') }}"></script>
-<script src="{{ url_for('static', filename='js/chartstyles.js') }}"></script>
-<script src="{{ url_for('static', filename='js/charts.js') }}?v1.2.1"></script>
-{% endblock %}
+  </div>
+  {% include 'footer.html' %}
+  <script src="{{ url_for('static', filename='js/d3.v5.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/d3-array.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/jquery-3.5.1.min.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/moment.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/chartstyles.js') }}"></script>
+  <script src="{{ url_for('static', filename='js/charts.js') }}?v1.2.1"></script>
+  {% endblock %}
