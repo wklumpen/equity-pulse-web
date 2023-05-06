@@ -9,263 +9,303 @@
 <!-- Primary Page Layout
 –––––––––––––––––––––––––––––––––––––––––––––––––– -->
 <div class="container">
-    <div class="row">
-        <div class="col s12">
-            <h1>Download Center for {{title}}</h1>
-            <p class='flow-text'>If you would like to create your own visualizations or conduct your own analysis, you can download bulk datasets for {{title}} using the links tabulated below. Data is provided without any warranty. For a given date, individual result calculations by block group are downloadable as a CSV file. Static spatial overlay files are downloadable in GeoJSON format. Population weighted summaries used to populate the <a href="/charts/{{tag}}">story page</a> are also provided for download.
-        </div>
+  <div class="row">
+    <div class="col s12">
+      <h1>Download Center for {{title}}</h1>
+      <p class='flow-text'>If you would like to create your own visualizations or conduct your own analysis, you can
+        download bulk datasets for {{title}} using the links tabulated below. Data is provided without any warranty. For
+        a given date, individual result calculations by block group are downloadable as a CSV file. Static spatial
+        overlay files are downloadable in GeoJSON format. Population weighted summaries used to populate the <a
+          href="/charts/{{tag}}">story page</a> are also provided for download.
     </div>
-    <div class="row">
-		<div class="col s12">
-			<div class="card-panel orange lighten-4">
-			<span class="black-text">
-				<p class='flow-text'>Due to the size of the data, bulk block-group level scores across all destinations and measures are not available for direct download. You can access and download the block-group specific scores for a single destination and measure via the following steps:
+  </div>
+  <div class="row">
+    <div class="col s12">
+      <div class="card-panel orange lighten-4">
+        <span class="black-text">
+          <p class='flow-text'>Due to the size of the data, bulk block-group level scores across all destinations and
+            measures are not available for direct download. You can access and download the block-group specific scores
+            for a single destination and measure via the following steps:
           <ol class='browser-default'>
             <li class='flow-text'>Visit the <a href="/map/{{tag}}">map</a> page for {{title}}</li>
-            <li class='flow-text'>Use the map configuration panel to choose the dataset you would like to download, and update the map.</li>
-            <li class='flow-text'>Click the download tab on the side panel and choose whether to download as CSV or as a spatial dataset.</li>
-          </ol></p>
-          <p class='flow-text'>If you would like to request a larger portion of the dataset for research or analysis, please email <a href='mailto:dashboard@transitcenter.org'>dashboard@transitcenter.org</a></p>
-			</span>
-			</div>
-		</div>
-	</div>
-  <div class='row'>
-      <div class='col s12'>
-        <h2>Population Weighted Regional Summaries</h2>
-        <p class='flow-text'>Summaries are population weighted scores aggregated across all block groups in MSA and Urban Cores for different access measures, dates, and socioeconomic groups. <b>Data is in CSV format.</b></p>
-        <div class='center-align'>
-          <a href="/data/dl/summary/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i class="material-icons left">cloud_download</i>Download Regional Summaries</a>
-        </div>
+            <li class='flow-text'>Use the map configuration panel to choose the dataset you would like to download, and
+              update the map.</li>
+            <li class='flow-text'>Click the download tab on the side panel and choose whether to download as CSV or as a
+              spatial dataset.</li>
+          </ol>
+          </p>
+          <p class='flow-text'>If you would like to request a larger portion of the dataset for research or analysis,
+            please email <a href='mailto:dashboard@transitcenter.org'>dashboard@transitcenter.org</a></p>
+        </span>
       </div>
+    </div>
   </div>
   <div class='row'>
     <div class='col s12'>
-        <h2>Static Geospatial Files</h2>
-        <p class='flow-text'>These files contain spatial data on block groups, transit layers, and demographics. You can use these as base layers for maps and analysis. <b>All geospatial files are in GeoJSON format.</b></p>
-        <div class="collection text-black">
-          <a href="{{ url_for('static', filename='data/'+tag+'_bg.geojson') }}" class="collection-item">Block Groups</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_transit.geojson') }}" class="collection-item">Transit Layer</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_pop_asiapacific.geojson') }}" class="collection-item">Demographics: 1 dot = 100 Asian/Pacific Islanders</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_pop_black.geojson') }}" class="collection-item">Demographics: 1 dot = 100 Black people</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_pop_hispanic.geojson') }}" class="collection-item">Demographics: 1 dot = 100 Latinx people</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_pop_white.geojson') }}" class="collection-item">Demographics: 1 dot = 100 White people</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_pop_poverty.geojson') }}" class="collection-item">Demographics: 1 dot = 100 people at/below 200% poverty line (low-income)</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_workers_essential.geojson') }}" class="collection-item">Demographics: 1 dot = 50 essential workers</a>
-          <a href="{{ url_for('static', filename='data/'+tag+'_hhld_single_mother.geojson') }}" class="collection-item">Demographics: 1 dot = 50 single-mother households</a>
-        </div>
+      <h2>Population Weighted Regional Summaries</h2>
+      <p class='flow-text'>Summaries are population weighted scores aggregated across all block groups in MSA and Urban
+        Cores for different access measures, dates, and socioeconomic groups. <b>Data is in CSV format.</b></p>
+      <div class="card-panel orange lighten-4">
+        <p class="flow-text"><b>Note:</b> Data issues may be influencing the low-cost fare access measures. Until we can
+          resolve this issue, we caution against using the low-cost fare access metrics. Please contact
+          dashboard@transitcenter.org with questions.</p>
+      </div>
+      <div class='center-align'>
+        <a href="/data/dl/summary/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i
+            class="material-icons left">cloud_download</i>Download Regional Summaries</a>
+      </div>
     </div>
-    
+  </div>
+  <div class='row'>
+    <div class='col s12'>
+      <h2>Static Geospatial Files</h2>
+      <p class='flow-text'>These files contain spatial data on block groups, transit layers, and demographics. You can
+        use these as base layers for maps and analysis. <b>All geospatial files are in GeoJSON format.</b></p>
+      <div class="collection text-black">
+        <a href="{{ url_for('static', filename='data/'+tag+'_bg.geojson') }}" class="collection-item">Block Groups</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_transit.geojson') }}" class="collection-item">Transit
+          Layer</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_pop_asiapacific.geojson') }}"
+          class="collection-item">Demographics: 1 dot = 100 Asian/Pacific Islanders</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_pop_black.geojson') }}"
+          class="collection-item">Demographics: 1 dot = 100 Black people</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_pop_hispanic.geojson') }}"
+          class="collection-item">Demographics: 1 dot = 100 Latinx people</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_pop_white.geojson') }}"
+          class="collection-item">Demographics: 1 dot = 100 White people</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_pop_poverty.geojson') }}"
+          class="collection-item">Demographics: 1 dot = 100 people at/below 200% poverty line (low-income)</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_workers_essential.geojson') }}"
+          class="collection-item">Demographics: 1 dot = 50 essential workers</a>
+        <a href="{{ url_for('static', filename='data/'+tag+'_hhld_single_mother.geojson') }}"
+          class="collection-item">Demographics: 1 dot = 50 single-mother households</a>
+      </div>
+    </div>
+
     <div class='col s12'>
       <h2>Static Population Profiles</h2>
       <p class='flow-text'>These files contain population demographic values for all block groups in the region.</p>
       <div class='center-align'>
-        <a href="/data/dl/pop/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i class="material-icons left">cloud_download</i>Download Population Profiles</a>
+        <a href="/data/dl/pop/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i
+            class="material-icons left">cloud_download</i>Download Population Profiles</a>
       </div>
     </div>
     <div class='col s12'>
       <h2>Reliability Data</h2>
       {% if reliability %}
-        <p class='flow-text'>Where possible, reliability data has been collected for a number of agencies accross all regions. We provide the following fields:</p>
-        <ul class='browser-default flow-text'>
-          <li><code>timestamp</code>: The time when the data was collected (UTC timezone)</li>
-          <li><code>agency</code>: The agency name</li>
-          <li><code>mode</code>: The mode of transit (Bus or Rail)</li>
-          <li><code>otp</code>: The on-time performance, or the percent of vehicles which departed their most recent stop between 1 minute early and 5 minutes late.</li>
-          <li><code>delay_abs</code>: The average punctuality in seconds accross all measured vehicles (average schedule deviation).</li>
-          <li><code>delay_late</code>: The average delay in seconds of all vehicles more than 5 minutes late.</li>
-          <li><code>delay_early</code>: The average schedule deviation in seconds of all vehicles more than 1 minute early.</li>
-          <li><code>fraction</code>: The percent of buses sampled that had appropriate data.</li>
-        </ul>
-        <div class='center-align'>
-          <a href="/data/dl/reliability/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i class="material-icons left">cloud_download</i>Download Reliability Data</a>
-        </div>
+      <p class='flow-text'>Where possible, reliability data has been collected for a number of agencies accross all
+        regions. We provide the following fields:</p>
+      <ul class='browser-default flow-text'>
+        <li><code>timestamp</code>: The time when the data was collected (UTC timezone)</li>
+        <li><code>agency</code>: The agency name</li>
+        <li><code>mode</code>: The mode of transit (Bus or Rail)</li>
+        <li><code>otp</code>: The on-time performance, or the percent of vehicles which departed their most recent stop
+          between 1 minute early and 5 minutes late.</li>
+        <li><code>delay_abs</code>: The average punctuality in seconds accross all measured vehicles (average schedule
+          deviation).</li>
+        <li><code>delay_late</code>: The average delay in seconds of all vehicles more than 5 minutes late.</li>
+        <li><code>delay_early</code>: The average schedule deviation in seconds of all vehicles more than 1 minute
+          early.</li>
+        <li><code>fraction</code>: The percent of buses sampled that had appropriate data.</li>
+      </ul>
+      <div class='center-align'>
+        <a href="/data/dl/reliability/{{tag}}" class="waves-effect waves-light blue transit btn-large"><i
+            class="material-icons left">cloud_download</i>Download Reliability Data</a>
+      </div>
       {% else %}
-        <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available in {{title}}.</p>
+      <p class='flow-text'>Unfortunately, the real-time data required to make reliability calculations is not available
+        in {{title}}.</p>
       {% endif %}
-      
+
     </div>
   </div>
   <div class='row'>
-      <div class='col s12'>
-          <h2>Data Definitons</h2>
-          <h3>Acccess and Transit Scores</h3>
-          <p class='flow-text'>Access and transit scores (and the shareable map URLs) use a unique code to identify the parameter configuration being measured:</p>
-          <p class='flow-text'><code>[opportunity]_[parameter]_[period]_[autoFlag]_[fareFlag]</code></p>
-          <p class='flow-text'>Where <code>period</code> is one of <code>AM</code> (weekday morning peak), <code>PM</code> (weekday evening), or <code>WE</code> (weekend). Transit service column names are in the form <code>los_trips_[period]</code>, where <code>period</code> is one of <code>WKD</code> for a weekday measure and <code>SAT</code> for a Saturday measure. The table below provides a reference for the other various options in the score keys. You can refer to the <a href="/methodology">how it works</a> page for more detail on the scores.</p>
-      </div>
+    <div class='col s12'>
+      <h2>Data Definitons</h2>
+      <h3>Acccess and Transit Scores</h3>
+      <p class='flow-text'>Access and transit scores (and the shareable map URLs) use a unique code to identify the
+        parameter configuration being measured:</p>
+      <p class='flow-text'><code>[opportunity]_[parameter]_[period]_[autoFlag]_[fareFlag]</code></p>
+      <p class='flow-text'>Where <code>period</code> is one of <code>AM</code> (weekday morning peak), <code>PM</code>
+        (weekday evening), or <code>WE</code> (weekend). Transit service column names are in the form
+        <code>los_trips_[period]</code>, where <code>period</code> is one of <code>WKD</code> for a weekday measure and
+        <code>SAT</code> for a Saturday measure. The table below provides a reference for the other various options in
+        the score keys. You can refer to the <a href="/methodology">how it works</a> page for more detail on the scores.
+      </p>
+    </div>
   </div>
   <div class='row'>
-      <div class='col s12'>
-          <table class='highlight'>
-              <thead>
-                <tr>
-                  <th rowspan="2">Opportunity</th>
-                  <th rowspan="2">Measure Type</th>
-                  <th rowspan="2">Unit</th>
-                  <th rowspan="2">Code</th>
-                  <th colspan="2">Parameter 1</th>
-                  <th colspan="2">Parameter 2</th>
-                  <th colspan="2">Parameter 3</th>
-                  <th colspan="2">Auto Ratio</th>
-                  <th colspan="2">Fare Capped</th>
-                </tr>
-                <tr>
-                  <td><i>Description</i></td>
-                  <td><i>Code</i></td>
-                  <td><i>Description</i></td>
-                  <td><i>Code</i></td>
-                  <td><i>Description</i></td>
-                  <td><i>Code</i></td>
-                  <td><i>Yes</i></td>
-                  <td><i>No</i></td>
-                  <td><i>Yes</i></td>
-                  <td><i>No</i></td>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Jobs</td>
-                  <td>Cumulative</td>
-                  <td>Jobs</td>
-                  <td><code>C000_P</code></td>
-                  <td>30 min</td>
-                  <td><code>c30</code></td>
-                  <td>45 minutes</td>
-                  <td><code>c45</code></td>
-                  <td>60 minutes</td>
-                  <td><code>c60</code></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td><code>fareY</code></td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Low-Income Jobs</td>
-                  <td>Cumulative</td>
-                  <td>Jobs</td>
-                  <td><code>CE01_P</code></td>
-                  <td>30 min</td>
-                  <td><code>c30</code></td>
-                  <td>45 minutes</td>
-                  <td><code>c45</code></td>
-                  <td>60 minutes</td>
-                  <td><code>c60</code></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td><code>fareY</code></td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Groceries</td>
-                  <td>Travel Time</td>
-                  <td>Minutes</td>
-                  <td><code>snap_M</code></td>
-                  <td>Closest</td>
-                  <td><code>t1</code></td>
-                  <td>3rd Closest</td>
-                  <td><code>t3</code></td>
-                  <td>-</td>
-                  <td></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td>-</td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Hospitals</td>
-                  <td>Travel Time</td>
-                  <td>Minutes</td>
-                  <td><code>hospitals_M</code></td>
-                  <td>Closest</td>
-                  <td><code>t1</code></td>
-                  <td>3rd Closest</td>
-                  <td><code>t3</code></td>
-                  <td>-</td>
-                  <td></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td>-</td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Urgent Care</td>
-                  <td>Travel Time</td>
-                  <td>Minutes</td>
-                  <td><code>urgentcare_M</code></td>
-                  <td>Closest</td>
-                  <td><code>t1</code></td>
-                  <td>3rd Closest</td>
-                  <td><code>t3</code></td>
-                  <td>-</td>
-                  <td></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td>-</td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Pharmacies</td>
-                  <td>Travel Time</td>
-                  <td>Minutes</td>
-                  <td><code>pharmacies_M</code></td>
-                  <td>Closest</td>
-                  <td><code>t1</code></td>
-                  <td>3rd Closest</td>
-                  <td><code>t3</code></td>
-                  <td>-</td>
-                  <td></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td>-</td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Parks</td>
-                  <td>Cumulative</td>
-                  <td>Acres</td>
-                  <td><code>parks_P</code></td>
-                  <td>15 minutes</td>
-                  <td><code>c15</code></td>
-                  <td>30 minutes</td>
-                  <td><code>c30</code></td>
-                  <td>-</td>
-                  <td></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td><code>fareY</code></td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Post-Secondary Institutions</td>
-                  <td>Travel Time</td>
-                  <td>Minutes</td>
-                  <td><code>schools_M</code></td>
-                  <td>Closest</td>
-                  <td><code>t1</code></td>
-                  <td>3rd Closest</td>
-                  <td><code>t3</code></td>
-                  <td>-</td>
-                  <td></td>
-                  <td><code>autoY</code></td>
-                  <td><code>autoN</code></td>
-                  <td>-</td>
-                  <td><code>fareN</code></td>
-                </tr>
-                <tr>
-                  <td>Transit Service Intensity</td>
-                  <td>Trips Per Day</td>
-                  <td>Trips</td>
-                  <td>los_trips</td>
-                  <td colspan="10">Options are WKD for weekday service, SAT for Saturday service.</td>
-                </tr>
-              </tbody>
-          </table>
-          <p><b>Note: </b>An additional gravity-based accessibility score is included for access to jobs, both low-income and all. A gravity-based accessibility measure that uses a continuous decay function to weight opportunities based on how quickly they can be reached. These scores are represented with the paremeter <code>nexp</code>. These scores are not included in the summary data as they are not used in the story page.</p>
-      </div>
+    <div class='col s12'>
+      <table class='highlight'>
+        <thead>
+          <tr>
+            <th rowspan="2">Opportunity</th>
+            <th rowspan="2">Measure Type</th>
+            <th rowspan="2">Unit</th>
+            <th rowspan="2">Code</th>
+            <th colspan="2">Parameter 1</th>
+            <th colspan="2">Parameter 2</th>
+            <th colspan="2">Parameter 3</th>
+            <th colspan="2">Auto Ratio</th>
+            <th colspan="2">Fare Capped</th>
+          </tr>
+          <tr>
+            <td><i>Description</i></td>
+            <td><i>Code</i></td>
+            <td><i>Description</i></td>
+            <td><i>Code</i></td>
+            <td><i>Description</i></td>
+            <td><i>Code</i></td>
+            <td><i>Yes</i></td>
+            <td><i>No</i></td>
+            <td><i>Yes</i></td>
+            <td><i>No</i></td>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Jobs</td>
+            <td>Cumulative</td>
+            <td>Jobs</td>
+            <td><code>C000_P</code></td>
+            <td>30 min</td>
+            <td><code>c30</code></td>
+            <td>45 minutes</td>
+            <td><code>c45</code></td>
+            <td>60 minutes</td>
+            <td><code>c60</code></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td><code>fareY</code></td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Low-Income Jobs</td>
+            <td>Cumulative</td>
+            <td>Jobs</td>
+            <td><code>CE01_P</code></td>
+            <td>30 min</td>
+            <td><code>c30</code></td>
+            <td>45 minutes</td>
+            <td><code>c45</code></td>
+            <td>60 minutes</td>
+            <td><code>c60</code></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td><code>fareY</code></td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Groceries</td>
+            <td>Travel Time</td>
+            <td>Minutes</td>
+            <td><code>snap_M</code></td>
+            <td>Closest</td>
+            <td><code>t1</code></td>
+            <td>3rd Closest</td>
+            <td><code>t3</code></td>
+            <td>-</td>
+            <td></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td>-</td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Hospitals</td>
+            <td>Travel Time</td>
+            <td>Minutes</td>
+            <td><code>hospitals_M</code></td>
+            <td>Closest</td>
+            <td><code>t1</code></td>
+            <td>3rd Closest</td>
+            <td><code>t3</code></td>
+            <td>-</td>
+            <td></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td>-</td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Urgent Care</td>
+            <td>Travel Time</td>
+            <td>Minutes</td>
+            <td><code>urgentcare_M</code></td>
+            <td>Closest</td>
+            <td><code>t1</code></td>
+            <td>3rd Closest</td>
+            <td><code>t3</code></td>
+            <td>-</td>
+            <td></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td>-</td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Pharmacies</td>
+            <td>Travel Time</td>
+            <td>Minutes</td>
+            <td><code>pharmacies_M</code></td>
+            <td>Closest</td>
+            <td><code>t1</code></td>
+            <td>3rd Closest</td>
+            <td><code>t3</code></td>
+            <td>-</td>
+            <td></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td>-</td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Parks</td>
+            <td>Cumulative</td>
+            <td>Acres</td>
+            <td><code>parks_P</code></td>
+            <td>15 minutes</td>
+            <td><code>c15</code></td>
+            <td>30 minutes</td>
+            <td><code>c30</code></td>
+            <td>-</td>
+            <td></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td><code>fareY</code></td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Post-Secondary Institutions</td>
+            <td>Travel Time</td>
+            <td>Minutes</td>
+            <td><code>schools_M</code></td>
+            <td>Closest</td>
+            <td><code>t1</code></td>
+            <td>3rd Closest</td>
+            <td><code>t3</code></td>
+            <td>-</td>
+            <td></td>
+            <td><code>autoY</code></td>
+            <td><code>autoN</code></td>
+            <td>-</td>
+            <td><code>fareN</code></td>
+          </tr>
+          <tr>
+            <td>Transit Service Intensity</td>
+            <td>Trips Per Day</td>
+            <td>Trips</td>
+            <td>los_trips</td>
+            <td colspan="10">Options are WKD for weekday service, SAT for Saturday service.</td>
+          </tr>
+        </tbody>
+      </table>
+      <p><b>Note: </b>An additional gravity-based accessibility score is included for access to jobs, both low-income
+        and all. A gravity-based accessibility measure that uses a continuous decay function to weight opportunities
+        based on how quickly they can be reached. These scores are represented with the paremeter <code>nexp</code>.
+        These scores are not included in the summary data as they are not used in the story page.</p>
+    </div>
   </div>
 </div>
 {% include 'footer.html' %}
 {% endblock %}
-
-
